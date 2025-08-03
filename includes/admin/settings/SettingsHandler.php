@@ -30,7 +30,6 @@ class SettingsHandler {
 
         // 4. 获取并保存设置
         $data = [];
-        $data['use_global_settings'] = !empty( $_POST['use_global_settings'] ) ? 1 : 0;
         $data['stat_enabled'] = !empty( $_POST['stat_enabled'] ) ? 1 : 0;
         $data['sort_enabled'] = !empty( $_POST['sort_enabled'] ) ? 1 : 0;
         $data['rest_api_enabled'] = !empty( $_POST['rest_api_enabled'] ) ? 1 : 0;

@@ -20,7 +20,11 @@ class Sort {
             return;
         }
 
-        add_filter('manage_edit-post_sortable_columns', [self::class , 'make_views_column_sortable'], 20);
+        $post_types = get_post_types(['public' => true], 'names'); // 获取所有公开的文章类型
+        foreach ($post_types as $type) {
+            add_filter("manage_edit-{$type}_sortable_columns", [self::class, 'make_views_column_sortable'], 20);
+        }
+
         add_filter('pre_get_posts', [self::class, 'add_view_count_sorting'], 20);
     }
 

@@ -65,10 +65,10 @@ class HooksRegistrar {
         add_action('update_option_rwpsl_settings', self::cb([$settings_handler, 'after_settings_saved']), 10, 2);
 
         // UI columns
-        add_filter('manage_posts_columns', self::cb([$columns, 'add_views_column']));
-        add_action('manage_posts_custom_column', self::cb([$columns, 'display_views_column']), 10, 2);
-        add_filter('manage_page_posts_columns', self::cb([$columns, 'add_views_column']));
-        add_action('manage_page_posts_custom_column', self::cb([$columns, 'display_views_column']), 10, 2);
+        add_filter('manage_posts_columns', self::cb([$columns, 'maybe_add_views_column']));
+        add_action('manage_posts_custom_column', self::cb([$columns, 'maybe_display_views_column']), 10, 2);
+        add_filter('manage_page_posts_columns', self::cb([$columns, 'maybe_add_views_column']));
+        add_action('manage_page_posts_custom_column', self::cb([$columns, 'maybe_display_views_column']), 10, 2);
 
         // plugin meta
         add_action('plugin_action_links_' . plugin_basename(RWPSL_PLUGIN_FILE), [PluginMetaLinks::class, 'add_links']);
