@@ -2,7 +2,6 @@
 namespace RobertWP\PostViewStatsLite\Admin\Settings;
 
 use RobertWP\PostViewStatsLite\Traits\Singleton;
-use RobertWP\PostViewStatsLite\Utils\TemplateLoader;
 
 if (!defined('ABSPATH')) exit;
 
@@ -15,8 +14,9 @@ class SettingsRegistrar {
         self::register_settings_fields('rwpsl-settings');
     }
 
-    public static function register_settings_fields($page_slug){
-
+    public static function register_settings_fields($page_slug)
+    {
+        // === 第一组设置：功能设置 ===
         add_settings_section(
             'rwpsl_feature_section',
             __('Feature Settings', 'rw-postviewstats-lite'),
@@ -29,47 +29,47 @@ class SettingsRegistrar {
                 'id' => 'rwpsl_stat_field',
                 'option' => 'stat_enabled',
                 'label' => __('Enable page view statistics', 'rw-postviewstats-lite'),
-                'desc'  => __('When enabled, the page views of each article will be automatically counted.', 'rw-postviewstats-lite')
+                'desc' => __('When enabled, the page views of each article will be automatically counted.', 'rw-postviewstats-lite')
             ],
             [
                 'id' => 'rwpsl_sort_field',
                 'option' => 'sort_enabled',
                 'label' => __('Enable sorting', 'rw-postviewstats-lite'),
-                'desc'  => __('When enabled, You can sort the articles on the article list page by clicking "Views".', 'rw-postviewstats-lite')
+                'desc' => __('When enabled, You can sort the articles on the article list page by clicking "Views".', 'rw-postviewstats-lite')
             ],
             [
                 'id' => 'rwpsl_rest_api_field',
                 'option' => 'rest_api_enabled',
                 'label' => __('Enable REST API', 'rw-postviewstats-lite'),
-                'desc'  => __('When enabled, you can retrieve the view count of a specific post via the REST API.', 'rw-postviewstats-lite')
+                'desc' => __('When enabled, you can retrieve the view count of a specific post via the REST API.', 'rw-postviewstats-lite')
             ],
         ];
 
         foreach ($fields as $field) {
-            add_settings_field(
-                $field['id'],
-                $field['label'],
-                function () use ($field) {
-                    $option = $field['option'];
+            SettingsRenderer::render_checkbox_setting_field($field, $page_slug, 'rwpsl_feature_section' );
+        }
 
-                    // 网络设置页或站点未启用全局设置
-                    $all_settings = get_option(self::OPTION_SITE_SETTINGS, []);
-                    $value = isset($all_settings[$option]) ? $all_settings[$option] : '0';
+        // === 第二组设置：数据设置 ===
+        add_settings_section(
+            'rwpsp_data_section',
+            __('Data Settings', 'rw-postviewstats-pro'),
+            null,
+            $page_slug
+        );
 
-                    $checked = checked($value, '1', false);
+        $data_fields = [
+            [
+                'id' => 'rwpsp_delete_data_field',
+                'option' => 'delete_data_on_uninstall',
+                'label' => __('Delete data on uninstall', 'rw-postviewstats-pro'),
+                'desc'  => __('When checked, all statistical data will be permanently deleted when the plugin is uninstalled.', 'rw-postviewstats-pro')
+            ]
+        ];
 
-                    TemplateLoader::load('partials/checkbox-field', [
-                        'option' => $option,
-                        'checked' => $checked,
-                        'desc' => $field['desc'],
-                    ]);
-                },
-                $page_slug,
-                'rwpsl_feature_section'
-            );
+        foreach ($data_fields as $field) {
+            SettingsRenderer::render_checkbox_setting_field($field, $page_slug, 'rwpsp_data_section');
         }
     }
-
     // 获取有效配置
     public static function get_effective_setting($key) {
         $site_settings = get_option(self::OPTION_SITE_SETTINGS, []);

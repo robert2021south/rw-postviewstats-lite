@@ -34,6 +34,7 @@ class SettingsHandler {
         $data['stat_enabled'] = !empty( $_POST['stat_enabled'] ) ? 1 : 0;
         $data['sort_enabled'] = !empty( $_POST['sort_enabled'] ) ? 1 : 0;
         $data['rest_api_enabled'] = !empty( $_POST['rest_api_enabled'] ) ? 1 : 0;
+        $data['delete_data_on_uninstall'] = !empty( $_POST['delete_data_on_uninstall'] ) ? 1 : 0;
 
         update_option( SettingsRegistrar::OPTION_SITE_SETTINGS, $data );
 

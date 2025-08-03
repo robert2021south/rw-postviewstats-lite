@@ -1,5 +1,5 @@
 <div class="wrap">
-    <h1><?php esc_html_e('RW PostViewStats Lite Settings', 'rw-postviewstats-lite'); ?></h1>
+    <h1><?php esc_html_e('Settings', 'rw-postviewstats-lite'); ?></h1>
 
     <form method="post" action="<?php echo esc_url(admin_url('admin-post.php')); ?>">
         <input type="hidden" name="action" value="rwpsl_save_settings">
