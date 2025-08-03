@@ -1,0 +1,29 @@
+<?php
+/**
+ * PRO Admin Hint Template
+ *
+ * @var int    $basic_views  Total views count
+ * @var string $upgrade_url  Upgrade page URL
+ * @var string $violated_param  Violated param
+ */
+?>
+<div class="rwpsl-shortcode-wrapper">
+    <?php if (!empty($violated_param)) : ?>
+        <div class="rwpsl-param-warning">
+            <?php printf(__('Parameter "%s" requires PRO license', 'text-domain'), esc_html($violated_param)); ?>
+        </div>
+    <?php endif; ?>
+
+    <span class="rwpsl-admin-hint" data-test="pro-hint">
+        <?php echo esc_html($basic_views); ?>
+        <a href="<?php echo esc_url($upgrade_url); ?>"
+           class="rwpsl-admin-hint__badge"
+           aria-label="<?php esc_attr_e('Upgrade to PRO', 'text-domain'); ?>">
+           <?php esc_html_e('PRO', 'text-domain'); ?>
+        </a>
+        <!-- 新增悬浮提示元素 -->
+        <span class="rwpsl-pro-hint">
+            <?php esc_html_e('Upgrade to unlock advanced features', 'text-domain'); ?>
+        </span>
+    </span>
+</div>

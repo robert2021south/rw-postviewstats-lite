@@ -1,0 +1,16 @@
+/* ======================
+   Menu Icons (v1.0)
+   ====================== */
+@font-face {
+    font-family: 'rwpsl_article_stat';
+    src: url(../webfonts/rw-postviewstats-lite.eot?39147086);
+    src: url('../webfonts/rw-postviewstats-lite.eot?39147086#iefix') format('embedded-opentype'), url(../webfonts/rw-postviewstats-lite.ttf?39147086) format('truetype'), url(../webfonts/rw-postviewstats-lite.woff?39147086) format('woff'), url('../webfonts/rw-postviewstats-lite.svg?39147086#icomoon') format('svg');
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap
+}
+
+#adminmenu #toplevel_page_rwpsl-settings .menu-icon-generic div.wp-menu-image::before {
+    font-family: "rwpsl_article_stat" !important;
+    content: "\e800"
+}

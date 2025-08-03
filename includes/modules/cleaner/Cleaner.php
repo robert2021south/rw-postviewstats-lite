@@ -1,0 +1,125 @@
+<?php
+/*
+ *
+ * */
+namespace RobertWP\PostViewStatsLite\Modules\Cleaner;
+
+if (!defined('ABSPATH')) exit;
+
+use RobertWP\PostViewStatsLite\Modules\Tracker\Tracker;
+use RobertWP\PostViewStatsLite\Traits\Singleton;
+use RobertWP\PostViewStatsLite\Utils\Helper;
+use RobertWP\PostViewStatsLite\Utils\TemplateLoader;
+
+
+class Cleaner {
+    use Singleton;
+
+    public static function add_cleaner_submenu() {
+        add_submenu_page(
+            'rwpsl-settings',
+            __('Data Cleaner','rw-postviewstats-lite'),
+            __('Data Cleaner','rw-postviewstats-lite'),
+            'manage_options',
+            'rwpsl-cleaner',
+            [self::class, 'render_cleaner_page']
+        );
+    }
+
+    public static function render_cleaner_page() {
+
+        // 准备模板需要的变量
+        $template_args = [
+            'show_success_notice' => isset($_GET['cleaned'], $_GET['nonce']) &&
+                $_GET['cleaned'] == '1' &&
+                wp_verify_nonce(wp_unslash($_GET['nonce']), 'rwpsl_cleaned_notice'),
+            'admin_post_url' => admin_url('admin-post.php'),
+            'nonce_action' => 'rwpsl_cleaner_action',
+            'post_types' => get_post_types(['public' => true], 'objects'),
+            'upgrade_url'=> Helper::get_upgrade_url()
+        ];
+
+        // 加载模板
+        TemplateLoader::load('cleaner-page', $template_args, 'cleaner');
+    }
+
+    public static function handle_cleaner_request() {
+        if (!current_user_can('manage_options')) {
+            wp_redirect(admin_url('admin.php?page=rwpsl-cleaner&notice=ins_perm'));
+            exit;
+        }
+
+        // Nonce 验证
+        if (!isset($_POST['rwpsl_cleaner_nonce']) ||
+            !wp_verify_nonce(wp_unslash($_POST['rwpsl_cleaner_nonce']), 'rwpsl_cleaner_action')// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
+        ) {
+            wp_redirect(admin_url('admin.php?page=rwpsl-cleaner&notice=inv_req'));
+            exit;
+        }
+
+        $post_type  = isset($_POST['post_type']) ? sanitize_text_field(wp_unslash($_POST['post_type'])) : 'post';
+
+        // 允许 post 和 page
+        $allowed_types = ['post', 'page'];
+
+        if (!in_array($post_type, $allowed_types, true)) {
+            $post_type = 'post'; // 默认回退为 post
+        }
+
+        // 强制限制为30天前
+        $date_limit = date('Ymd', strtotime('-30 days'));
+
+        global $wpdb;
+
+        // 获取所有相关 meta_key
+        $meta_keys = $wpdb->get_col(" SELECT DISTINCT meta_key FROM $wpdb->postmeta WHERE meta_key LIKE '_rwpsl_%' ");
+
+        if (!$meta_keys) {
+            wp_redirect(admin_url('admin.php?page=rwpsl-cleaner&cleaned=1&nonce='.wp_create_nonce( 'rwpsl_cleaned_notice' )));
+            exit;
+        }
+
+        // 获取目标文章ID
+        $posts = get_posts(array(
+            'numberposts' => -1,
+            'post_type'   => $post_type,
+            'post_status' => 'any',
+            'fields'      => 'ids',
+        ));
+
+        foreach ($posts as $post_id) {
+            $retained_today_values = [];
+
+            // 先处理 _rwpsl_today_YYYYMMDD 的数据
+            foreach ($meta_keys as $meta_key) {
+                if (preg_match('/^' . Tracker::RWPSL_META_KEY_TODAY_PREFIX . '(\d{8})$/', $meta_key, $matches)) {
+                    $date = $matches[1];
+
+                    if ((int)$date >= (int)$date_limit) {
+                        // 未过期，记录数值
+                        $value = get_post_meta($post_id, $meta_key, true);
+                        $retained_today_values[] = (int)$value; // 假设是整数
+                    } else {
+                        // 已过期，删除
+                        delete_post_meta($post_id, $meta_key);
+                    }
+                }
+            }
+
+            // 然后处理 _rwpsl_total
+            if (in_array(Tracker::RWPSL_META_KEY_TOTAL, $meta_keys, true)) {
+                if (!empty($retained_today_values)) {
+                    // 还有有效数据，更新 _rwpsl_total
+                    $total = array_sum($retained_today_values);
+                    update_post_meta($post_id, Tracker::RWPSL_META_KEY_TOTAL, $total);
+                } else {
+                    // 没有任何有效数据，删除 _rwpsl_total
+                    delete_post_meta($post_id, Tracker::RWPSL_META_KEY_TOTAL);
+                }
+            }
+        }
+
+        wp_redirect(admin_url('admin.php?page=rwpsl-cleaner&cleaned=1&nonce='.wp_create_nonce( 'rwpsl_cleaned_notice' )));
+        exit;
+    }
+}

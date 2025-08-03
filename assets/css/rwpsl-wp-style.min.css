@@ -1,0 +1,140 @@
+/* ======================
+   Admin PRO Hint (v2.0)
+   ====================== */
+
+/* 外层容器（短代码包装） */
+.rwpsl-shortcode-wrapper {
+    position: relative;
+    display: inline-block;
+    margin: 2px 0;
+}
+
+/* 参数违规警告（独立显示） */
+.rwpsl-param-warning {
+    display: block;
+    padding: 8px 12px;
+    margin-bottom: 8px;
+    background: #fff8e5;
+    border-left: 3px solid #ffb900;
+    color: #d63638;
+    font-size: 13px;
+    line-height: 1.4;
+}
+
+/* 管理员提示组件（主容器） */
+.rwpsl-admin-hint {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 13px;
+}
+
+/* PRO 徽章基础样式 */
+.rwpsl-admin-hint__badge {
+    /* 视觉设计 */
+    padding: 2px 8px;
+    background: #3858e9;
+    border: 1px solid #1a4bd9;
+    border-radius: 3px;
+    color: white;
+
+    /* 文字样式 */
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    text-decoration: none;
+
+    /* 交互效果 */
+    transition: all 0.2s ease;
+    opacity: 0.9;
+}
+
+.rwpsl-admin-hint__badge:hover {
+    opacity: 1;
+    background: #1a4bd9;
+}
+
+/* 悬浮提示框 */
+.rwpsl-pro-hint {
+    /* 定位与显示 */
+    display: none;
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 999;
+
+    /* 视觉设计 */
+    background: #2c3338;
+    color: white;
+    padding: 6px 10px;
+    border-radius: 4px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+
+    /* 文字样式 */
+    font-size: 12px;
+    line-height: 1.4;
+    white-space: nowrap;
+}
+
+/* 悬浮触发 */
+.rwpsl-shortcode-wrapper:hover .rwpsl-pro-hint {
+    display: block !important;
+}
+.rwpsl-shortcode-wrapper .rwpsl-admin-hint .rwpsl-pro-hint{
+    /* 定位 */
+    position: absolute;
+    bottom: calc(100% + 5px);
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 100000; /* 确保最高层级 */
+
+    /* 视觉 */
+    display: block; /* 默认显示测试 */
+    background: #2c3338;
+    color: white;
+    padding: 8px 12px;
+    border-radius: 4px;
+    box-shadow: 0 3px 10px rgba(0,0,0,0.2);
+    width: max-content;
+    max-width: 200px;
+
+    /* 初始状态 */
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s, visibility 0.3s, transform 0.2s;
+}
+/* 悬浮触发效果 */
+.rwpsl-shortcode-wrapper .rwpsl-admin-hint:hover .rwpsl-pro-hint,
+.rwpsl-shortcode-wrapper .rwpsl-admin-hint:focus-within .rwpsl-pro-hint {
+    opacity: 1;
+    visibility: visible;
+    transform: translateX(-50%) translateY(-5px);
+}
+
+
+/* 移动端适配 */
+@media (max-width: 782px) {
+    .rwpsl-pro-hint {
+        white-space: normal;
+        width: 200px;
+        left: auto;
+        right: 0;
+        transform: none;
+    }
+}
+@media (prefers-color-scheme: dark) {
+    .rwpsl-admin-hint__badge {
+        background: #5a7aff;
+    }
+}
+
+.rwpsl-pro-hint {
+    transition: opacity 0.3s, transform 0.2s;
+    opacity: 0;
+}
+.rwpsl-shortcode-wrapper:hover .rwpsl-pro-hint {
+    opacity: 1;
+    transform: translateX(-50%) translateY(-5px);
+}
