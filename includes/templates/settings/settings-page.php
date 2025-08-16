@@ -1,5 +1,19 @@
+<?php
+/** @var string $upgrade_url  */
+?>
+?>
 <div class="wrap">
     <h1><?php esc_html_e('Settings', 'rw-postviewstats-lite'); ?></h1>
+
+    <div class="notice notice-warning is-dismissible" style="border-left: 4px solid #ff9800;">
+        <p style="font-size:14px;">
+            🚀 <strong><?php esc_html_e( 'Upgrade to WP PostViewStat Pro', 'wp-postviewstat-lite' ); ?></strong>
+            <?php esc_html_e( 'to unlock multisite stats, date range filtering, full export functionality, and other advanced features!', 'wp-postviewstat-lite' ); ?>
+            <a href="<?php echo esc_url($upgrade_url); ?>" class="button button-primary" target="_blank" style="margin-left:10px;">
+                <?php esc_html_e( 'Upgrade Now', 'wp-postviewstat-lite' ); ?>
+            </a>
+        </p>
+    </div>
 
     <form method="post" action="<?php echo esc_url(admin_url('admin-post.php')); ?>">
         <input type="hidden" name="action" value="rwpsl_save_settings">

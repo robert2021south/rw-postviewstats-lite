@@ -36,7 +36,7 @@ class Cleaner {
             'admin_post_url' => admin_url('admin-post.php'),
             'nonce_action' => 'rwpsl_cleaner_action',
             'post_types' => get_post_types(['public' => true], 'objects'),
-            'upgrade_url'=> Helper::get_upgrade_url()
+            'upgrade_url'=> Helper::get_upgrade_url('cleaner')
         ];
 
         // 加载模板

@@ -81,8 +81,16 @@ class Helper
         return 'unknown';
     }
 
-    public static function get_upgrade_url(): string {
-        return esc_url('https://codecanyon.net/item/rw-postviewstats-pro/88888');
+    public static function get_upgrade_url( $source = ''): string {
+
+        $base_url = 'https://robertwp.com/rw-postviewstats-pro/';
+        if ( $source ) {
+            return add_query_arg( 'source', $source, $base_url );
+        }
+        return $base_url;
+
+        //return esc_url('https://codecanyon.net/item/rw-postviewstats-pro/88888');
+
     }
 
 }

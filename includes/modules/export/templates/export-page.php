@@ -37,7 +37,7 @@
                         <?php endforeach; ?>
                     </select>
                     <p class="description" style="margin-top: 10px;">
-                        <a href="<?php echo $upgrade_url;?>>" target="_blank" style="color: #0073aa; font-weight: bold;">
+                        <a href="<?php echo esc_url($upgrade_url);?>" target="_blank" style="color: #0073aa; font-weight: bold;">
                             <?php esc_html_e('Upgrade to Pro to unlock all post types', 'rw-postviewstats-lite'); ?>
                         </a>
                     </p>
