@@ -37,4 +37,134 @@
         </ol>
         <p><small>⚠️ <em><?php _e('Replies may be delayed if key info is missing.', 'rw-postviewstats-lite'); ?></em></small></p>
     </div>
+
+
+    <style>
+        /* 浮动表格容器 */
+        .lite-pro-compare {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 360px;
+            background: #fff;
+            border: 1px solid #ccd0d4;
+            border-radius: 8px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.15);
+            z-index: 9999;
+            font-family: Arial, sans-serif;
+            font-size: 14px;
+        }
+
+        /* 标题栏 */
+        .lite-pro-header {
+            background: #0073aa;
+            color: #fff;
+            padding: 10px 15px;
+            border-radius: 8px 8px 0 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: bold;
+        }
+
+        /* 关闭按钮 */
+        .lite-pro-close {
+            cursor: pointer;
+            font-size: 16px;
+            color: #fff;
+        }
+
+        /* 表格样式 */
+        .lite-pro-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        .lite-pro-table th,
+        .lite-pro-table td {
+            border: 1px solid #e5e5e5;
+            padding: 8px;
+            text-align: center;
+        }
+        .lite-pro-table th {
+            background: #f9f9f9;
+        }
+        .lite-pro-highlight {
+            background: #e6f7ff;
+            font-weight: bold;
+        }
+    </style>
+
+    <div class="lite-pro-compare" id="liteProCompare">
+        <div class="lite-pro-header">
+            RW PostViewStats Lite / Pro Comparison
+            <span class="lite-pro-close" onclick="document.getElementById('liteProCompare').style.display='none'">&times;</span>
+        </div>
+        <table class="lite-pro-table">
+            <tr>
+                <th>Feature</th>
+                <th>Lite</th>
+                <th class="lite-pro-highlight">Pro</th>
+            </tr>
+            <tr>
+                <td>Views Display</td>
+                <td>Show views in post/page list; shortcode shows only total views of the current post (can specify post ID)</td>
+                <td class="lite-pro-highlight">Shortcode supports date and date range in addition</td>
+            </tr>
+            <tr>
+                <td>REST API</td>
+                <td>Get views of a specific post ID only</td>
+                <td class="lite-pro-highlight">Support specific days range and manually increase views for a post</td>
+            </tr>
+            <tr>
+                <td>Data Export</td>
+                <td>Export only standard posts and pages</td>
+                <td class="lite-pro-highlight">Export custom post types</td>
+            </tr>
+            <tr>
+                <td>Data Cleaning</td>
+                <td>Clean only standard posts and pages</td>
+                <td class="lite-pro-highlight">Clean custom post types and by specific date</td>
+            </tr>
+            <tr>
+                <td>Multisite Support</td>
+                <td>✖</td>
+                <td class="lite-pro-highlight">✔</td>
+            </tr>
+        </table>
+
+        <div class="lite-pro-header" style="margin-top:10px;">
+            Envato License Plans
+        </div>
+        <table class="lite-pro-table">
+            <tr>
+                <th>License</th>
+                <th>Regular</th>
+                <th class="lite-pro-highlight">Extended</th>
+            </tr>
+            <tr>
+                <td>Sites Allowed</td>
+                <td>1 site</td>
+                <td class="lite-pro-highlight">Unlimited sites</td>
+            </tr>
+            <tr>
+                <td>Validity</td>
+                <td>Lifetime use, 1 year updates</td>
+                <td class="lite-pro-highlight">Lifetime use, lifetime updates</td>
+            </tr>
+            <tr>
+                <td>Support</td>
+                <td>6 months (extendable to 12 months on Envato)</td>
+                <td class="lite-pro-highlight">1 year (extendable on Envato)</td>
+            </tr>
+        </table>
+
+        <div style="text-align:center; padding:15px;">
+            <a href="<?php echo esc_url($upgrade_url);?>"
+               target="_blank"
+               style="display:inline-block; padding:10px 20px; background:#0073aa; color:#fff; text-decoration:none; border-radius:5px; font-weight:bold;">
+                Upgrade to Pro
+            </a>
+        </div>
+    </div>
+
 </div>
