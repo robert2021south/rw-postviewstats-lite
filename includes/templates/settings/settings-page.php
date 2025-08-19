@@ -76,35 +76,6 @@
             </tr>
         </table>
 
-        <div class="lite-pro-header" style="margin-top:10px;">
-            Envato License Plans
-        </div>
-        <table class="lite-pro-table">
-            <tr>
-                <th>License</th>
-                <th>Lite</th>
-                <th>Pro Regular</th>
-                <th class="lite-pro-highlight">Pro Extended</th>
-            </tr>
-            <tr>
-                <td>Sites Allowed</td>
-                <td>Free, unlimited</td>
-                <td>1 site</td>
-                <td class="lite-pro-highlight">Unlimited sites</td>
-            </tr>
-            <tr>
-                <td>Validity</td>
-                <td>Unlimited use</td>
-                <td>Lifetime use, 1 year updates</td>
-                <td class="lite-pro-highlight">Lifetime use, lifetime updates</td>
-            </tr>
-            <tr>
-                <td>Support</td>
-                <td>No official support</td>
-                <td>6 months (extendable to 12 months on Envato)</td>
-                <td class="lite-pro-highlight">1 year (extendable on Envato)</td>
-            </tr>
-        </table>
 
         <div style="text-align:center; padding:15px;">
             <a href="<?php echo esc_url($upgrade_url);?>"
