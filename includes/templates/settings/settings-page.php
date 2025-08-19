@@ -1,7 +1,6 @@
 <?php
 /** @var string $upgrade_url  */
 ?>
-?>
 <div class="wrap">
     <h1><?php esc_html_e('Settings', 'rw-postviewstats-lite'); ?></h1>
 
