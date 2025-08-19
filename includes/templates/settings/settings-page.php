@@ -37,7 +37,7 @@
         </ol>
         <p><small>⚠️ <em><?php _e('Replies may be delayed if key info is missing.', 'rw-postviewstats-lite'); ?></em></small></p>
     </div>
-    
+
     <div class="lite-pro-compare" id="liteProCompare">
         <div class="lite-pro-header">
             RW PostViewStats Lite / Pro Comparison
@@ -82,21 +82,25 @@
         <table class="lite-pro-table">
             <tr>
                 <th>License</th>
-                <th>Regular</th>
-                <th class="lite-pro-highlight">Extended</th>
+                <th>Lite</th>
+                <th>Pro Regular</th>
+                <th class="lite-pro-highlight">Pro Extended</th>
             </tr>
             <tr>
                 <td>Sites Allowed</td>
+                <td>Free, unlimited</td>
                 <td>1 site</td>
                 <td class="lite-pro-highlight">Unlimited sites</td>
             </tr>
             <tr>
                 <td>Validity</td>
+                <td>Unlimited use</td>
                 <td>Lifetime use, 1 year updates</td>
                 <td class="lite-pro-highlight">Lifetime use, lifetime updates</td>
             </tr>
             <tr>
                 <td>Support</td>
+                <td>No official support</td>
                 <td>6 months (extendable to 12 months on Envato)</td>
                 <td class="lite-pro-highlight">1 year (extendable on Envato)</td>
             </tr>
@@ -110,5 +114,6 @@
             </a>
         </div>
     </div>
+
 
 </div>
