@@ -34,7 +34,7 @@ class Bootstrap {
         $data['stat_enabled'] = 1;
         $data['sort_enabled'] = 1;
         $data['rest_api_enabled'] = 1;
-        $data['delete_data_on_uninstall'] = 1;
+        $data['delete_data_on_uninstall'] = 0;
         update_option( SettingsRegistrar::OPTION_SITE_SETTINGS, $data );
     }
 

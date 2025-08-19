@@ -14,3 +14,56 @@
     font-family: "rwpsl_article_stat" !important;
     content: "\e800"
 }
+
+/* 浮动表格容器 */
+.lite-pro-compare {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    width: 360px;
+    background: #fff;
+    border: 1px solid #ccd0d4;
+    border-radius: 8px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.15);
+    z-index: 9999;
+    font-family: Arial, sans-serif;
+    font-size: 14px;
+}
+
+/* 标题栏 */
+.lite-pro-header {
+    background: #0073aa;
+    color: #fff;
+    padding: 10px 15px;
+    border-radius: 8px 8px 0 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-weight: bold;
+}
+
+/* 关闭按钮 */
+.lite-pro-close {
+    cursor: pointer;
+    font-size: 16px;
+    color: #fff;
+}
+
+/* 表格样式 */
+.lite-pro-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+.lite-pro-table th,
+.lite-pro-table td {
+    border: 1px solid #e5e5e5;
+    padding: 8px;
+    text-align: center;
+}
+.lite-pro-table th {
+    background: #f9f9f9;
+}
+.lite-pro-highlight {
+    background: #e6f7ff;
+    font-weight: bold;
+}
