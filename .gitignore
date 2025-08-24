@@ -3,3 +3,6 @@ directory_structure.txt
 /tests/
 phpunit.xml.dist
 run-tests.sh
+composer.lock
+composer.json
+/vendor/
