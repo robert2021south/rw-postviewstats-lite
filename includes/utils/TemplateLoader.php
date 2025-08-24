@@ -42,7 +42,7 @@ class TemplateLoader
             extract($args, EXTR_SKIP);
             include $template_file;
         } else {
-            error_log("Template '{$template_name}' not found.");
+            Helper::rw_error_log("Template '{$template_name}' not found.");
         }
     }
 

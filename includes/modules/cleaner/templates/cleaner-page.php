@@ -6,7 +6,7 @@
  * @var string $admin_post_url
  * @var array $post_types
  * @var bool $show_success_notice
- * @var bool $is_feature_enabled
+ * @var bool $default_limit
  * @var bool $upgrade_url
  */
 ?>
@@ -41,14 +41,14 @@
                             }
                             ?>
                             <option value="<?php echo esc_attr($type->name); ?>"
-                                <?php echo $is_pro_only ? 'disabled style="color: #999;" title="'.__('Pro Only - Upgrade to use this post type','rw-postviewstats-lite').'"' : ''; ?>>
-                                <?php echo $label; ?>
+                                <?php echo $is_pro_only ? 'disabled style="color: #999;" title="'.esc_attr__('Pro Only - Upgrade to use this post type','rw-postviewstats-lite').'"' : ''; ?>>
+                                <?php echo esc_html($label); ?>
                             </option>
                         <?php endforeach; ?>
                     </select>
 
                     <p class="description" style="margin-top: 10px;">
-                        <a href="<?php echo $upgrade_url;?>" target="_blank" style="color: #0073aa; font-weight: bold;">
+                        <a href="<?php echo esc_attr($upgrade_url);?>" target="_blank" style="color: #0073aa; font-weight: bold;">
                             <?php esc_html_e('Upgrade to Pro to unlock all post types', 'rw-postviewstats-lite'); ?>
                         </a>
                     </p>
@@ -66,9 +66,6 @@
                     </label>
                 </th>
                 <td>
-                    <?php
-                    $default_limit = date('Ymd', strtotime('-30 days'));
-                    ?>
                     <input type="text" name="date_limit" id="date_limit" value="<?php echo esc_attr($default_limit); ?>" readonly />
                     <p class="description" style="color:#c00;">
                         <?php esc_html_e('Lite version always cleans data older than 30 days.', 'rw-postviewstats-lite'); ?>

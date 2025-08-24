@@ -1,4 +1,5 @@
 <?php
+
 if (!defined('ABSPATH')) exit;
 
 spl_autoload_register(function ($class) {
@@ -20,7 +21,9 @@ spl_autoload_register(function ($class) {
     if (file_exists($file)) {
         require $file;
     } else {
-        error_log("Autoload error: File not found for class $class => $file");
+        if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
+            error_log("Autoload error: File not found for class $class => $file");
+        }
     }
 });
 

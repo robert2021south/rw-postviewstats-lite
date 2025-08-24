@@ -1,3 +1,5 @@
 /languages/
 directory_structure.txt
-
+/tests/
+phpunit.xml.dist
+run-tests.sh

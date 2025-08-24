@@ -14,8 +14,8 @@ class PostViewsExporter {
     public static function add_export_submenu() {
         add_submenu_page(
             'rwpsl-settings', // 顶级菜单的 slug
-            __('Data Export', 'rw-postviewstats-pro'),
-            __('Data Export', 'rw-postviewstats-pro'),
+            __('Data Export', 'rw-postviewstats-lite'),
+            __('Data Export', 'rw-postviewstats-lite'),
             'manage_options',
             'rwpsl-export',
             [self::class, 'render_export_page']
@@ -42,11 +42,8 @@ class PostViewsExporter {
             exit;
         }
 
-        if (
-            // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
-            ! isset( $_POST['rwpsl_export_nonce'] ) ||
-            // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
-            ! wp_verify_nonce( wp_unslash($_POST['rwpsl_export_nonce']), 'rwpsl_export_csv' )
+        $nonce = sanitize_text_field( wp_unslash( $_POST['rwpsl_export_nonce'] ?? '' ) );
+        if (empty( $_POST['rwpsl_export_nonce'] ) ||!wp_verify_nonce( $nonce, 'rwpsl_export_csv' )
         ) {
             wp_redirect(admin_url('admin.php?page=rwpsl-export&notice=sec_chk_fail'));
             exit;

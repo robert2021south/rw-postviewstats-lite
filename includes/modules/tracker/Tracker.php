@@ -15,13 +15,13 @@ class Tracker {
     public function track_views_ajax() {
 
         $post_id = absint($_POST['post_id'] ?? 0);
-        $nonce = $_POST['nonce'] ?? '';
-        $nonce_action = $_POST['nonce_action'] ?? '';
+        $nonce = sanitize_text_field( wp_unslash( $_POST['nonce'] ?? '' ) );
+        $nonce_action = sanitize_text_field( wp_unslash( $_POST['nonce_action'] ?? '' ) );
 
         if (!$post_id) wp_send_json_error();
 
         //  // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
-        if (!isset($nonce) || !wp_verify_nonce(wp_unslash($nonce), $nonce_action)) {
+        if (empty($nonce) || !wp_verify_nonce($nonce, $nonce_action)) {
             wp_send_json_error('Nonce verification failed');
             return;
         }

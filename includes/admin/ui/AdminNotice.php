@@ -17,9 +17,9 @@ class AdminNotice {
     public static function maybe_show_general_notice() {
         if (self::$general_notice_registered) return;
 
-        $key = sanitize_text_field($_GET['notice'] ?? '');
-        $context = sanitize_key($_GET['context'] ?? 'common');
-        $network = sanitize_text_field($_GET['network'] ?? '');
+        $key = sanitize_text_field( wp_unslash( $_GET['notice'] ?? '' ) );
+        $context = sanitize_key( wp_unslash( $_GET['context'] ?? 'common' ) );
+        $network = sanitize_text_field( wp_unslash( $_GET['network'] ?? '' ) );
 
         if (empty($key)) return;
 
@@ -32,7 +32,7 @@ class AdminNotice {
         $notice_data = $notices[$notice_key] ?? $notices[$default_key] ?? null;
         if (!$notice_data) return;
 
-        $custom_message = isset($_GET['msg']) ? sanitize_text_field($_GET['msg']) : null;
+        $custom_message = isset($_GET['msg']) ? sanitize_text_field(wp_unslash($_GET['msg'])) : null;
 
         $message = $custom_message ?: $notice_data['message'];
         $type = $notice_data['type'] ?? 'warning';

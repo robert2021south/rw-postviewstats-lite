@@ -12,7 +12,7 @@ class SettingsHandler {
     public function handle_settings_form() {
 
         // 1. 忽略非表单提交的请求
-        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+        if (empty( $_SERVER['REQUEST_METHOD'] ) || $_SERVER['REQUEST_METHOD'] !== 'POST') {
             return;
         }
 
@@ -23,7 +23,8 @@ class SettingsHandler {
         }
 
         // 3. Nonce 验证
-        if ( empty($_POST['_wpnonce']) || !wp_verify_nonce( $_POST['_wpnonce'], 'rwpsl_save_settings_action' ) ) {
+        $nonce = sanitize_text_field( wp_unslash( $_POST['_wpnonce'] ?? '' ) );
+        if ( empty($nonce) || !wp_verify_nonce( $nonce, 'rwpsl_save_settings_action' ) ) {
             wp_redirect(network_admin_url('admin.php?page=rwpsl-settings&notice=inv_nonce'));
             exit;
         }

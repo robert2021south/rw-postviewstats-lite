@@ -52,7 +52,7 @@ class SettingsRegistrar {
         // === 第二组设置：数据设置 ===
         add_settings_section(
             'rwpsp_data_section',
-            __('Data Settings', 'rw-postviewstats-pro'),
+            __('Data Settings', 'rw-postviewstats-lite'),
             null,
             $page_slug
         );
@@ -61,8 +61,8 @@ class SettingsRegistrar {
             [
                 'id' => 'rwpsp_delete_data_field',
                 'option' => 'delete_data_on_uninstall',
-                'label' => __('Delete data on uninstall', 'rw-postviewstats-pro'),
-                'desc'  => __('When checked, all statistical data will be permanently deleted when the plugin is uninstalled.', 'rw-postviewstats-pro')
+                'label' => __('Delete data on uninstall', 'rw-postviewstats-lite'),
+                'desc'  => __('When checked, all statistical data will be permanently deleted when the plugin is uninstalled.', 'rw-postviewstats-lite')
             ]
         ];
 

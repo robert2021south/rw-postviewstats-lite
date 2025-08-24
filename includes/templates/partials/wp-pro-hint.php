@@ -10,7 +10,9 @@
 <div class="rwpsl-shortcode-wrapper">
     <?php if (!empty($violated_param)) : ?>
         <div class="rwpsl-param-warning">
-            <?php printf(__('Parameter "%s" requires PRO license', 'text-domain'), esc_html($violated_param)); ?>
+            <?php /* translators: %s: parameter name that requires PRO license */
+            printf(esc_html__('Parameter "%s" requires PRO license', 'rw-postviewstats-lite'), esc_html($violated_param));
+            ?>
         </div>
     <?php endif; ?>
 
@@ -18,12 +20,12 @@
         <?php echo esc_html($basic_views); ?>
         <a href="<?php echo esc_url($upgrade_url); ?>"
            class="rwpsl-admin-hint__badge"
-           aria-label="<?php esc_attr_e('Upgrade to PRO', 'text-domain'); ?>">
-           <?php esc_html_e('PRO', 'text-domain'); ?>
+           aria-label="<?php esc_attr_e('Upgrade to PRO', 'rw-postviewstats-lite'); ?>">
+           <?php esc_html_e('PRO', 'rw-postviewstats-lite'); ?>
         </a>
         <!-- 新增悬浮提示元素 -->
         <span class="rwpsl-pro-hint">
-            <?php esc_html_e('Upgrade to unlock advanced features', 'text-domain'); ?>
+            <?php esc_html_e('Upgrade to unlock advanced features', 'rw-postviewstats-lite'); ?>
         </span>
     </span>
 </div>

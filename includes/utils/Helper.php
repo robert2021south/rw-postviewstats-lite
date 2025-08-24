@@ -54,7 +54,8 @@ class Helper
     public static function get_valid_ip()
     {
         if (isset($_SERVER['REMOTE_ADDR'])) {
-            $ip = trim($_SERVER['REMOTE_ADDR']);
+            $ip = trim(sanitize_text_field(wp_unslash( $_SERVER['REMOTE_ADDR'] ?? '')));
+
             if (filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4 | FILTER_FLAG_IPV6)) {
                 return $ip;
             }
@@ -68,7 +69,7 @@ class Helper
 
         foreach ($trusted_proxy_headers as $key) {
             if (isset($_SERVER[$key])) {
-                $ip = trim($_SERVER[$key]);
+                $ip = trim(sanitize_text_field( wp_unslash( $_SERVER[$key] ?? '')));
                 foreach (explode(',', $ip) as $ip_part) {
                     $ip_part = trim($ip_part);
                     if (filter_var($ip_part, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4 | FILTER_FLAG_IPV6)) {
@@ -91,6 +92,45 @@ class Helper
 
         //return esc_url('https://codecanyon.net/item/rw-postviewstats-pro/88888');
 
+    }
+
+    /**
+     * 安全写入插件日志
+     *
+     * @param mixed  $data      要记录的内容，可以是字符串、数组或对象
+     * @param string $context   可选，日志上下文前缀，默认为插件名
+     *
+     */
+    /*
+     * 使用示例：
+     * 简单字符串
+        myplugin_log( 'This is a debug message' );
+       数组/对象
+        myplugin_log( [
+            'post_id' => 123,
+            'status'  => 'failed'
+        ] );
+       自定义上下文
+        myplugin_log( 'Something happened', 'MyPluginImport' );
+     * */
+    public static function rw_error_log( $data, $context = 'rwpsl' ) {
+        // 只在调试模式下记录日志
+        if ( ! defined( 'WP_DEBUG' ) || ! WP_DEBUG ) {
+            return;
+        }
+
+        // 如果是数组或对象，转换成可读字符串
+        if ( is_array( $data ) || is_object( $data ) ) {
+            $data = print_r( $data, true );
+        } else {
+            $data = (string) $data;
+        }
+
+        // 添加时间戳和上下文前缀
+        $message = sprintf( '[%s] [%s] %s', $context, gmdate( 'Y-m-d H:i:s' ), $data );
+
+        // 写入 PHP 错误日志
+        error_log( $message );
     }
 
 }

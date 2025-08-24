@@ -44,7 +44,7 @@ class RestApi {
         $days = isset($request['days']) ? (int) $request['days'] : 7;
 
         if (!$post || 'publish' !== $post->post_status) {
-            return new WP_Error('invalid_post', __('Invalid Post ID','rw-postviewstats-pro'), ['status' => 404]);
+            return new WP_Error('invalid_post', __('Invalid Post ID','rw-postviewstats-lite'), ['status' => 404]);
         }
 
         $basic_data = [

@@ -31,8 +31,8 @@
                             }
                             ?>
                             <option value="<?php echo esc_attr($type->name); ?>"
-                                <?php echo $is_pro_only ? 'disabled style="color: #999;" title="'.__('Pro Only - Upgrade to use this post type','rw-postviewstats-lite').'"' : ''; ?>>
-                                <?php echo $label; ?>
+                                <?php echo $is_pro_only ? 'disabled style="color: #999;" title="'.esc_attr__('Pro Only - Upgrade to use this post type','rw-postviewstats-lite').'"' : ''; ?>>
+                                <?php echo esc_html($label); ?>
                             </option>
                         <?php endforeach; ?>
                     </select>

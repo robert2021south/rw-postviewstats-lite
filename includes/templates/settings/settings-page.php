@@ -6,10 +6,10 @@
 
     <div class="notice notice-warning is-dismissible" style="border-left: 4px solid #ff9800;">
         <p style="font-size:14px;">
-            🚀 <strong><?php esc_html_e( 'Upgrade to WP PostViewStat Pro', 'wp-postviewstat-lite' ); ?></strong>
-            <?php esc_html_e( 'to unlock multisite stats, date range filtering, full export functionality, and other advanced features!', 'wp-postviewstat-lite' ); ?>
+            🚀 <strong><?php esc_html_e( 'Upgrade to WP PostViewStat Pro', 'rw-postviewstats-lite' ); ?></strong>
+            <?php esc_html_e( 'to unlock multisite stats, date range filtering, full export functionality, and other advanced features!', 'rw-postviewstats-lite' ); ?>
             <a href="<?php echo esc_url($upgrade_url); ?>" class="button button-primary" target="_blank" style="margin-left:10px;">
-                <?php esc_html_e( 'Upgrade Now', 'wp-postviewstat-lite' ); ?>
+                <?php esc_html_e( 'Upgrade Now', 'rw-postviewstats-lite' ); ?>
             </a>
         </p>
     </div>
@@ -24,17 +24,34 @@
     </form>
 
     <div class="plugin-support-footer" style="margin-top: 2em; padding: 1em; background: #f8f9fa; border-left: 4px solid #2271b1;">
-        <h3>❓ <?php _e('Need help? Need help? Follow these steps:', 'rw-postviewstats-lite'); ?></h3>
+        <h3>❓ <?php esc_html_e('Need help? Need help? Follow these steps:', 'rw-postviewstats-lite'); ?></h3>
         <ol>
-            <li><strong>📖 <?php _e('Check the', 'rw-postviewstats-lite'); ?> <a href="https://docs.robertwp.com/rw-postviewstats-pro/en/#/guide" target="_blank"><?php _e('[5-Minute Quick Guide]', 'rw-postviewstats-lite'); ?></a></strong>（<?php _e('covers 90% FAQs', 'rw-postviewstats-lite'); ?>）</li>
-            <li><strong>🔍 <?php printf(
+
+            <li>
+                <strong>📖 <?php esc_html_e('Check the', 'rw-postviewstats-lite'); ?>
+                    <a href="https://docs.robertwp.com/rw-postviewstats-pro/en/#/guide" target="_blank">
+                        <?php esc_html_e('[5-Minute Quick Guide]', 'rw-postviewstats-lite'); ?></a></strong>
+                （<?php esc_html_e('covers 90% FAQs', 'rw-postviewstats-lite'); ?>）
+            </li>
+
+            <li>
+                <strong>🔍 <?php
+                    /* translators: %s: parameter name that requires search keyword */
+                    printf(
                         esc_html__('Search %s with keywords', 'rw-postviewstats-lite'),
                         '<a href="https://docs.robertwp.com/rw-postviewstats-pro/en/#/faq" target="_blank">' . esc_html__('[Top Questions]',
                             'rw-postviewstats-lite') . '</a>'
-                    ); ?></strong></li>
-            <li><strong>✉️ <?php _e('Still stuck?', 'rw-postviewstats-lite'); ?> <a href="mailto:support@robertwp.com?subject=<?php _e('Plugin Issue: {Brief Description}&body=● Details:%0A● Screenshots/Logs:', 'rw-postviewstats-lite'); ?>"><?php _e('Email us', 'rw-postviewstats-lite'); ?></a></strong> (<?php _e('include: problem details + screenshots + error logs', 'rw-postviewstats-lite'); ?>)</li>
+                    ); ?></strong>
+            </li>
+
+            <li>
+                <strong>✉️ <?php esc_html_e('Still stuck?', 'rw-postviewstats-lite'); ?>
+                    <a href="mailto:support@robertwp.com?subject=<?php esc_attr_e('Plugin Issue: {Brief Description}&body=● Details:%0A● Screenshots/Logs:', 'rw-postviewstats-lite'); ?>">
+                        <?php esc_html_e('Email us', 'rw-postviewstats-lite'); ?></a></strong>
+                (<?php esc_html_e('include: problem details + screenshots + error logs', 'rw-postviewstats-lite'); ?>)
+            </li>
         </ol>
-        <p><small>⚠️ <em><?php _e('Replies may be delayed if key info is missing.', 'rw-postviewstats-lite'); ?></em></small></p>
+        <p><small>⚠️ <em><?php esc_html_e('Replies may be delayed if key info is missing.', 'rw-postviewstats-lite'); ?></em></small></p>
     </div>
 
     <div class="lite-pro-compare" id="liteProCompare">

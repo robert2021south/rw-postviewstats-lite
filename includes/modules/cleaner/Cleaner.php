@@ -29,13 +29,15 @@ class Cleaner {
     public static function render_cleaner_page() {
 
         // 准备模板需要的变量
+        $nonce = sanitize_text_field( wp_unslash( $_POST['nonce'] ?? '' ) );
         $template_args = [
             'show_success_notice' => isset($_GET['cleaned'], $_GET['nonce']) &&
                 $_GET['cleaned'] == '1' &&
-                wp_verify_nonce(wp_unslash($_GET['nonce']), 'rwpsl_cleaned_notice'),
+                wp_verify_nonce($nonce, 'rwpsl_cleaned_notice'),
             'admin_post_url' => admin_url('admin-post.php'),
             'nonce_action' => 'rwpsl_cleaner_action',
             'post_types' => get_post_types(['public' => true], 'objects'),
+            'default_limit' => gmdate('Ymd', strtotime('-30 days')),
             'upgrade_url'=> Helper::get_upgrade_url('cleaner')
         ];
 
@@ -67,7 +69,7 @@ class Cleaner {
         }
 
         // 强制限制为30天前
-        $date_limit = date('Ymd', strtotime('-30 days'));
+        $date_limit = gmdate('Ymd', strtotime('-30 days'));
 
         global $wpdb;
 
