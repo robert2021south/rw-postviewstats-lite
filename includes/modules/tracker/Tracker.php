@@ -58,6 +58,8 @@ class Tracker {
 
     /**
      * Retrieve post views by ID
+     * @param $post_id
+     * @return int
      */
     public static function get_views($post_id) {
         return (int) get_post_meta($post_id, self::RWPSL_META_KEY_TOTAL, true);
