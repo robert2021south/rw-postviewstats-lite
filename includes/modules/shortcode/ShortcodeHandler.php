@@ -26,6 +26,11 @@ class ShortcodeHandler{
         return $this->generate_output($post_id, $lite_atts);
     }
 
+    protected function get_total_views($post_id): int
+    {
+        return (int)get_post_meta($post_id, Tracker::RWPSL_META_KEY_TOTAL, true);
+    }
+
     // === 私有方法 ===
 
     /**
@@ -46,11 +51,6 @@ class ShortcodeHandler{
     }
 
     // === 工具方法 ===
-    private function get_total_views($post_id): int
-    {
-        return (int)get_post_meta($post_id, Tracker::RWPSL_META_KEY_TOTAL, true);
-    }
-
     private function sanitize_post_id($post_id): int
     {
         return absint($post_id);
