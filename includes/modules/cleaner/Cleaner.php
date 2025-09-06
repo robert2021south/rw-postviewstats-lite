@@ -4,13 +4,10 @@
  * */
 namespace RobertWP\PostViewStatsLite\Modules\Cleaner;
 
-if (!defined('ABSPATH')) exit;
-
 use RobertWP\PostViewStatsLite\Modules\Tracker\Tracker;
 use RobertWP\PostViewStatsLite\Traits\Singleton;
 use RobertWP\PostViewStatsLite\Utils\Helper;
 use RobertWP\PostViewStatsLite\Utils\TemplateLoader;
-
 
 class Cleaner {
     use Singleton;

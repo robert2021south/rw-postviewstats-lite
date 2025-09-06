@@ -1,8 +1,6 @@
 <?php
 namespace RobertWP\PostViewStatsLite\Modules\Export;
 
-if (!defined('ABSPATH')) exit;
-
 use RobertWP\PostViewStatsLite\Modules\Tracker\Tracker;
 use RobertWP\PostViewStatsLite\Traits\Singleton;
 use RobertWP\PostViewStatsLite\Utils\Helper;

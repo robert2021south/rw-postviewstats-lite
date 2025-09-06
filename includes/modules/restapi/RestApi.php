@@ -4,13 +4,16 @@
  * */
 namespace RobertWP\PostViewStatsLite\Modules\RestApi;
 
-if (!defined('ABSPATH')) exit;
-
 use RobertWP\PostViewStatsLite\Admin\Settings\SettingsRegistrar;
 use RobertWP\PostViewStatsLite\Modules\Tracker\Tracker;
 use RobertWP\PostViewStatsLite\Traits\Singleton;
 use WP_Error;
 
+if (!function_exists('rwpsl_get_views')) {
+    function rwpsl_get_views($post_id) {
+        return Tracker::get_views($post_id);
+    }
+}
 
 class RestApi {
     use Singleton;

@@ -6,8 +6,6 @@ namespace RobertWP\PostViewStatsLite\Modules\PostColumn;
 
 use RobertWP\PostViewStatsLite\Modules\Tracker\Tracker;
 
-if (!defined('ABSPATH')) exit;
-
 
 class PostViewsColumn {
 

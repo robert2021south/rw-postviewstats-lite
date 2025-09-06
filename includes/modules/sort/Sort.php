@@ -4,8 +4,6 @@
  * */
 namespace RobertWP\PostViewStatsLite\Modules\Sort;
 
-if (!defined('ABSPATH')) exit;
-
 use RobertWP\PostViewStatsLite\Admin\Settings\SettingsRegistrar;
 use RobertWP\PostViewStatsLite\Modules\Tracker\Tracker;
 use RobertWP\PostViewStatsLite\Traits\Singleton;

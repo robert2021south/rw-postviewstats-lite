@@ -1,8 +1,6 @@
 <?php
 namespace RobertWP\PostViewStatsLite\Core;
 
-if (!defined('ABSPATH')) exit;
-
 class CallbackWrapper {
     private static array $callbackCache = [];
 

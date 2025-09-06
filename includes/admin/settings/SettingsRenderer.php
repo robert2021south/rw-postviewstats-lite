@@ -3,8 +3,6 @@ namespace RobertWP\PostViewStatsLite\Admin\Settings;
 
 use RobertWP\PostViewStatsLite\Utils\TemplateLoader;
 
-if (!defined('ABSPATH')) exit;
-
 class SettingsRenderer {
 
     public static function render_checkbox_setting_field(array $field, string $page_slug, string $section_id)

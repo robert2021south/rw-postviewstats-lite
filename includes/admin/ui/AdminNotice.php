@@ -1,8 +1,6 @@
 <?php
 namespace RobertWP\PostViewStatsLite\Admin\UI;
 
-if (!defined('ABSPATH')) exit;
-
 use RobertWP\PostViewStatsLite\Core\CallbackWrapper;
 use RobertWP\PostViewStatsLite\Utils\TemplateLoader;
 

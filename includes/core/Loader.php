@@ -4,8 +4,6 @@
  * */
 namespace RobertWP\PostViewStatsLite\Core;
 
-if (!defined('ABSPATH')) exit;
-
 use RobertWP\PostViewStatsLite\Modules\Cleaner\Cleaner;
 use RobertWP\PostViewStatsLite\Modules\Export\PostViewsExporter;
 use RobertWP\PostViewStatsLite\Modules\PostColumn\PostViewsColumn;

@@ -4,8 +4,6 @@ namespace RobertWP\PostViewStatsLite\Admin\Menu;
 use RobertWP\PostViewStatsLite\Admin\UI\SettingsRenderer;
 use RobertWP\PostViewStatsLite\Traits\Singleton;
 
-if (!defined('ABSPATH')) exit;
-
 class AdminMenuManager {
     use Singleton;
 

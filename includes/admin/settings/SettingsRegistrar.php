@@ -3,8 +3,6 @@ namespace RobertWP\PostViewStatsLite\Admin\Settings;
 
 use RobertWP\PostViewStatsLite\Traits\Singleton;
 
-if (!defined('ABSPATH')) exit;
-
 class SettingsRegistrar {
     use Singleton;
 

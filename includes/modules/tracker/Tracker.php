@@ -3,8 +3,6 @@
  * */
 namespace RobertWP\PostViewStatsLite\Modules\Tracker;
 
-if (!defined('ABSPATH')) exit;
-
 use RobertWP\PostViewStatsLite\Admin\Settings\SettingsRegistrar;
 
 class Tracker {

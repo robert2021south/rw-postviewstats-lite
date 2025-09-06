@@ -1,8 +1,6 @@
 <?php
 namespace RobertWP\PostViewStatsLite\Admin\Settings;
 
-if (!defined('ABSPATH')) exit;
-
 class SettingsHandler {
 
     public function after_settings_saved( $old_value, $new_value ) {
