@@ -23,7 +23,7 @@ class Context
 
         // 3. 检查插件专属 AJAX/REST 操作
         $action = wp_unslash( $_REQUEST['action'] ?? '' );
-        if (strpos($_REQUEST['action'], 'rwpsl_') === 0) {
+        if (strpos($action, 'rwpsl_') === 0) {
             return true;
         }
 
