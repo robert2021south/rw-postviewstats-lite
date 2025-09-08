@@ -1,7 +1,11 @@
 <?php
 namespace RobertWP\PostViewStatsLite\Utils;
 
-if (!defined('ABSPATH')) exit;
+if (!function_exists('rwpsl_wp_die')) {
+    function rwpsl_wp_die($message = '') {
+        Helper::wp_die($message);
+    }
+}
 
 class Helper
 {
@@ -131,6 +135,11 @@ class Helper
 
         // 写入 PHP 错误日志
         error_log( $message );
+    }
+
+    public static function wp_die($message = '') {
+        //error_log("rwpsl_wp_die CALLED with: " . $message);
+        \wp_die($message);
     }
 
 }

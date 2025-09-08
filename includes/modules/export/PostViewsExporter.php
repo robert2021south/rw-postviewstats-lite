@@ -7,6 +7,7 @@ use RobertWP\PostViewStatsLite\Modules\Tracker\Tracker;
 use RobertWP\PostViewStatsLite\Traits\Singleton;
 use RobertWP\PostViewStatsLite\Utils\Helper;
 use RobertWP\PostViewStatsLite\Utils\TemplateLoader;
+use function RobertWP\PostViewStatsLite\Utils\rwpsl_wp_die;
 
 class PostViewsExporter {
     use Singleton;
@@ -39,14 +40,14 @@ class PostViewsExporter {
 
         if (!current_user_can( 'manage_options')) {
             wp_redirect(admin_url('admin.php?page=rwpsl-export&notice=ins_perm'));
-            exit;
+            rwpsl_wp_die();
         }
 
         $nonce = sanitize_text_field( wp_unslash( $_POST['rwpsl_export_nonce'] ?? '' ) );
         if (empty( $_POST['rwpsl_export_nonce'] ) ||!wp_verify_nonce( $nonce, 'rwpsl_export_csv' )
         ) {
             wp_redirect(admin_url('admin.php?page=rwpsl-export&notice=sec_chk_fail'));
-            exit;
+            rwpsl_wp_die();
         }
 
         $post_type = isset( $_POST['post_type'] ) ? sanitize_text_field( wp_unslash($_POST['post_type']) ) : 'post';
@@ -59,12 +60,12 @@ class PostViewsExporter {
 
         if (! in_array($post_type, ['post', 'page'], true)) {
             wp_redirect(admin_url('admin.php?page=rwpsl-export&notice=pro_only'));
-            exit;
+            rwpsl_wp_die();
         }
 
         if ( empty( $posts ) ) {
             wp_redirect(admin_url('admin.php?page=rwpsl-export&notice=no_posts'));
-            exit;
+            rwpsl_wp_die();
         }
 
         $filename = "page-views-export-{$post_type}-" . gmdate( 'Y-m-d_H-i-s' ) . ".csv";
@@ -88,7 +89,7 @@ class PostViewsExporter {
 
         // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_read_fclose
         fclose( $output );
-        exit;
+        rwpsl_wp_die();
     }
 
 }
