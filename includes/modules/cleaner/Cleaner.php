@@ -8,6 +8,7 @@ use RobertWP\PostViewStatsLite\Modules\Tracker\Tracker;
 use RobertWP\PostViewStatsLite\Traits\Singleton;
 use RobertWP\PostViewStatsLite\Utils\Helper;
 use RobertWP\PostViewStatsLite\Utils\TemplateLoader;
+use function RobertWP\PostViewStatsLite\Utils\rwpsl_wp_die;
 
 class Cleaner {
     use Singleton;
@@ -45,7 +46,7 @@ class Cleaner {
     public static function handle_cleaner_request() {
         if (!current_user_can('manage_options')) {
             wp_redirect(admin_url('admin.php?page=rwpsl-cleaner&notice=ins_perm'));
-            exit;
+            rwpsl_wp_die();
         }
 
         // Nonce 验证
@@ -53,7 +54,7 @@ class Cleaner {
             !wp_verify_nonce(wp_unslash($_POST['rwpsl_cleaner_nonce']), 'rwpsl_cleaner_action')// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
         ) {
             wp_redirect(admin_url('admin.php?page=rwpsl-cleaner&notice=inv_req'));
-            exit;
+            rwpsl_wp_die();
         }
 
         $post_type  = isset($_POST['post_type']) ? sanitize_text_field(wp_unslash($_POST['post_type'])) : 'post';
@@ -75,7 +76,7 @@ class Cleaner {
 
         if (!$meta_keys) {
             wp_redirect(admin_url('admin.php?page=rwpsl-cleaner&cleaned=1&nonce='.wp_create_nonce( 'rwpsl_cleaned_notice' )));
-            exit;
+            rwpsl_wp_die();
         }
 
         // 获取目标文章ID
@@ -119,6 +120,6 @@ class Cleaner {
         }
 
         wp_redirect(admin_url('admin.php?page=rwpsl-cleaner&cleaned=1&nonce='.wp_create_nonce( 'rwpsl_cleaned_notice' )));
-        exit;
+        rwpsl_wp_die();
     }
 }
