@@ -3,18 +3,17 @@ namespace RobertWP\PostViewStatsLite\Admin\Settings;
 
 use RobertWP\PostViewStatsLite\Traits\Singleton;
 
-if (!defined('ABSPATH')) exit;
-
 class SettingsRegistrar {
     use Singleton;
 
     const OPTION_SITE_SETTINGS = 'rwpsl_site_settings';
 
-    public function register_settings() {
+    public function register_settings(): void
+    {
         self::register_settings_fields('rwpsl-settings');
     }
 
-    public static function register_settings_fields($page_slug)
+    public static function register_settings_fields($page_slug): void
     {
         // === 第一组设置：功能设置 ===
         add_settings_section(
@@ -70,10 +69,11 @@ class SettingsRegistrar {
             SettingsRenderer::render_checkbox_setting_field($field, $page_slug, 'rwpsp_data_section');
         }
     }
+
     // 获取有效配置
     public static function get_effective_setting($key) {
         $site_settings = get_option(self::OPTION_SITE_SETTINGS, []);
-        return isset($site_settings[$key]) ? $site_settings[$key] : '0';
+        return $site_settings[$key] ?? '0';
     }
 
 }

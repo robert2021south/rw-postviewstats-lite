@@ -1,11 +1,10 @@
 <?php
 namespace RobertWP\PostViewStatsLite\I18n;
 
-if (!defined('ABSPATH')) exit;
-
 class Localization {
 
-    public static function load_textdomain() {
+    public static function load_textdomain(): void
+    {
         load_plugin_textdomain(
             'rw-postviewstats-lite',
             false,

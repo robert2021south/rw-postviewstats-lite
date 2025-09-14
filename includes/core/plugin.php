@@ -1,8 +1,6 @@
 <?php
 namespace RobertWP\PostViewStatsLite\Core;
 
-if ( ! defined( 'ABSPATH' ) ) exit;
-
 require_once __DIR__ . '\..\autoload.php';
 
 add_action('plugins_loaded', [Bootstrap::class, 'run']);

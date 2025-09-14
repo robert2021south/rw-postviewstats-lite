@@ -1,7 +1,7 @@
 <?php
 namespace RobertWP\PostViewStatsLite\Modules\Shortcode;
 
-use RobertWP\PostViewStatsLite\Modules\Tracker\Tracker;
+use RobertWP\PostViewStatsLite\Modules\tracker\Tracker;
 
 if (!defined('ABSPATH')) exit;
 
@@ -13,7 +13,7 @@ class ShortcodeHandler{
      * @param array $atts 短码属性
      * @return string HTML输出
      */
-    public function display_post_views($atts = [])
+    public function display_post_views($atts = []): string
     {
         global $post;
 

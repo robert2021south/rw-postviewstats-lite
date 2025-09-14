@@ -4,17 +4,16 @@
  * */
 namespace RobertWP\PostViewStatsLite\Modules\Sort;
 
-if (!defined('ABSPATH')) exit;
-
 use RobertWP\PostViewStatsLite\Admin\Settings\SettingsRegistrar;
-use RobertWP\PostViewStatsLite\Modules\Tracker\Tracker;
+use RobertWP\PostViewStatsLite\Modules\tracker\Tracker;
 use RobertWP\PostViewStatsLite\Traits\Singleton;
 
 
 class Sort {
     use Singleton;
 
-    public static function maybe_register_hooks() {
+    public static function maybe_register_hooks(): void
+    {
 
         if (SettingsRegistrar::get_effective_setting('sort_enabled') !== 1) {
             return;
@@ -28,7 +27,8 @@ class Sort {
         add_filter('pre_get_posts', [self::class, 'add_view_count_sorting'], 20);
     }
 
-    public static function add_view_count_sorting($query) {
+    public static function add_view_count_sorting($query): void
+    {
         if (!is_admin() && $query->is_main_query() && $query->get('orderby') === 'views') {
             $query->set('meta_key', Tracker::RWPSL_META_KEY_TOTAL);
             $query->set('orderby', 'meta_value_num');

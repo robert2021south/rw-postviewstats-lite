@@ -1,15 +1,15 @@
 <?php
 namespace RobertWP\PostViewStatsLite\Admin\Settings;
 
-if (!defined('ABSPATH')) exit;
-
 class SettingsHandler {
 
-    public function after_settings_saved( $old_value, $new_value ) {
+    public function after_settings_saved( $old_value, $new_value ): void
+    {
         do_action( 'rwpsl_settings_saved', $new_value, $old_value );
     }
 
-    public function handle_settings_form() {
+    public function handle_settings_form(): void
+    {
 
         // 1. 忽略非表单提交的请求
         if (empty( $_SERVER['REQUEST_METHOD'] ) || $_SERVER['REQUEST_METHOD'] !== 'POST') {
@@ -45,7 +45,8 @@ class SettingsHandler {
 
     }
 
-    public static function sanitize_callback($input) {
+    public static function sanitize_callback($input): string
+    {
         // 执行字段数据清理
         return sanitize_text_field($input);
     }

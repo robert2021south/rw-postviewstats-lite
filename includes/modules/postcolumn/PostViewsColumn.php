@@ -4,10 +4,7 @@
  * */
 namespace RobertWP\PostViewStatsLite\Modules\PostColumn;
 
-use RobertWP\PostViewStatsLite\Modules\Tracker\Tracker;
-
-if (!defined('ABSPATH')) exit;
-
+use RobertWP\PostViewStatsLite\Modules\tracker\Tracker;
 
 class PostViewsColumn {
 
@@ -22,7 +19,8 @@ class PostViewsColumn {
     }
 
     // Display page view data
-    public function maybe_display_views_column($column, $post_id) {
+    public function maybe_display_views_column($column, $post_id): void
+    {
         if ($this->is_pro_plugin_active()) {
             return; // Pro 插件已启用，跳过添加列
         }
@@ -33,7 +31,8 @@ class PostViewsColumn {
     }
 
     // 检测 Pro 插件是否启用
-    protected function is_pro_plugin_active() {
+    protected function is_pro_plugin_active(): bool
+    {
         if (!function_exists('is_plugin_active')) {
             include_once ABSPATH . 'wp-admin/includes/plugin.php';
         }

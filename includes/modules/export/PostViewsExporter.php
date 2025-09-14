@@ -1,9 +1,7 @@
 <?php
 namespace RobertWP\PostViewStatsLite\Modules\Export;
 
-if (!defined('ABSPATH')) exit;
-
-use RobertWP\PostViewStatsLite\Modules\Tracker\Tracker;
+use RobertWP\PostViewStatsLite\Modules\tracker\Tracker;
 use RobertWP\PostViewStatsLite\Traits\Singleton;
 use RobertWP\PostViewStatsLite\Utils\Helper;
 use RobertWP\PostViewStatsLite\Utils\TemplateLoader;
@@ -12,7 +10,8 @@ use function RobertWP\PostViewStatsLite\Utils\rwpsl_wp_die;
 class PostViewsExporter {
     use Singleton;
 
-    public static function add_export_submenu() {
+    public static function add_export_submenu(): void
+    {
         add_submenu_page(
             'rwpsl-settings', // 顶级菜单的 slug
             __('Data Export', 'rw-postviewstats-lite'),
@@ -23,7 +22,8 @@ class PostViewsExporter {
         );
     }
 
-    public static function render_export_page() {
+    public static function render_export_page(): void
+    {
         // 准备模板需要的变量
         $template_args = [
             'admin_post_url' => admin_url('admin-post.php'),
@@ -36,7 +36,8 @@ class PostViewsExporter {
         TemplateLoader::load('export-page', $template_args, 'export');
     }
 
-    public static function handle_export_csv() {
+    public static function handle_export_csv(): void
+    {
 
         if (!current_user_can( 'manage_options')) {
             wp_redirect(admin_url('admin.php?page=rwpsl-export&notice=ins_perm'));

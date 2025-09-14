@@ -1,8 +1,6 @@
 <?php
 namespace RobertWP\PostViewStatsLite\Utils;
 
-if (!defined('ABSPATH')) exit;
-
 class TemplateLoader
 {
     protected static string $plugin_base_path = '';

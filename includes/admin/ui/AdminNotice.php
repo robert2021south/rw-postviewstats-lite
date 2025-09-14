@@ -1,8 +1,6 @@
 <?php
 namespace RobertWP\PostViewStatsLite\Admin\UI;
 
-if (!defined('ABSPATH')) exit;
-
 use RobertWP\PostViewStatsLite\Core\CallbackWrapper;
 use RobertWP\PostViewStatsLite\Utils\TemplateLoader;
 
@@ -10,11 +8,13 @@ class AdminNotice {
     private static bool $conflict_notice_shown = false;
     private static bool $general_notice_registered = false;
 
-    public static function maybe_add_notice() {
+    public static function maybe_add_notice(): void
+    {
         self::maybe_show_general_notice();
     }
 
-    public static function maybe_show_general_notice() {
+    public static function maybe_show_general_notice(): void
+    {
         if (self::$general_notice_registered) return;
 
         $key = sanitize_text_field( wp_unslash( $_GET['notice'] ?? '' ) );

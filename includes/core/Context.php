@@ -1,8 +1,6 @@
 <?php
 namespace RobertWP\PostViewStatsLite\Core;
 
-if (!defined('ABSPATH')) exit;
-
 class Context
 {
     public static function is_plugin_context(): bool
