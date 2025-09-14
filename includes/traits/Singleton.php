@@ -1,8 +1,6 @@
 <?php
 namespace RobertWP\PostViewStatsLite\Traits;
 
-if (!defined('ABSPATH')) exit;
-
 use Exception;
 
 trait Singleton {

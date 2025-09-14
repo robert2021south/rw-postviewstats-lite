@@ -15,12 +15,13 @@ use RobertWP\PostViewStatsLite\Modules\PostColumn\PostViewsColumn;
 use RobertWP\PostViewStatsLite\Modules\RestApi\RestApi;
 use RobertWP\PostViewStatsLite\Modules\Shortcode\ShortcodeHandler;
 use RobertWP\PostViewStatsLite\Modules\Sort\Sort;
-use RobertWP\PostViewStatsLite\Modules\Tracker\Tracker;
+use RobertWP\PostViewStatsLite\Modules\tracker\Tracker;
 
 
 class HooksRegistrar {
 
-    public static function register() {
+    public static function register(): void
+    {
         self::register_textdomain_hooks();  // 放第一，语言加载早于其他逻辑更安全
         self::register_core_hooks();    // 核心功能，如版本检查、激活等
         self::register_admin_hooks();    // 管理后台钩子
@@ -28,16 +29,19 @@ class HooksRegistrar {
         self::register_feature_hooks();    // 功能性模块（视具体项目结构）
     }
 
-    private static function register_textdomain_hooks() {
+    private static function register_textdomain_hooks(): void
+    {
         add_action('init', [Localization::class, 'load_textdomain']);
     }
 
-    private static function register_core_hooks() {
+    private static function register_core_hooks(): void
+    {
         add_action('admin_init', self::cb([VersionChecker::class, 'check']));
         add_action('admin_init', self::cb([AdminNotice::class,'maybe_add_notice']));
     }
 
-    private static function register_admin_hooks() {
+    private static function register_admin_hooks(): void
+    {
         if (!is_admin()) return;
 
         $menu_manager = AdminMenuManager::get_instance();
@@ -74,7 +78,8 @@ class HooksRegistrar {
 
     }
 
-    private static function register_frontend_hooks() {
+    private static function register_frontend_hooks(): void
+    {
         $display = new ShortcodeHandler();
         add_shortcode('rwpsl_post_views', self::cb([$display, 'display_post_views']));
 
@@ -84,12 +89,14 @@ class HooksRegistrar {
         add_action('wp_enqueue_scripts', [FrontendAssets::class, 'enqueue']);
     }
 
-    private static function register_feature_hooks() {
+    private static function register_feature_hooks(): void
+    {
         RestApi::maybe_register_hooks();
         Sort::maybe_register_hooks();
     }
 
-    private static function cb($callback) {
+    private static function cb($callback): callable
+    {
         return CallbackWrapper::plugin_context_only($callback);
     }
 

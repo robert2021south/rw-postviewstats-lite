@@ -7,7 +7,8 @@ use RobertWP\PostViewStatsLite\Traits\Singleton;
 class AdminMenuManager {
     use Singleton;
 
-    public function add_settings_menu() {
+    public function add_settings_menu(): void
+    {
         add_menu_page(
             __('Page view statistics', 'rw-postviewstats-lite'),          // page title
             __('RW PostViewStats Lite', 'rw-postviewstats-lite'),              // menu title

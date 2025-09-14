@@ -4,7 +4,7 @@
  * */
 namespace RobertWP\PostViewStatsLite\Modules\Cleaner;
 
-use RobertWP\PostViewStatsLite\Modules\Tracker\Tracker;
+use RobertWP\PostViewStatsLite\Modules\tracker\Tracker;
 use RobertWP\PostViewStatsLite\Traits\Singleton;
 use RobertWP\PostViewStatsLite\Utils\Helper;
 use RobertWP\PostViewStatsLite\Utils\TemplateLoader;
@@ -13,7 +13,8 @@ use function RobertWP\PostViewStatsLite\Utils\rwpsl_wp_die;
 class Cleaner {
     use Singleton;
 
-    public static function add_cleaner_submenu() {
+    public static function add_cleaner_submenu(): void
+    {
         add_submenu_page(
             'rwpsl-settings',
             __('Data Cleaner','rw-postviewstats-lite'),
@@ -24,7 +25,8 @@ class Cleaner {
         );
     }
 
-    public static function render_cleaner_page() {
+    public static function render_cleaner_page(): void
+    {
 
         // 准备模板需要的变量
         $nonce = sanitize_text_field( wp_unslash( $_POST['nonce'] ?? '' ) );
@@ -43,7 +45,8 @@ class Cleaner {
         TemplateLoader::load('cleaner-page', $template_args, 'cleaner');
     }
 
-    public static function handle_cleaner_request() {
+    public static function handle_cleaner_request(): void
+    {
         if (!current_user_can('manage_options')) {
             wp_redirect(admin_url('admin.php?page=rwpsl-cleaner&notice=ins_perm'));
             rwpsl_wp_die();

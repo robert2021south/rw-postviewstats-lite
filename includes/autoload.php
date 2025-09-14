@@ -1,7 +1,4 @@
 <?php
-
-if (!defined('ABSPATH')) exit;
-
 spl_autoload_register(function ($class) {
     $prefix = 'RobertWP\\PostViewStatsLite\\';
 

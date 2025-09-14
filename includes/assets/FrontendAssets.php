@@ -1,21 +1,22 @@
 <?php
 namespace RobertWP\PostViewStatsLite\Assets;
 
-if (!defined('ABSPATH')) exit;
-
 class FrontendAssets {
 
-    public static function enqueue() {
+    public static function enqueue(): void
+    {
         self::enqueue_styles();
         self::enqueue_scripts();
     }
 
-    public static function enqueue_styles(){
+    public static function enqueue_styles(): void
+    {
         wp_register_style('rwpsl-wp-style-min', RWPSL_ASSETS_URL. 'css/rwpsl-wp-style.min.css', [], RWPSL_PLUGIN_VERSION );
         wp_enqueue_style('rwpsl-wp-style-min');
     }
 
-    private static function enqueue_scripts() {
+    private static function enqueue_scripts(): void
+    {
 
         $supported_types = apply_filters('rwpsl_supported_post_types', ['post','page']);
         if (!is_singular($supported_types)) return;

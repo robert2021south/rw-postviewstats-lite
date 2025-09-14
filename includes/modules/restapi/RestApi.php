@@ -5,7 +5,7 @@
 namespace RobertWP\PostViewStatsLite\Modules\RestApi;
 
 use RobertWP\PostViewStatsLite\Admin\Settings\SettingsRegistrar;
-use RobertWP\PostViewStatsLite\Modules\Tracker\Tracker;
+use RobertWP\PostViewStatsLite\Modules\tracker\Tracker;
 use RobertWP\PostViewStatsLite\Traits\Singleton;
 use WP_Error;
 
@@ -18,7 +18,8 @@ if (!function_exists('rwpsl_get_views')) {
 class RestApi {
     use Singleton;
 
-    public static function maybe_register_hooks() {
+    public static function maybe_register_hooks(): void
+    {
 
         if (SettingsRegistrar::get_effective_setting('rest_api_enabled') !== 1) {
             return;
@@ -27,7 +28,8 @@ class RestApi {
         add_action('rest_api_init', [self::class, 'register_routes']);
     }
 
-    public static function register_routes() {
+    public static function register_routes(): void
+    {
         register_rest_route('rwpsl/v1', '/views/(?P<id>\d+)', array(
             'methods'  => 'GET',
             'callback' => [self::class,'get_post_views'],
