@@ -21,7 +21,7 @@ class SettingsRenderer {
 
                 TemplateLoader::load('partials/checkbox-field', [
                     'option' => $option,
-                    'checked' => $checked,
+                    'value' => $value,
                     'desc' => $field['desc'],
                 ]);
             },
