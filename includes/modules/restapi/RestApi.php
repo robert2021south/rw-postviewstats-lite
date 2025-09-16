@@ -43,7 +43,6 @@ class RestApi {
     public static function get_post_views($request) {
         $post_id = (int) $request['id'];
         $post    = get_post($post_id);
-        $days = isset($request['days']) ? (int) $request['days'] : 7;
 
         if (!$post || 'publish' !== $post->post_status) {
             return new WP_Error('invalid_post', __('Invalid Post ID','rw-postviewstats-lite'), ['status' => 404]);
