@@ -74,14 +74,6 @@ class Cleaner {
 
         global $wpdb;
 
-        // 获取所有相关 meta_key
-        $meta_keys = $wpdb->get_col(" SELECT DISTINCT meta_key FROM $wpdb->postmeta WHERE meta_key LIKE '_rwpsl_%' ");
-
-        if (!$meta_keys) {
-            wp_redirect(admin_url('admin.php?page=rwpsl-cleaner&cleaned=1&nonce='.wp_create_nonce( 'rwpsl_cleaned_notice' )));
-            rwpsl_wp_die();
-        }
-
         // 获取目标文章ID
         $posts = get_posts(array(
             'numberposts' => -1,
@@ -93,15 +85,19 @@ class Cleaner {
         foreach ($posts as $post_id) {
             $retained_today_values = [];
 
+            // 只获取当前文章的 meta
+            $post_metas = get_post_meta($post_id);
+
             // 先处理 _rwpsl_today_YYYYMMDD 的数据
-            foreach ($meta_keys as $meta_key) {
+            foreach ($post_metas as $meta_key => $values) {
                 if (preg_match('/^' . Tracker::RWPSL_META_KEY_TODAY_PREFIX . '(\d{8})$/', $meta_key, $matches)) {
                     $date = $matches[1];
 
                     if ((int)$date >= (int)$date_limit) {
-                        // 未过期，记录数值
-                        $value = get_post_meta($post_id, $meta_key, true);
-                        $retained_today_values[] = (int)$value; // 假设是整数
+                        // // 未过期，记录数值
+                        foreach ($values as $value) {
+                            $retained_today_values[] = (int)$value;
+                        }
                     } else {
                         // 已过期，删除
                         delete_post_meta($post_id, $meta_key);
@@ -110,7 +106,8 @@ class Cleaner {
             }
 
             // 然后处理 _rwpsl_total
-            if (in_array(Tracker::RWPSL_META_KEY_TOTAL, $meta_keys, true)) {
+            // 然后处理 _rwpsl_total
+            if (metadata_exists('post', $post_id, Tracker::RWPSL_META_KEY_TOTAL)) {
                 if (!empty($retained_today_values)) {
                     // 还有有效数据，更新 _rwpsl_total
                     $total = array_sum($retained_today_values);
