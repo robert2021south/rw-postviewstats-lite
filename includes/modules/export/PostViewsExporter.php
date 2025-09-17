@@ -6,13 +6,6 @@ use RobertWP\PostViewStatsLite\Traits\Singleton;
 use RobertWP\PostViewStatsLite\Utils\Helper;
 use RobertWP\PostViewStatsLite\Utils\TemplateLoader;
 
-if (!function_exists(__NAMESPACE__ . '\rwpsl_wp_die')) {
-    function rwpsl_wp_die($message = ''): void
-    {
-        Helper::wp_die($message);
-    }
-}
-
 class PostViewsExporter {
     use Singleton;
 
@@ -47,14 +40,14 @@ class PostViewsExporter {
 
         if (!current_user_can( 'manage_options')) {
             wp_redirect(admin_url('admin.php?page=rwpsl-export&notice=ins_perm'));
-            rwpsl_wp_die();
+            exit;
         }
 
         $nonce = sanitize_text_field( wp_unslash( $_POST['rwpsl_export_nonce'] ?? '' ) );
         if (empty( $_POST['rwpsl_export_nonce'] ) ||!wp_verify_nonce( $nonce, 'rwpsl_export_csv' )
         ) {
             wp_redirect(admin_url('admin.php?page=rwpsl-export&notice=sec_chk_fail'));
-            rwpsl_wp_die();
+            exit;
         }
 
         $post_type = isset( $_POST['post_type'] ) ? sanitize_text_field( wp_unslash($_POST['post_type']) ) : 'post';
@@ -67,12 +60,12 @@ class PostViewsExporter {
 
         if (! in_array($post_type, ['post', 'page'], true)) {
             wp_redirect(admin_url('admin.php?page=rwpsl-export&notice=pro_only'));
-            rwpsl_wp_die();
+            exit;
         }
 
         if ( empty( $posts ) ) {
             wp_redirect(admin_url('admin.php?page=rwpsl-export&notice=no_posts'));
-            rwpsl_wp_die();
+            exit;
         }
 
         $filename = "page-views-export-{$post_type}-" . gmdate( 'Y-m-d_H-i-s' ) . ".csv";
@@ -96,7 +89,7 @@ class PostViewsExporter {
 
         // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_read_fclose
         fclose( $output );
-        exit();
+        exit;
     }
 
 }
