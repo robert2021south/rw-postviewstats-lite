@@ -1,12 +1,6 @@
 <?php
 namespace RobertWP\PostViewStatsLite\Utils;
 
-if (!function_exists('rwpsl_wp_die')) {
-    function rwpsl_wp_die($message = '') {
-        Helper::wp_die($message);
-    }
-}
-
 class Helper
 {
 
