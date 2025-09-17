@@ -8,7 +8,13 @@ use RobertWP\PostViewStatsLite\Modules\tracker\Tracker;
 use RobertWP\PostViewStatsLite\Traits\Singleton;
 use RobertWP\PostViewStatsLite\Utils\Helper;
 use RobertWP\PostViewStatsLite\Utils\TemplateLoader;
-use function RobertWP\PostViewStatsLite\Utils\rwpsl_wp_die;
+
+if (!function_exists(__NAMESPACE__ . '\rwpsl_wp_die')) {
+    function rwpsl_wp_die($message = ''): void
+    {
+        Helper::wp_die($message);
+    }
+}
 
 class Cleaner {
     use Singleton;
