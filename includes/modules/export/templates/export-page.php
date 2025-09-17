@@ -46,7 +46,7 @@
         </table>
 
         <p>
-            <input type="submit" class="button button-primary" value="<?php esc_attr_e('Export CSV', 'rw-postviewstats-lite'); ?>">
+            <input type="submit" id="submit" class="button button-primary" value="<?php esc_attr_e('Export CSV', 'rw-postviewstats-lite'); ?>">
         </p>
     </form>
 </div>

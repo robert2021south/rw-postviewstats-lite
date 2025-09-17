@@ -10,7 +10,8 @@ class Tracker {
     const RWPSL_META_KEY_TOTAL = '_rwpsl_total' ;
     const RWPSL_META_KEY_TODAY_PREFIX = '_rwpsl_today_';
 
-    public function track_views_ajax() {
+    public function track_views_ajax()
+    {
 
         $post_id = absint($_POST['post_id'] ?? 0);
         $nonce = sanitize_text_field( wp_unslash( $_POST['nonce'] ?? '' ) );
@@ -59,7 +60,8 @@ class Tracker {
      * @param $post_id
      * @return int
      */
-    public static function get_views($post_id) {
+    public static function get_views($post_id): int
+    {
         return (int) get_post_meta($post_id, self::RWPSL_META_KEY_TOTAL, true);
     }
 
