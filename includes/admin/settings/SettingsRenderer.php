@@ -17,8 +17,6 @@ class SettingsRenderer {
                 $all_settings = get_option(SettingsRegistrar::OPTION_SITE_SETTINGS, []);
                 $value = $all_settings[$option] ?? '0';
 
-                $checked = checked($value, '1', false);
-
                 TemplateLoader::load('partials/checkbox-field', [
                     'option' => $option,
                     'value' => $value,
