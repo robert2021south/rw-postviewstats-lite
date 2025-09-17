@@ -9,13 +9,6 @@ use RobertWP\PostViewStatsLite\Traits\Singleton;
 use RobertWP\PostViewStatsLite\Utils\Helper;
 use RobertWP\PostViewStatsLite\Utils\TemplateLoader;
 
-if (!function_exists(__NAMESPACE__ . '\rwpsl_wp_die')) {
-    function rwpsl_wp_die($message = ''): void
-    {
-        Helper::wp_die($message);
-    }
-}
-
 class Cleaner {
     use Singleton;
 
@@ -55,7 +48,7 @@ class Cleaner {
     {
         if (!current_user_can('manage_options')) {
             wp_redirect(admin_url('admin.php?page=rwpsl-cleaner&notice=ins_perm'));
-            rwpsl_wp_die();
+            exit;
         }
 
         // Nonce 验证
@@ -63,7 +56,7 @@ class Cleaner {
             !wp_verify_nonce(wp_unslash($_POST['rwpsl_cleaner_nonce']), 'rwpsl_cleaner_action')// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
         ) {
             wp_redirect(admin_url('admin.php?page=rwpsl-cleaner&notice=inv_req'));
-            rwpsl_wp_die();
+            exit;
         }
 
         $post_type  = isset($_POST['post_type']) ? sanitize_text_field(wp_unslash($_POST['post_type'])) : 'post';
@@ -77,8 +70,6 @@ class Cleaner {
 
         // 强制限制为30天前
         $date_limit = gmdate('Ymd', strtotime('-30 days'));
-
-        global $wpdb;
 
         // 获取目标文章ID
         $posts = get_posts(array(
@@ -126,6 +117,6 @@ class Cleaner {
         }
 
         wp_redirect(admin_url('admin.php?page=rwpsl-cleaner&cleaned=1&nonce='.wp_create_nonce( 'rwpsl_cleaned_notice' )));
-        rwpsl_wp_die();
+        exit;
     }
 }

@@ -131,11 +131,6 @@ class Helper
         error_log( $message );
     }
 
-    public static function wp_die($message = '') {
-        //error_log("rwpsl_wp_die CALLED with: " . $message);
-        \wp_die($message);
-    }
-
 }
 
 
