@@ -5,7 +5,13 @@ use RobertWP\PostViewStatsLite\Modules\tracker\Tracker;
 use RobertWP\PostViewStatsLite\Traits\Singleton;
 use RobertWP\PostViewStatsLite\Utils\Helper;
 use RobertWP\PostViewStatsLite\Utils\TemplateLoader;
-use function RobertWP\PostViewStatsLite\Utils\rwpsl_wp_die;
+
+if (!function_exists(__NAMESPACE__ . '\rwpsl_wp_die')) {
+    function rwpsl_wp_die($message = ''): void
+    {
+        Helper::wp_die($message);
+    }
+}
 
 class PostViewsExporter {
     use Singleton;
@@ -90,7 +96,7 @@ class PostViewsExporter {
 
         // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_read_fclose
         fclose( $output );
-        rwpsl_wp_die();
+        exit();
     }
 
 }
