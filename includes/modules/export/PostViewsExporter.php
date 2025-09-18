@@ -64,7 +64,7 @@ class PostViewsExporter {
         }
 
         if ( empty( $posts ) ) {
-            wp_redirect(admin_url('admin.php?page=rwpsl-export&notice=no_posts'));
+            wp_redirect(admin_url('admin.php?page=rwpsl-export&notice=no_posts&context=export'));
             exit;
         }
 
