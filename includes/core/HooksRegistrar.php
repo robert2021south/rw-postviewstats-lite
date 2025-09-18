@@ -61,7 +61,7 @@ class HooksRegistrar {
 
         // admin_init
         add_action('admin_init', [$settings_registrar, 'register_settings']);
-        add_action('admin_init', self::cb([AdminNotice::class, 'maybe_show_general_notice']));
+        //add_action('admin_init', self::cb([AdminNotice::class, 'maybe_show_general_notice']));
 
         // option update hook
         add_action('update_option_rwpsl_settings', self::cb([$settings_handler, 'after_settings_saved']), 10, 2);
