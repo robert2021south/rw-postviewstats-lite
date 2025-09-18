@@ -7,6 +7,6 @@
 
 <?php if ( ! empty( $message ) ) : ?>
     <div class="notice notice-<?php echo esc_attr($notice_type); ?> is-dismissible">
-        <p><?php echo esc_html($message); ?></p>
+        <p><?php echo wp_kses($message,['strong' => []]); ?></p>
     </div>
 <?php endif; ?>
