@@ -1,0 +1,72 @@
+name: WordPress Plugin Codeception Tests
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        php: [8.1, 8.2]
+        wp: [6.4, 6.5]
+
+    services:
+      mysql:
+        image: mysql:8
+        env:
+          MYSQL_ROOT_PASSWORD: root
+          MYSQL_DATABASE: test_db
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd="mysqladmin ping --silent"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=5
+
+      selenium:
+        image: selenium/standalone-chrome:latest
+        ports:
+          - 4444:4444
+        options: >-
+          --health-cmd="curl -s http://localhost:4444/wd/hub/status | grep -q '\"ready\":true'"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=5
+
+    env:
+      WP_DB_NAME: test_db
+      WP_DB_USER: root
+      WP_DB_PASSWORD: root
+      WP_DB_HOST: mysql   # 用容器名 mysql，Actions 会解析
+      WP_DIR: ${{ github.workspace }}/wp
+      SELENIUM_HOST: selenium
+      SELENIUM_PORT: 4444
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php }}
+          extensions: mbstring, intl, curl, mysqli
+          coverage: none
+
+      - name: Install Composer dependencies
+        run: composer install --no-interaction
+
+      - name: Setup WordPress
+        run: |
+          wget https://wordpress.org/wordpress-${{ matrix.wp }}.tar.gz
+          tar -xzf wordpress-${{ matrix.wp }}.tar.gz
+          mv wordpress wp
+          cp tests/wp-tests-config.php wp/wp-tests-config.php
+
+      - name: Run Codeception tests
+        run: ./run-tests.sh

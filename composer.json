@@ -1,0 +1,24 @@
+{
+    "name": "robertwp/rw-postviewstats-lite",
+    "description": "A WordPress plugin for post view statistics",
+    "type": "wordpress-plugin",
+    "license": "GPL-2.0-or-later",
+    "autoload": {
+        "psr-4": {
+            "RobertWP\\PostViewStatsLite\\": "includes/",
+            "Tests\\": "tests/",
+            "WPBrowser\\": "vendor/lucatume/wp-browser/src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Robert South",
+            "email": "robert2021south@gmail.com"
+        }
+    ],
+    "minimum-stability": "stable",
+    "require-dev": {
+        "codeception/codeception": "^5.3",
+        "lucatume/wp-browser": "^4.5"
+    }
+}
