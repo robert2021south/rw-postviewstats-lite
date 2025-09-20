@@ -35,19 +35,22 @@ class PostViewsExporter {
         TemplateLoader::load('export-page', $template_args, 'export');
     }
 
+    /**
+     * @throws \Exception
+     */
     public static function handle_export_csv(): void
     {
 
         if (!current_user_can( 'manage_options')) {
             wp_redirect(admin_url('admin.php?page=rwpsl-export&notice=ins_perm'));
-            exit;
+            Helper::terminate();
         }
 
         $nonce = sanitize_text_field( wp_unslash( $_POST['rwpsl_export_nonce'] ?? '' ) );
         if (empty( $_POST['rwpsl_export_nonce'] ) ||!wp_verify_nonce( $nonce, 'rwpsl_export_csv' )
         ) {
             wp_redirect(admin_url('admin.php?page=rwpsl-export&notice=sec_chk_fail'));
-            exit;
+            Helper::terminate();
         }
 
         $post_type = isset( $_POST['post_type'] ) ? sanitize_text_field( wp_unslash($_POST['post_type']) ) : 'post';
@@ -60,12 +63,12 @@ class PostViewsExporter {
 
         if (! in_array($post_type, ['post', 'page'], true)) {
             wp_redirect(admin_url('admin.php?page=rwpsl-export&notice=pro_only'));
-            exit;
+            Helper::terminate();
         }
 
         if ( empty( $posts ) ) {
             wp_redirect(admin_url('admin.php?page=rwpsl-export&notice=no_posts&context=export'));
-            exit;
+            Helper::terminate();
         }
 
         $filename = "page-views-export-{$post_type}-" . gmdate( 'Y-m-d_H-i-s' ) . ".csv";
@@ -89,7 +92,7 @@ class PostViewsExporter {
 
         // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_read_fclose
         fclose( $output );
-        exit;
+        Helper::terminate();
     }
 
 }
