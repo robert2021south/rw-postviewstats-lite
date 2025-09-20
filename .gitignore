@@ -1,9 +1,10 @@
 /languages/
-directory_structure.txt
-/tests/
-phpunit.xml.dist
-run-tests.sh
-composer.lock
-composer.json
 /vendor/
-.phpunit.result.cache
+/tests.bak/
+/tests_bak/
+directory_structure.txt
+composer.lock
+composer-pure.json
+composer-copy.json
+run-tests.bak.sh
+run-tests.bak2.sh
