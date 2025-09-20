@@ -131,6 +131,13 @@ class Helper
         error_log( $message );
     }
 
+    public static function terminate(): void {
+        if (defined('WP_ENV') && constant('WP_ENV') === 'testing') {
+            throw new \Exception('terminate called');
+        }
+        exit;
+    }
+
 }
 
 

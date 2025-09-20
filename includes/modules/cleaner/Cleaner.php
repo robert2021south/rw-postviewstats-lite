@@ -44,11 +44,14 @@ class Cleaner {
         TemplateLoader::load('cleaner-page', $template_args, 'cleaner');
     }
 
+    /**
+     * @throws \Exception
+     */
     public static function handle_cleaner_request(): void
     {
         if (!current_user_can('manage_options')) {
             wp_redirect(admin_url('admin.php?page=rwpsl-cleaner&notice=ins_perm'));
-            exit;
+            Helper::terminate();
         }
 
         // Nonce 验证
@@ -56,7 +59,7 @@ class Cleaner {
             !wp_verify_nonce(wp_unslash($_POST['rwpsl_cleaner_nonce']), 'rwpsl_cleaner_action')// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
         ) {
             wp_redirect(admin_url('admin.php?page=rwpsl-cleaner&notice=inv_req'));
-            exit;
+            Helper::terminate();
         }
 
         $post_type  = isset($_POST['post_type']) ? sanitize_text_field(wp_unslash($_POST['post_type'])) : 'post';
@@ -117,6 +120,6 @@ class Cleaner {
         }
 
         wp_redirect(admin_url('admin.php?page=rwpsl-cleaner&cleaned=1&nonce='.wp_create_nonce( 'rwpsl_cleaned_notice' )));
-        exit;
+        Helper::terminate();
     }
 }
