@@ -73,7 +73,7 @@ jobs:
         run: |
           shopt -s extglob
           mkdir -p wp/wp-content/plugins/rw-postviewstats-lite
-          mv -R !(wp) wp/wp-content/plugins/rw-postviewstats-lite/
+          cp -R !(wp) wp/wp-content/plugins/rw-postviewstats-lite/
 
       - name: Run Codeception tests
         run: |
