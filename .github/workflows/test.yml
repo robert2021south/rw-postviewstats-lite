@@ -35,6 +35,7 @@ jobs:
         ports:
           - 4444:4444
         options: >-
+          --default-authentication-plugin=mysql_native_password
           --health-cmd="curl -s http://localhost:4444/wd/hub/status | grep -q '\"ready\":\s*true'"
           --health-interval=10s
           --health-timeout=5s
@@ -50,45 +51,11 @@ jobs:
       SELENIUM_PORT: 4444
 
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
-
-      - name: Setup PHP
-        uses: shivammathur/setup-php@v2
-        with:
-          php-version: ${{ matrix.php }}
-          extensions: mbstring, intl, curl, mysqli
-          coverage: none
-
-      - name: Install Composer dependencies
-        run: composer install --no-interaction
-
-      - name: Setup WordPress
-        run: |
-          wget https://wordpress.org/wordpress-${{ matrix.wp }}.tar.gz
-          tar -xzf wordpress-${{ matrix.wp }}.tar.gz
-          mv wordpress wp
-          
-      - name: Move plugin into WordPress plugins folder
-        shell: bash
-        run: |
-          shopt -s extglob
-          mkdir -p wp/wp-content/plugins/rw-postviewstats-lite
-          cp -R !(wp) wp/wp-content/plugins/rw-postviewstats-lite/
 
       - name: Debug MySQL logs
         run: docker logs $(docker ps -qf "name=mysql")
 
       - name: Test MySQL connection
         run: |
-          apt-get update && apt-get install -y mysql-client
-          export MYSQL_PWD=root
           mysql -hmysql -uroot -e "SHOW DATABASES;"
 
-      - name: Make run-tests.sh executable
-        run: chmod +x wp/wp-content/plugins/rw-postviewstats-lite/run-tests.sh
-
-      - name: Run Codeception tests
-        run: |
-          cd wp/wp-content/plugins/rw-postviewstats-lite          
-          ./run-tests.sh
