@@ -6,7 +6,8 @@ export WP_DB_NAME=${WP_DB_NAME:-test_db}
 export WP_DB_USER=${WP_DB_USER:-root}
 export WP_DB_PASSWORD=${WP_DB_PASSWORD:-root}
 export WP_DB_HOST=${WP_DB_HOST:-mysql}
-export WP_DIR=${{ github.workspace }}/wp
+export WP_DIR=${WP_DIR:-$(pwd)/wp}
+
 export SELENIUM_HOST=${SELENIUM_HOST:-selenium}
 export SELENIUM_PORT=${SELENIUM_PORT:-4444}
 export WP_WEB_DRIVER_URL="http://${SELENIUM_HOST}:${SELENIUM_PORT}/wd/hub"
