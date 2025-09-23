@@ -70,9 +70,8 @@ jobs:
           
       - name: Move plugin into WordPress plugins folder
         run: |
-          mkdir -p wp/wp-content/plugins
-          cp -R . wp/wp-content/plugins/rw-postviewstats-lite
-
+          mkdir -p wp/wp-content/plugins/rw-postviewstats-lite
+          cp -R !(wp) wp/wp-content/plugins/rw-postviewstats-lite/
 
       - name: Run Codeception tests
         run: |
