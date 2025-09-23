@@ -75,6 +75,9 @@ jobs:
           mkdir -p wp/wp-content/plugins/rw-postviewstats-lite
           cp -R !(wp) wp/wp-content/plugins/rw-postviewstats-lite/
 
+      - name: Make run-tests.sh executable
+        run: chmod +x wp/wp-content/plugins/rw-postviewstats-lite/run-tests.sh
+
       - name: Run Codeception tests
         run: |
           cd wp/wp-content/plugins/rw-postviewstats-lite          
