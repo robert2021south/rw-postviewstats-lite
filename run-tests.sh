@@ -2,13 +2,12 @@
 set -e
 
 # 默认值（如果环境变量未设置）
-export WP_DB_NAME=${WP_DB_NAME:-wordpress682}
+export WP_DB_NAME=${WP_DB_NAME:-test_db}
 export WP_DB_USER=${WP_DB_USER:-root}
-export WP_DB_PASSWORD=${WP_DB_PASSWORD:-H0a9S1h8}
-export WP_DB_HOST=${WP_DB_HOST:-127.0.0.1}
-export WP_DIR=${WP_DIR:-$(pwd)/wp}
-
-export SELENIUM_HOST=${SELENIUM_HOST:-127.0.0.1}
+export WP_DB_PASSWORD=${WP_DB_PASSWORD:-root}
+export WP_DB_HOST=${WP_DB_HOST:-mysql}
+export WP_DIR=${{ github.workspace }}/wp
+export SELENIUM_HOST=${SELENIUM_HOST:-selenium}
 export SELENIUM_PORT=${SELENIUM_PORT:-4444}
 export WP_WEB_DRIVER_URL="http://${SELENIUM_HOST}:${SELENIUM_PORT}/wd/hub"
 

@@ -1,18 +1,19 @@
-name: WordPress Plugin Codeception Tests
+name: RW PostViewStats Lite Codeception Tests
 
 on:
   push:
     branches:
-      - main
+      - ci
   pull_request:
-
+    branches:
+      - ci
 jobs:
   test:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        php: [8.1, 8.2]
-        wp: [6.4, 6.5]
+        php: [8.2]
+        wp: [6.8]
 
     services:
       mysql:
@@ -33,16 +34,16 @@ jobs:
         ports:
           - 4444:4444
         options: >-
-          --health-cmd="curl -s http://localhost:4444/wd/hub/status | grep -q '\"ready\":true'"
+          --health-cmd="curl -s http://localhost:4444/wd/hub/status | grep -q '\"ready\":\s*true'"
           --health-interval=10s
           --health-timeout=5s
           --health-retries=5
 
     env:
+      WP_DB_HOST: mysql   # 用容器名 mysql，Actions 会解析
       WP_DB_NAME: test_db
       WP_DB_USER: root
       WP_DB_PASSWORD: root
-      WP_DB_HOST: mysql   # 用容器名 mysql，Actions 会解析
       WP_DIR: ${{ github.workspace }}/wp
       SELENIUM_HOST: selenium
       SELENIUM_PORT: 4444
@@ -66,7 +67,9 @@ jobs:
           wget https://wordpress.org/wordpress-${{ matrix.wp }}.tar.gz
           tar -xzf wordpress-${{ matrix.wp }}.tar.gz
           mv wordpress wp
-          cp tests/wp-tests-config.php wp/wp-tests-config.php
+          
 
       - name: Run Codeception tests
-        run: ./run-tests.sh
+        run: |
+          cd wp/wp-content/plugins/rw-postviewstats-lite          
+          ./run-tests.sh
