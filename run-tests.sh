@@ -19,7 +19,7 @@ echo "Selenium: $WP_WEB_DRIVER_URL"
 echo ""
 
 echo "====== Waiting for MySQL ======"
-until mysqladmin ping -h "$WP_DB_HOST" -u"$WP_DB_USER" -p"$WP_DB_PASSWORD" --silent; do
+until mysqladmin ping --protocol=tcp -h "$WP_DB_HOST" -u"$WP_DB_USER" -p"$WP_DB_PASSWORD" --silent; do
       echo "Waiting for MySQL..."
       sleep 2
   done
