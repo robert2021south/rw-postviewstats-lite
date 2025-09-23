@@ -30,6 +30,8 @@ jobs:
           --health-interval=10s
           --health-timeout=5s
           --health-retries=5
+        command: >
+          --default-authentication-plugin=mysql_native_password
 
       selenium:
         image: selenium/standalone-chrome:latest
@@ -50,11 +52,8 @@ jobs:
       SELENIUM_PORT: 4444
 
     steps:
-
-      - name: Debug MySQL logs
-        run: docker logs $(docker ps -qf "name=mysql")
-
       - name: Test MySQL connection
         run: |
-          mysql -hmysql -uroot -e "SHOW DATABASES;"
-
+          sudo apt-get update
+          sudo apt-get install -y mysql-client
+          mysql -hmysql -uroot -proot -e "SHOW DATABASES;"
