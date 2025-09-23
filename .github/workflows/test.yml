@@ -68,6 +68,11 @@ jobs:
           tar -xzf wordpress-${{ matrix.wp }}.tar.gz
           mv wordpress wp
           
+      - name: Move plugin into WordPress plugins folder
+        run: |
+          mkdir -p wp/wp-content/plugins
+          cp -R . wp/wp-content/plugins/rw-postviewstats-lite
+
 
       - name: Run Codeception tests
         run: |
