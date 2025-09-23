@@ -8,3 +8,4 @@ composer-pure.json
 composer-copy.json
 run-tests.bak.sh
 run-tests.bak2.sh
+tests/Support/Data/wordpress682.sql

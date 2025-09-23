@@ -1,16 +1,16 @@
 <?php
-namespace Tests\Functional;
+namespace Tests\Integration;
 
 use RobertWP\PostViewStatsLite\Modules\RestApi\RestApi;
 use RobertWP\PostViewStatsLite\Modules\Tracker\Tracker;
-use Tests\Support\FunctionalTester;
+use Tests\Support\IntegrationTester;
 
 class RestApiCest
 {
     /**
      * 测试：文章不存在时返回错误
      */
-    public function test_returns_error_if_post_not_found(FunctionalTester $I): void
+    public function test_returns_error_if_post_not_found(IntegrationTester $I): void
     {
         $request = ['id' => 99999]; // 一个不存在的文章 ID
         $response = RestApi::get_post_views($request);
@@ -22,7 +22,7 @@ class RestApiCest
     /**
      * 测试：文章不是已发布状态时返回错误
      */
-    public function test_returns_error_if_post_is_not_published(FunctionalTester $I): void
+    public function test_returns_error_if_post_is_not_published(IntegrationTester $I): void
     {
         // 创建一篇草稿文章
         $post_id = wp_insert_post(['post_status' => 'draft']);
@@ -37,7 +37,7 @@ class RestApiCest
     /**
      * 测试：文章已发布时返回浏览量
      */
-    public function test_returns_post_views_if_post_is_published(FunctionalTester $I): void
+    public function test_returns_post_views_if_post_is_published(IntegrationTester $I): void
     {
         // 创建一篇发布文章
         $post_id = wp_insert_post([

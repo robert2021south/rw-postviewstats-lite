@@ -2,9 +2,9 @@
 set -e
 
 # 默认值（如果环境变量未设置）
-export WP_DB_NAME=${WP_DB_NAME:-test_db}
+export WP_DB_NAME=${WP_DB_NAME:-wordpress682}
 export WP_DB_USER=${WP_DB_USER:-root}
-export WP_DB_PASSWORD=${WP_DB_PASSWORD:-root}
+export WP_DB_PASSWORD=${WP_DB_PASSWORD:-H0a9S1h8}
 export WP_DB_HOST=${WP_DB_HOST:-127.0.0.1}
 export WP_DIR=${WP_DIR:-$(pwd)/wp}
 
@@ -25,16 +25,16 @@ until mysqladmin ping -h "$WP_DB_HOST" --silent; do
 done
 
 echo "====== Waiting for Selenium ======"
-until curl -s "http://${SELENIUM_HOST}:${SELENIUM_PORT}/wd/hub/status" | grep -q "\"ready\":true"; do
+until curl -s "http://${SELENIUM_HOST}:${SELENIUM_PORT}/wd/hub/status" | grep -q "\"ready\":\s*true"; do
     echo "Waiting for Selenium..."
     sleep 2
 done
 
 echo "====== Running Unit & Integration Tests ======"
-vendor/bin/codecept run unit --debug
-vendor/bin/codecept run integration --debug
+vendor/bin/codecept run unit
+vendor/bin/codecept run integration
 
 echo "====== Running Acceptance Tests (Selenium / WPWebDriver) ======"
-vendor/bin/codecept run acceptance --debug
+vendor/bin/codecept run acceptance
 
 echo "All tests passed!"

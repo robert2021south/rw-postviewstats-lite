@@ -1,17 +1,17 @@
 <?php
-namespace Tests\Functional;
+namespace Tests\Integration;
 
 use RobertWP\PostViewStatsLite\Modules\Export\PostViewsExporter;
-use Tests\Support\FunctionalTester;
+use Tests\Support\IntegrationTester;
 
 class ExportCest{
 
-    public function _before(FunctionalTester $I): void
+    public function _before(IntegrationTester $I): void
     {
         wp_cache_flush();
     }
 
-    public function _after(FunctionalTester $I): void
+    public function _after(IntegrationTester $I): void
     {
         wp_cache_flush();
     }
@@ -19,7 +19,7 @@ class ExportCest{
     /**
      * 用例 1: 无权限用户 → ins_perm
      */
-    public function testNoPermissionUser(FunctionalTester $I): void
+    public function testNoPermissionUser(IntegrationTester $I): void
     {
         // 模拟一个没有 manage_options 权限的用户
         $userId = $I->haveUserInDatabase(
@@ -50,7 +50,7 @@ class ExportCest{
     /**
      * 用例 2: 有权限 + nonce 失败 → sec_chk_fail
      */
-    public function testNonceFail(FunctionalTester $I): void
+    public function testNonceFail(IntegrationTester $I): void
     {
         $userId = $I->haveUserInDatabase('adminuser', 'administrator', ['user_pass' => '123456']);
         wp_set_current_user($userId);
@@ -78,7 +78,7 @@ class ExportCest{
     /**
      * 用例 3: 有权限 + nonce 有效 + post_type 不允许 → pro_only
      */
-    public function testProOnlyPostType(FunctionalTester $I): void
+    public function testProOnlyPostType(IntegrationTester $I): void
     {
         $userId = $I->haveUserInDatabase('adminuser', 'administrator', ['user_pass' => '123456']);
         wp_set_current_user($userId);
@@ -106,7 +106,7 @@ class ExportCest{
     /**
      * 用例 4: 有权限 + nonce 有效 + post_type=post + 无文章 → no_posts
      */
-    public function testNoPosts(FunctionalTester $I): void
+    public function testNoPosts(IntegrationTester $I): void
     {
         $userId = $I->haveUserInDatabase('adminuser', 'administrator', ['user_pass' => '123456']);
         wp_set_current_user($userId);
@@ -136,7 +136,7 @@ class ExportCest{
     /**
      * 用例 5: 有权限 + nonce 有效 + post_type=post + 有文章 → 导出 CSV （happy path）
      */
-    public function testExportCsv(FunctionalTester $I): void
+    public function testExportCsv(IntegrationTester $I): void
     {
         $userId = $I->haveUserInDatabase('adminuser', 'administrator', ['user_pass' => '123456']);
         wp_set_current_user($userId);

@@ -1,21 +1,21 @@
 <?php
 
-namespace Tests\Functional;
+namespace Tests\Integration;
 
 use RobertWP\PostViewStatsLite\Modules\Cleaner\Cleaner;
 use RobertWP\PostViewStatsLite\Modules\Tracker\Tracker;
-use Tests\Support\FunctionalTester;
+use Tests\Support\IntegrationTester;
 
 class CleanerCest
 {
 
-    public function _before(FunctionalTester $I): void
+    public function _before(IntegrationTester $I): void
     {
         // 每个测试运行前清除 WordPress 对象缓存
         wp_cache_flush();
     }
 
-    public function _after(FunctionalTester $I): void
+    public function _after(IntegrationTester $I): void
     {
         // 每个测试运行后再清一次，确保干净
         wp_cache_flush();
@@ -24,7 +24,7 @@ class CleanerCest
     /**
      * 权限不足时跳转
      */
-    public function testRedirectsWhenUserCannotManageOptions(FunctionalTester $I): void
+    public function testRedirectsWhenUserCannotManageOptions(IntegrationTester $I): void
     {
         // 模拟未登录用户
         wp_set_current_user(0);
@@ -51,7 +51,7 @@ class CleanerCest
     /**
      * Nonce 无效时跳转
      */
-    public function testRedirectsWhenNonceInvalid(FunctionalTester $I): void
+    public function testRedirectsWhenNonceInvalid(IntegrationTester $I): void
     {
         // 创建一个管理员用户
         $user_id = $I->haveUserInDatabase('admin', 'administrator', ['user_pass' => 'password']);
@@ -80,7 +80,7 @@ class CleanerCest
     /**
      * 没有找到任何 meta_keys 时跳转
      */
-    public function testRedirectsWhenNoMetaKeys(FunctionalTester $I): void
+    public function testRedirectsWhenNoMetaKeys(IntegrationTester $I): void
     {
         $user_id = $I->haveUserInDatabase('admin2', 'administrator', ['user_pass' => 'password2']);
         wp_set_current_user($user_id);
@@ -108,7 +108,7 @@ class CleanerCest
     /**
      * @throws \Exception
      */
-    public function testExpiredTodayAndTotalAreDeleted(FunctionalTester $I): void
+    public function testExpiredTodayAndTotalAreDeleted(IntegrationTester $I): void
     {
         // 1. 创建 post
         $postId = $I->havePostInDatabase(['post_type' => 'post']);
@@ -138,7 +138,7 @@ class CleanerCest
         ], "断言失败：total meta 仍然存在");
     }
 
-    public function testExpiredTodayDeletedButValidTodayAndTotalRemain(FunctionalTester $I): void
+    public function testExpiredTodayDeletedButValidTodayAndTotalRemain(IntegrationTester $I): void
     {
         $postId = $I->havePostInDatabase(['post_type' => 'post']);
 
@@ -175,7 +175,7 @@ class CleanerCest
         ], "断言失败：total meta 被误删");
     }
 
-    public function testOnlyTodayNoTotalA(FunctionalTester $I): void
+    public function testOnlyTodayNoTotalA(IntegrationTester $I): void
     {
         $postId = $I->havePostInDatabase(['post_type' => 'post']);
 
@@ -196,7 +196,7 @@ class CleanerCest
         // total 不存在 → 不需要断言，但可以确认不会报错
     }
 
-    public function testOnlyTodayNoTotalB(FunctionalTester $I): void
+    public function testOnlyTodayNoTotalB(IntegrationTester $I): void
     {
         $postId = $I->havePostInDatabase(['post_type' => 'post']);
 
@@ -220,7 +220,7 @@ class CleanerCest
     /**
      * 有未过期 meta_keys 更新 total
      */
-    public function testValidMetaKeysUpdateTotal(FunctionalTester $I): void
+    public function testValidMetaKeysUpdateTotal(IntegrationTester $I): void
     {
         $user_id = $I->haveUserInDatabase('admin4', 'administrator', ['user_pass' => 'password']);
         wp_set_current_user($user_id);
@@ -251,7 +251,7 @@ class CleanerCest
     /**
      * post_type 非法时回退到 post
      */
-    public function testInvalidPostTypeFallsBackToPost(FunctionalTester $I): void
+    public function testInvalidPostTypeFallsBackToPost(IntegrationTester $I): void
     {
         $user_id = $I->haveUserInDatabase('admin5', 'administrator', ['user_pass' => 'password']);
         wp_set_current_user($user_id);

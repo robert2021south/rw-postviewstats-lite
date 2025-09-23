@@ -192,7 +192,7 @@ class SettingsCest
         $I->havePostMetaInDatabase($postId, Tracker::RWPSL_META_KEY_TOTAL, 0);
 
         // Step 1: 登录后台，关闭 REST API
-        $I->loginAsAdmin();
+        //$I->loginAsAdmin();
         $I->amOnAdminPage('admin.php?page=rwpsl-settings');
         $I->uncheckOption('rest_api_enabled');
         $I->click('#submit');

@@ -11,24 +11,30 @@ bootstrap: false
 modules:
     # enable helpers as array
     enabled:
+        - Asserts
         - \Tests\Support\Helper\Acceptance
-        - WPDb:
-            dsn: 'mysql:host=127.0.0.1;dbname=wordpress682'
-            user: 'root'
-            password: 'H0a9S1h8'
-            url: 'http://wordpress-6.8.2.local/'
-            tablePrefix: 'wp_'
-            populate: true
-            cleanup: true
-            dump: 'tests/_data/wordpress682.sql'
-            databases:
+        - WPLoader
+        - WPDb
+        - WPWebDriver
+        - WPFilesystem
+    config:
+          WPDb:
+              dsn: 'mysql:host=127.0.0.1;dbname=wordpress682'
+              user: 'root'
+              password: 'H0a9S1h8'
+              url: 'http://wordpress-6.8.2.local/'
+              tablePrefix: 'wp_'
+              populate: true
+              cleanup: true
+              dump: 'tests/_data/wordpress682.sql'
+              databases:
                 default:
                   dsn: 'mysql:host=127.0.0.1;dbname=wordpress682'
                   user: 'root'
                   password: 'H0a9S1h8'
-        - WPFilesystem:
+          WPFilesystem:
               wpRootFolder: 'D:\projects\test\wordpress-6.8.2'
-        - WPLoader:
+          WPLoader:
               wpRootFolder: 'D:\projects\test\wordpress-6.8.2'
               dbName: 'wordpress'
               dbHost: '127.0.0.1'
@@ -41,24 +47,23 @@ modules:
               plugins: [ ]           # 可以指定要激活的插件，比如 ["my-plugin/my-plugin.php"]
               activatePlugins: [ ]   # 同上
               loadOnly: true
-        - WPWebDriver:
-            url: 'http://wordpress-6.8.2.local'
-            browser: chrome
-            host: 127.0.0.1
-            port: 4444
-            capabilities:
+          WPWebDriver:
+              url: 'http://wordpress-6.8.2.local'
+              browser: chrome
+              host: 127.0.0.1
+              port: 4444
+              capabilities:
                 chromeOptions:
-                    args:
-                        - "--headless"
-                        - "--disable-gpu"
-                        - "--window-size=1280,1024"
-                    binary: "C:/Program Files/Google/Chrome/Application/chrome.exe"  # 指定完整路径
-                    prefs: #首选项
-                      download.default_directory: 'D:\\projects\\test\\wordpress-6.8.2\\wp-content\\plugins\\rw-postviewstats-lite\\tests\\_output'  #指定自动下载文件的目录
-                      download.prompt_for_download: false  #禁止弹窗“是否保存”
-                      directory_upgrade: true     #如果目录不存在，自动创建；允许覆盖下载文件
-                      plugins.always_open_pdf_externally: true    #PDF 不在浏览器打开，直接下载
-            adminUsername: 'admin'
-            adminPassword: '^H0a9S1h8$~'
-            adminPath: '/wp-admin'
-
+                  args:
+                    - "--headless"
+                    - "--disable-gpu"
+                    - "--window-size=1280,1024"
+                  binary: "C:/Program Files/Google/Chrome/Application/chrome.exe"  # 指定完整路径
+                  prefs: #首选项
+                    download.default_directory: 'D:\\projects\\test\\wordpress-6.8.2\\wp-content\\plugins\\rw-postviewstats-lite\\tests\\_output'  #指定自动下载文件的目录
+                    download.prompt_for_download: false  #禁止弹窗“是否保存”
+                    directory_upgrade: true     #如果目录不存在，自动创建；允许覆盖下载文件
+                    plugins.always_open_pdf_externally: true    #PDF 不在浏览器打开，直接下载
+              adminUsername: 'admin'
+              adminPassword: '^H0a9S1h8$~'
+              adminPath: '/wp-admin'

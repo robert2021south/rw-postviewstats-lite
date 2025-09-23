@@ -1,14 +1,18 @@
 <?php
 
-namespace Tests\Functional;
+namespace Tests\Integration;
 
 use RobertWP\PostViewStatsLite\Admin\Settings\SettingsRegistrar;
 use RobertWP\PostViewStatsLite\Modules\Tracker\Tracker;
-use Tests\Support\FunctionalTester;
+use Tests\Support\IntegrationTester;
 
 class TrackerCest
 {
-    public function testGetViews(FunctionalTester $I): void
+    function _before(IntegrationTester $I): void
+    {
+    }
+
+    public function testGetViews(IntegrationTester $I): void
     {
         $I->wantTo('Test Tracker::get_views in a real WordPress environment');
 
@@ -34,7 +38,7 @@ class TrackerCest
     /**
      * 测试 track_views() 是否正确更新总浏览量和今日浏览量
      */
-    public function testTrackViewsUpdatesMeta(FunctionalTester $I): void
+    public function testTrackViewsUpdatesMeta(IntegrationTester $I): void
     {
         $I->wantTo('Test Tracker::track_views updates total and today views correctly');
 
