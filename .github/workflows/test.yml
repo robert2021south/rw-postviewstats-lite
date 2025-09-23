@@ -76,6 +76,15 @@ jobs:
           mkdir -p wp/wp-content/plugins/rw-postviewstats-lite
           cp -R !(wp) wp/wp-content/plugins/rw-postviewstats-lite/
 
+      - name: Debug MySQL logs
+        run: docker logs $(docker ps -qf "name=mysql")
+
+      - name: Test MySQL connection
+        run: |
+          apt-get update && apt-get install -y mysql-client
+          export MYSQL_PWD=root
+          mysql -hmysql -uroot -e "SHOW DATABASES;"
+
       - name: Make run-tests.sh executable
         run: chmod +x wp/wp-content/plugins/rw-postviewstats-lite/run-tests.sh
 
