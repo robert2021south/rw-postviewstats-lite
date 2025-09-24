@@ -75,14 +75,9 @@ jobs:
           mkdir -p wp/wp-content/plugins/rw-postviewstats-lite          
           shopt -s extglob
           mv !(wp) wp/wp-content/plugins/rw-postviewstats-lite
-          cd  wp/wp-content/plugins/rw-postviewstats-lite
-
-      - name: Make run-tests.sh executable
-        run: |
-            echo "Current path:"
-            pwd
-            chmod +x run-tests.sh
 
       - name: Run Codeception tests
+        working-directory: wp/wp-content/plugins/rw-postviewstats-lite
         run: |
+          chmod +x run-tests.sh
           ./run-tests.sh
