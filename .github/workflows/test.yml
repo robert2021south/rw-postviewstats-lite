@@ -44,6 +44,12 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install -y mysql-client
+
+      - name: Debug network
+        run: |
+          ping -c 3 mysql || echo "Cannot ping mysql"
+          nslookup mysql || echo "Cannot resolve mysql"
+
       - name: Wait for MySQL to be ready
         run: |
           echo "Waiting for MySQL..."
