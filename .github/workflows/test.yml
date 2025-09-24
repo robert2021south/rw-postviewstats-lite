@@ -75,6 +75,7 @@ jobs:
           mkdir -p wp/wp-content/plugins/rw-postviewstats-lite          
           shopt -s extglob
           mv !(wp) wp/wp-content/plugins/rw-postviewstats-lite
+          ls -la wp/wp-content/plugins/
 
       - name: Run Codeception tests
         working-directory: wp/wp-content/plugins/rw-postviewstats-lite
