@@ -7,7 +7,7 @@ on:
     branches: [ ci ]
 
 jobs:
-  mysql-test:
+  test:
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -78,7 +78,10 @@ jobs:
           cd  wp/wp-content/plugins/rw-postviewstats-lite
 
       - name: Make run-tests.sh executable
-        run: chmod +x run-tests.sh
+        run: |
+            echo "Current path:"
+            pwd
+            chmod +x run-tests.sh
 
       - name: Run Codeception tests
         run: |
