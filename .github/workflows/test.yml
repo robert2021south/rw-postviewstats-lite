@@ -46,7 +46,7 @@ jobs:
       WP_DB_USER: root
       WP_DB_PASSWORD: root
       WP_DIR: ${{ github.workspace }}/wp
-      SELENIUM_HOST: selenium
+      SELENIUM_HOST: 127.0.0.1
       SELENIUM_PORT: 4444
 
     steps:
