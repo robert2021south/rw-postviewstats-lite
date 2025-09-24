@@ -18,7 +18,7 @@ jobs:
           MYSQL_DATABASE: test_db
           MYSQL_ROOT_HOST: "%"
         ports:
-          - 3306
+          - 3306:3306
         options: >-
           --health-cmd="mysqladmin ping -uroot -proot --silent"
           --health-interval=5s
@@ -31,15 +31,8 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y mysql-client
 
-      - name: Wait for MySQL to be ready
-        run: |
-          echo "Waiting for MySQL..."
-          until mysqladmin ping -hmysql -uroot -proot --silent; do
-            echo "Still waiting..."
-            sleep 2
-          done
-
       - name: Test MySQL connection
         run: |
           echo "Databases on MySQL:"
-          mysql -hmysql -uroot -proot -e "SHOW DATABASES;"
+          mysql -h127.0.0.1 -P3306 -uroot -proot -e "SHOW DATABASES;"
+
