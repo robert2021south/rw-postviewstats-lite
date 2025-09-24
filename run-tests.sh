@@ -25,7 +25,7 @@ until mysqladmin ping --protocol=tcp -h "$WP_DB_HOST" -u"$WP_DB_USER" -p"$WP_DB_
 done
 
 echo "====== Waiting for Selenium ======"
-until curl -s "http://${SELENIUM_HOST}:${SELENIUM_PORT}/wd/hub/status" | grep -q "\"ready\":\s*true"; do
+until curl -s $WP_WEB_DRIVER_URL"/status" | grep -q '"ready":\s*true'; do
     echo "Waiting for Selenium..."
     sleep 2
 done
