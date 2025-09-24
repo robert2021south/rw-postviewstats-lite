@@ -1,4 +1,4 @@
-name: W PostViewStats Lite Codeception Tests
+name: RW PostViewStats Lite Codeception Tests
 
 on:
   push:
@@ -69,15 +69,24 @@ jobs:
           tar -xzf wordpress-${{ matrix.wp }}.tar.gz
           mv wordpress wp
 
+      - name: Adjust Path
+        run: |
+          rm -f wordpress-6.8.tar.gz
+          mv wp /home/runner/work/
+          mkdir -p /home/runner/work/wp/wp-content/plugins/rw-postviewstats-lite
+          cp -R * /home/runner/work/wp/wp-content/plugins/rw-postviewstats-lite/
+          cd /home/runner/work/wp/wp-content/plugins/rw-postviewstats-lite
+
       - name: Debug current directory
         run: |
           echo "Current path:"
           pwd
           echo "Files in current directory:"
           ls -al
-          echo "Recursive listing:"
-          ls -R
-
+          echo "rw-postviewstats-lite:"
+          ls -al /home/runner/work/wp/wp-content/plugins/rw-postviewstats-lite/
+          echo "wp:"
+          ls -al /home/runner/work/wp/
 
 #      - name: Move plugin into WordPress plugins folder
 #        shell: bash
