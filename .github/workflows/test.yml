@@ -45,7 +45,7 @@ jobs:
       WP_DB_NAME: test_db
       WP_DB_USER: root
       WP_DB_PASSWORD: root
-      WP_DIR: ${{ github.workspace }}/wp
+      WP_DIR: ${{ github.workspace }}/wp  #${{ github.workspace }}值为 /home/runner/work/rw-postviewstats-lite/rw-postviewstats-lite
       SELENIUM_HOST: 127.0.0.1
       SELENIUM_PORT: 4444
 
@@ -69,13 +69,13 @@ jobs:
           tar -xzf wordpress-${{ matrix.wp }}.tar.gz
           mv wordpress wp
 
-      - name: Adjust Path
+      - name: Move Plugin Files
         run: |
-          rm -f wordpress-6.8.tar.gz
-          mv wp /home/runner/work/
-          mkdir -p /home/runner/work/wp/wp-content/plugins/rw-postviewstats-lite
-          cp -R * /home/runner/work/wp/wp-content/plugins/rw-postviewstats-lite/
-          cd /home/runner/work/wp/wp-content/plugins/rw-postviewstats-lite
+          rm -f wordpress-*.tar.gz
+          mkdir -p wp/wp-content/plugins/rw-postviewstats-lite          
+          shopt -s extglob
+          mv !(wp) wp/wp-content/plugins/rw-postviewstats-lite
+          cd  wp/wp-content/plugins/rw-postviewstats-lite
 
       - name: Make run-tests.sh executable
         run: chmod +x run-tests.sh
