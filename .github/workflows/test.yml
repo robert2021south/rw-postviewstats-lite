@@ -77,33 +77,9 @@ jobs:
           cp -R * /home/runner/work/wp/wp-content/plugins/rw-postviewstats-lite/
           cd /home/runner/work/wp/wp-content/plugins/rw-postviewstats-lite
 
-      - name: Debug current directory
+      - name: Make run-tests.sh executable
+        run: chmod +x run-tests.sh
+
+      - name: Run Codeception tests
         run: |
-          echo "Current path:"
-          pwd
-          echo "Files in current directory:"          
-          ls -al
-          
-          echo "/home/runner/work/:"
-          ls -al /home/runner/work/
-
-          echo "/home/runner/work/wp/wp-content/plugins/rw-postviewstats-lite/:"
-          ls -al /home/runner/work/wp/wp-content/plugins/rw-postviewstats-lite/
-          
-          echo "composer.json:"
-          cat /home/runner/work/wp/wp-content/plugins/rw-postviewstats-lite/composer.json
-
-#      - name: Move plugin into WordPress plugins folder
-#        shell: bash
-#        run: |
-#          shopt -s extglob
-#          mkdir -p wp/wp-content/plugins/rw-postviewstats-lite
-#          cp -R !(wp) wp/wp-content/plugins/rw-postviewstats-lite/
-#
-#      - name: Make run-tests.sh executable
-#        run: chmod +x wp/wp-content/plugins/rw-postviewstats-lite/run-tests.sh
-#
-#      - name: Run Codeception tests
-#        run: |
-#          cd wp/wp-content/plugins/rw-postviewstats-lite
-#          ./run-tests.sh
+          ./run-tests.sh
