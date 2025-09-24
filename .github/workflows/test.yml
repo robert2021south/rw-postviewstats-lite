@@ -1,4 +1,4 @@
-name: Test MySQL Only
+name: Test Selenium Only
 
 on:
   push:
@@ -16,7 +16,6 @@ jobs:
         ports:
           - 4444:4444
         options: >-
-          --default-authentication-plugin=mysql_native_password
           --health-cmd="curl -s http://localhost:4444/wd/hub/status | grep -q '\"ready\":\s*true'"
           --health-interval=10s
           --health-timeout=5s
