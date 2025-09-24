@@ -9,8 +9,27 @@ on:
 jobs:
   mysql-test:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        php: [8.2]
+        wp: [6.8]
 
     services:
+
+      mysql:
+        image: mysql:5.7
+        env:
+          MYSQL_DATABASE: test_db
+          MYSQL_ROOT_PASSWORD: root
+          MYSQL_ROOT_HOST: "%"
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd="mysqladmin ping -uroot -proot --silent"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=5
+
       selenium:
         image: selenium/standalone-chrome:latest
         ports:
@@ -21,13 +40,46 @@ jobs:
           --health-timeout=5s
           --health-retries=5
 
-    steps:
-      - name: Verify Selenium
-        run: |
-          echo "Checking Selenium status..."
-          until curl -s http://127.0.0.1:4444/wd/hub/status | grep -q '"ready":\s*true'; do
-            echo "Selenium not ready yet..."
-            sleep 2
-          done
-          echo "Selenium is ready!"
+    env:
+      WP_DB_HOST: 127.0.0.1
+      WP_DB_NAME: test_db
+      WP_DB_USER: root
+      WP_DB_PASSWORD: root
+      WP_DIR: ${{ github.workspace }}/wp
+      SELENIUM_HOST: selenium
+      SELENIUM_PORT: 4444
 
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php }}
+          extensions: mbstring, intl, curl, mysqli
+          coverage: none
+
+      - name: Install Composer dependencies
+        run: composer install --no-interaction
+
+      - name: Setup WordPress
+        run: |
+          wget https://wordpress.org/wordpress-${{ matrix.wp }}.tar.gz
+          tar -xzf wordpress-${{ matrix.wp }}.tar.gz
+          mv wordpress wp
+
+      - name: Move plugin into WordPress plugins folder
+        shell: bash
+        run: |
+          shopt -s extglob
+          mkdir -p wp/wp-content/plugins/rw-postviewstats-lite
+          cp -R !(wp) wp/wp-content/plugins/rw-postviewstats-lite/
+
+      - name: Make run-tests.sh executable
+        run: chmod +x wp/wp-content/plugins/rw-postviewstats-lite/run-tests.sh
+
+      - name: Run Codeception tests
+        run: |
+          cd wp/wp-content/plugins/rw-postviewstats-lite          
+          ./run-tests.sh

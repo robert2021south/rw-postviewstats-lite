@@ -5,10 +5,10 @@ set -e
 export WP_DB_NAME=${WP_DB_NAME:-test_db}
 export WP_DB_USER=${WP_DB_USER:-root}
 export WP_DB_PASSWORD=${WP_DB_PASSWORD:-root}
-export WP_DB_HOST=${WP_DB_HOST:-mysql}
+export WP_DB_HOST=${WP_DB_HOST:-127.0.0.1}
 export WP_DIR=${WP_DIR:-$(pwd)/wp}
 
-export SELENIUM_HOST=${SELENIUM_HOST:-selenium}
+export SELENIUM_HOST=${SELENIUM_HOST:-127.0.0.1}
 export SELENIUM_PORT=${SELENIUM_PORT:-4444}
 export WP_WEB_DRIVER_URL="http://${SELENIUM_HOST}:${SELENIUM_PORT}/wd/hub"
 
@@ -20,10 +20,6 @@ echo ""
 
 echo "====== Waiting for MySQL ======"
 until mysqladmin ping --protocol=tcp -h "$WP_DB_HOST" -u"$WP_DB_USER" -p"$WP_DB_PASSWORD" --silent; do
-      echo "Waiting for MySQL..."
-      sleep 2
-  done
-
     echo "Waiting for MySQL..."
     sleep 2
 done
