@@ -81,12 +81,17 @@ jobs:
         run: |
           echo "Current path:"
           pwd
-          echo "Files in current directory:"
+          echo "Files in current directory:"          
           ls -al
-          echo "rw-postviewstats-lite:"
+          
+          echo "/home/runner/work/:"
+          ls -al /home/runner/work/
+
+          echo "/home/runner/work/wp/wp-content/plugins/rw-postviewstats-lite/:"
           ls -al /home/runner/work/wp/wp-content/plugins/rw-postviewstats-lite/
-          echo "wp:"
-          ls -al /home/runner/work/wp/
+          
+          echo "composer.json:"
+          cat /home/runner/work/wp/wp-content/plugins/rw-postviewstats-lite/composer.json
 
 #      - name: Move plugin into WordPress plugins folder
 #        shell: bash
