@@ -1,43 +1,29 @@
-name: RW PostViewStats Lite Codeception Tests
+name: Test MySQL Only
 
 on:
   push:
-    branches:
-      - ci
+    branches: [ ci ]
   pull_request:
-    branches:
-      - ci
+    branches: [ ci ]
+
 jobs:
-  test:
+  mysql-test:
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        php: [8.2]
-        wp: [6.8]
 
     services:
       mysql:
         image: mysql:5.7
         env:
-          MYSQL_DATABASE: test_db
           MYSQL_ROOT_PASSWORD: root
+          MYSQL_DATABASE: test_db
           MYSQL_ROOT_HOST: "%"
         ports:
           - 3306
         options: >-
           --health-cmd="mysqladmin ping -uroot -proot --silent"
-          --health-interval=10s
+          --health-interval=5s
           --health-timeout=5s
-          --health-retries=5
-
-    env:
-      WP_DB_HOST: mysql   # 用容器名 mysql，Actions 会解析
-      WP_DB_NAME: test_db
-      WP_DB_USER: root
-      WP_DB_PASSWORD: root
-      WP_DIR: ${{ github.workspace }}/wp
-      SELENIUM_HOST: selenium
-      SELENIUM_PORT: 4444
+          --health-retries=20
 
     steps:
       - name: Install MySQL client
@@ -45,17 +31,15 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y mysql-client
 
-      - name: Debug network
-        run: |
-          ping -c 3 mysql || echo "Cannot ping mysql"
-          nslookup mysql || echo "Cannot resolve mysql"
-
       - name: Wait for MySQL to be ready
         run: |
           echo "Waiting for MySQL..."
           until mysqladmin ping -hmysql -uroot -proot --silent; do
+            echo "Still waiting..."
             sleep 2
           done
+
       - name: Test MySQL connection
         run: |
+          echo "Databases on MySQL:"
           mysql -hmysql -uroot -proot -e "SHOW DATABASES;"
