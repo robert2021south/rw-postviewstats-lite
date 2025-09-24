@@ -44,7 +44,12 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install -y mysql-client
-
+      - name: Wait for MySQL to be ready
+        run: |
+          echo "Waiting for MySQL..."
+          until mysqladmin ping -hmysql -uroot -proot --silent; do
+            sleep 2
+          done
       - name: Test MySQL connection
         run: |
           mysql -hmysql -uroot -proot -e "SHOW DATABASES;"
