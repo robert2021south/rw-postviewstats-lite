@@ -47,4 +47,4 @@ jobs:
 
       - name: Test MySQL connection
         run: |
-          mysql -hmysql -uroot -proot -e "SHOW DATABASES;""
+          mysql -hmysql -uroot -proot -e "SHOW DATABASES;"
