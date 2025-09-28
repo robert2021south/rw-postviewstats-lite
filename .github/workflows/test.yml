@@ -2,9 +2,9 @@ name: RW PostViewStats Lite Codeception Tests
 
 on:
   push:
-    branches: [ ci ]
+    branches: [ admin ]
   pull_request:
-    branches: [ ci ]
+    branches: [ admin ]
 
 jobs:
   test:
@@ -76,6 +76,30 @@ jobs:
           shopt -s extglob
           mv !(wp) wp/wp-content/plugins/rw-postviewstats-lite
           ls -la wp/wp-content/plugins/
+
+      - name: Configure WordPress for Testing
+        run: |
+          cd wp
+          # 复制配置文件
+          cp wp-config-sample.php wp-config.php
+          
+          # 更新数据库配置
+          sed -i "s/database_name_here/$WP_DB_NAME/g" wp-config.php
+          sed -i "s/username_here/$WP_DB_USER/g" wp-config.php
+          sed -i "s/password_here/$WP_DB_PASSWORD/g" wp-config.php
+          sed -i "s/localhost/$WP_DB_HOST/g" wp-config.php
+          
+          # 添加认证密钥和调试设置
+          curl -s https://api.wordpress.org/secret-key/1.1/salt/ >> wp-config.php
+          cat >> wp-config.php << 'EOF'
+
+        # 测试环境配置
+        define('WP_DEBUG', true);
+        define('WP_DEBUG_LOG', true);
+        define('WP_ENVIRONMENT_TYPE', 'testing');
+        define('TEST_SITE_URL', 'http://127.0.0.1');
+        EOF
+
 
       - name: Run Codeception tests
         working-directory: wp/wp-content/plugins/rw-postviewstats-lite
