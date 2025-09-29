@@ -17,11 +17,11 @@ jobs:
     services:
 
       mysql:
-        image: mysql:5.7
+        image: mysql:8.0
         env:
+          MYSQL_ROOT_HOST: "%"
           MYSQL_DATABASE: test_db
           MYSQL_ROOT_PASSWORD: root
-          MYSQL_ROOT_HOST: "%"
         ports:
           - 3306:3306
         options: >-
@@ -30,85 +30,74 @@ jobs:
           --health-timeout=5s
           --health-retries=5
 
-      selenium:
-        image: selenium/standalone-chrome:latest
-        ports:
-          - 4444:4444
-        options: >-
-          --health-cmd="curl -s http://127.0.0.1:4444/wd/hub/status | grep -q '\"ready\":\s*true'"
-          --health-interval=10s
-          --health-timeout=5s
-          --health-retries=5
+#      selenium:
+#        image: selenium/standalone-chrome:latest
+#        ports:
+#          - 4444:4444
+#        options: >-
+#          --health-cmd="curl -s http://127.0.0.1:4444/wd/hub/status | grep -q '\"ready\":\s*true'"
+#          --health-interval=10s
+#          --health-timeout=5s
+#          --health-retries=5
 
-    env:
-      WP_DB_HOST: 127.0.0.1
-      WP_DB_NAME: test_db
-      WP_DB_USER: root
-      WP_DB_PASSWORD: root
-      WP_DIR: ${{ github.workspace }}/wp  #${{ github.workspace }}值为 /home/runner/work/rw-postviewstats-lite/rw-postviewstats-lite
-      SELENIUM_HOST: 127.0.0.1
-      SELENIUM_PORT: 4444
+#    env:
+#      WP_DB_HOST: 127.0.0.1
+#      WP_DB_NAME: test_db
+#      WP_DB_USER: root
+#      WP_DB_PASSWORD: root
+#      WP_DIR: ${{ github.workspace }}/wp  #${{ github.workspace }}值为 /home/runner/work/rw-postviewstats-lite/rw-postviewstats-lite
+#      SELENIUM_HOST: 127.0.0.1
+#      SELENIUM_PORT: 4444
 
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
-
-      - name: Setup PHP
-        uses: shivammathur/setup-php@v2
-        with:
-          php-version: ${{ matrix.php }}
-          extensions: mbstring, intl, curl, mysqli
-          coverage: none
-
-      - name: Install Composer dependencies
-        run: composer install --no-interaction
-
-      - name: Setup WordPress
-        run: |
-          wget https://wordpress.org/wordpress-${{ matrix.wp }}.tar.gz
-          tar -xzf wordpress-${{ matrix.wp }}.tar.gz
-          mv wordpress wp
-
-      - name: Move Plugin Files
-        run: |
-          rm -f wordpress-*.tar.gz
-          mkdir -p wp/wp-content/plugins/rw-postviewstats-lite          
-          shopt -s extglob
-          mv !(wp) wp/wp-content/plugins/rw-postviewstats-lite
-          ls -la wp/wp-content/plugins/
-
-      - name: Configure WordPress for Testing
-        run: |
-          cd wp
-          cp wp-config-sample.php wp-config.php
-          
-          sed -i "s/database_name_here/$WP_DB_NAME/g" wp-config.php
-          sed -i "s/username_here/$WP_DB_USER/g" wp-config.php
-          sed -i "s/password_here/$WP_DB_PASSWORD/g" wp-config.php
-          sed -i "s/localhost/$WP_DB_HOST/g" wp-config.php
-          
-          curl -s https://api.wordpress.org/secret-key/1.1/salt/ >> wp-config.php
-
-          echo "# 测试环境配置" >> wp-config.php
-          echo "define('WP_DEBUG', true);" >> wp-config.php
-          echo "define('WP_DEBUG_LOG', true);" >> wp-config.php
-          echo "define('WP_ENVIRONMENT_TYPE', 'testing');" >> wp-config.php
-          echo "define('TEST_SITE_URL', 'http://127.0.0.1');" >> wp-config.php
-
-      - name: Install Chrome
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y wget unzip
-          wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
-          sudo apt install -y ./google-chrome-stable_current_amd64.deb
-
-      - name: Install Selenium Server
-        run: |
-            wget https://github.com/SeleniumHQ/selenium/releases/download/selenium-4.35.0/selenium-server-4.35.0.jar -O selenium-server.jar
-
-      - name: Start Selenium Server
-        run: |
-            nohup java -jar selenium-server.jar standalone > selenium.log 2>&1 &
+#    steps:
+#      - name: Checkout code
+#        uses: actions/checkout@v3
+#
+#      - name: Setup PHP
+#        uses: shivammathur/setup-php@v2
+#        with:
+#          php-version: ${{ matrix.php }}
+#          extensions: mbstring, intl, curl, mysqli
+#          coverage: none
+#
+#      - name: Install Composer dependencies
+#        run: composer install --no-interaction
+#
+#      - name: Setup WordPress
+#        run: |
+#          wget https://wordpress.org/wordpress-${{ matrix.wp }}.tar.gz
+#          tar -xzf wordpress-${{ matrix.wp }}.tar.gz
+#          mv wordpress wp
+#
+#      - name: Move Plugin Files
+#        run: |
+#          rm -f wordpress-*.tar.gz
+#          mkdir -p wp/wp-content/plugins/rw-postviewstats-lite
+#          shopt -s extglob
+#          mv !(wp) wp/wp-content/plugins/rw-postviewstats-lite
+#          ls -la wp/wp-content/plugins/
+#
+#      - name: Configure WordPress for Testing
+#        run: |
+#          cd wp
+#          cp wp-config-sample.php wp-config.php
+#
+#          sed -i "s/database_name_here/$WP_DB_NAME/g" wp-config.php
+#          sed -i "s/username_here/$WP_DB_USER/g" wp-config.php
+#          sed -i "s/password_here/$WP_DB_PASSWORD/g" wp-config.php
+#          sed -i "s/localhost/$WP_DB_HOST/g" wp-config.php
+#
+#          curl -s https://api.wordpress.org/secret-key/1.1/salt/ >> wp-config.php
+#
+#          echo "# 测试环境配置" >> wp-config.php
+#          echo "define('WP_DEBUG', true);" >> wp-config.php
+#          echo "define('WP_DEBUG_LOG', true);" >> wp-config.php
+#          echo "define('WP_ENVIRONMENT_TYPE', 'testing');" >> wp-config.php
+#          echo "define('TEST_SITE_URL', 'http://127.0.0.1');" >> wp-config.php
+#
+#      - name: Start Selenium Server
+#        run: |
+#            nohup java -jar selenium-server.jar standalone > selenium.log 2>&1 &
 
 #      - name: Run Codeception tests
 #        working-directory: wp/wp-content/plugins/rw-postviewstats-lite
