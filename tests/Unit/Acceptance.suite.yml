@@ -1,0 +1,11 @@
+actor: AcceptanceTester
+modules:
+  enabled:
+    - WebDriver:
+        url: 'http://127.0.0.1'   # 改成你的 WordPress 站点 URL
+        browser: chrome
+        port: 4444
+        host: 127.0.0.1
+        capabilities:
+          chromeOptions:
+            args: ["--headless", "--disable-gpu", "--no-sandbox", "--disable-dev-shm-usage"]

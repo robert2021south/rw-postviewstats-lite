@@ -1,0 +1,74 @@
+# Codeception Test Suite Configuration
+#
+# Suite for acceptance tests
+# Emulate web requests and make application process them
+# Include one of framework modules (Symfony, Yii2, Laravel, Phalcon5) to use it
+# Remove this suite if you don't use frameworks
+
+actor: AcceptanceTester
+suite_namespace: Tests\Acceptance
+bootstrap: false
+modules:
+    # enable helpers as array
+    enabled:
+        - Asserts
+        - \Tests\Support\Helper\Acceptance
+        - WPLoader
+        - WPDb
+        - WPWebDriver
+        - WPFilesystem
+    config:
+          WPDb:
+              dsn: 'mysql:host=127.0.0.1;dbname=test_db'
+              user: 'root'
+              password: 'H0a9S1h8'
+              url: 'http://wordpress682.local/'
+              tablePrefix: 'wp_'
+              populate: true
+              cleanup: true
+              dump: ''
+              databases:
+                default:
+                  dsn: 'mysql:host=127.0.0.1;dbname=test_db'
+                  user: 'root'
+                  password: 'H0a9S1h8'
+          WPFilesystem:
+              wpRootFolder: '/var/www/html/wp/'
+          WPLoader:
+              wpRootFolder: '/var/www/html/wp/'
+              dbName: 'test_db'
+              dbHost: '127.0.0.1'
+              dbUser: 'root'
+              dbPassword: 'H0a9S1h8'
+              tablePrefix: 'wp_'
+              domain: 'wordpress682.local'
+              adminEmail: 'robert2021south@gmail.com'
+              title: 'Test Blog'
+              plugins: [ "rw-postviewstats-lite/rw-postviewstats-lite.php" ]           # 可以指定要激活的插件，比如 ["my-plugin/my-plugin.php"]
+              activatePlugins: [ "rw-postviewstats-lite/rw-postviewstats-lite.php" ]   # 同上
+              loadOnly: true
+          WPWebDriver:
+              url: 'http://wordpress682.local'
+              browser: chrome
+              host: 127.0.0.1
+              port: 4444
+              restart: true
+              use_w3c: true                # W3C 协议兼容
+              capabilities:
+                chromeOptions:
+                  args:
+                    - "--headless"
+                    - "--disable-gpu"
+                    - "--window-size=1280,1024"
+                    - "--no-sandbox"
+                    - "--disable-dev-shm-usage"
+                    #- "--user-data-dir=/opt/selenium/tmp-profile-$$"
+                  binary: "/usr/bin/google-chrome"  # 指定完整路径
+                  prefs: #首选项
+                    download.default_directory: '/var/www/html/wp/wp-content/plugins/rw-postviewstats-lite/tests/_output'  #指定自动下载文件的目录
+                    download.prompt_for_download: false  #禁止弹窗“是否保存”
+                    directory_upgrade: true     #如果目录不存在，自动创建；允许覆盖下载文件
+                    plugins.always_open_pdf_externally: true    #PDF 不在浏览器打开，直接下载
+              adminUsername: 'admin'
+              adminPassword: '^H0a9S1h8$~'
+              adminPath: '/wp-admin'

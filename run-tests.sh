@@ -8,9 +8,9 @@ export WP_DB_PASSWORD=${WP_DB_PASSWORD:-root}
 export WP_DB_HOST=${WP_DB_HOST:-127.0.0.1}
 export WP_DIR=${WP_DIR:-$(pwd)/wp}
 
-export SELENIUM_HOST=${SELENIUM_HOST:-127.0.0.1}
-export SELENIUM_PORT=${SELENIUM_PORT:-4444}
-export WP_WEB_DRIVER_URL="http://${SELENIUM_HOST}:${SELENIUM_PORT}/wd/hub"
+#export SELENIUM_HOST=${SELENIUM_HOST:-127.0.0.1}
+#export SELENIUM_PORT=${SELENIUM_PORT:-4444}
+#export WP_WEB_DRIVER_URL="http://${SELENIUM_HOST}:${SELENIUM_PORT}/wd/hub"
 
 # 新增Web服务器配置
 export WP_URL="http://127.0.0.1:8080"
@@ -19,7 +19,7 @@ export WP_DOMAIN="127.00.0.1:8080"
 echo "====== Environment Variables ======"
 echo "DB: $WP_DB_USER@$WP_DB_HOST/$WP_DB_NAME"
 echo "WordPress dir: $WP_DIR"
-echo "Selenium: $WP_WEB_DRIVER_URL"
+#echo "Selenium: $WP_WEB_DRIVER_URL"
 echo ""
 
 echo "====== Waiting for MySQL ======"
@@ -28,11 +28,11 @@ until mysqladmin ping --protocol=tcp -h "$WP_DB_HOST" -u"$WP_DB_USER" -p"$WP_DB_
     sleep 2
 done
 
-echo "====== Waiting for Selenium ======"
-until curl -s $WP_WEB_DRIVER_URL"/status" | grep -q '"ready":\s*true'; do
-    echo "Waiting for Selenium..."
-    sleep 2
-done
+#echo "====== Waiting for Selenium ======"
+#until curl -s $WP_WEB_DRIVER_URL"/status" | grep -q '"ready":\s*true'; do
+#    echo "Waiting for Selenium..."
+#    sleep 2
+#done
 
 echo "====== Running Unit & Integration Tests ======"
 vendor/bin/codecept run unit
