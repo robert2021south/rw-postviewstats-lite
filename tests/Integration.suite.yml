@@ -15,20 +15,19 @@ modules:
         - lucatume\WPBrowser\Module\WPLoader   #负责加载 WordPress 核心、安装、初始化环境
     config:
             lucatume\WPBrowser\Module\WPDb:
-                dsn: 'mysql:host=127.0.0.1;dbname=test_db'
+                dsn: 'mysql:host=localhost;dbname=test_db'
                 user: 'root'
                 password: 'root'
                 dump: ''
                 populate: false
                 cleanup: true
-                url: 'http://rwpsl.local'
                 tablePrefix: 'wp_'
             lucatume\WPBrowser\Module\WPLoader:
               wpRootFolder: '/home/runner/work/rw-postviewstats-lite/rw-postviewstats-lite/wp/'
-              dbUrl: 'mysql://root:root@127.0.0.1:3306/test_db'
-              domain: 'rwpsl.local'
+              dbUrl: 'mysql://root:root@localhost:3306/test_db'
+              domain: 'localhost'
               adminUsername: 'admin'
-              adminPassword: '^H0a9S1h8$~'
+              adminPassword: 'pBlaWDphJvFab5Jbi3KR9q6s'
               adminEmail: 'robert2021south@gmail.com'
               loadOnly: true
 step_decorators: ~

@@ -18,17 +18,17 @@ modules:
         - WPFilesystem
     config:
           WPDb:
-              dsn: 'mysql:host=127.0.0.1;dbname=test_db'
+              dsn: 'mysql:host=localhost;dbname=test_db'
               user: 'root'
               password: 'root'
-              url: 'http://rwpsl.local/'
+              url: 'http://localhost/'
               tablePrefix: 'wp_'
               populate: true
               cleanup: true
               dump: ''
               databases:
                 default:
-                  dsn: 'mysql:host=127.0.0.1;dbname=test_db'
+                  dsn: 'mysql:host=localhost;dbname=test_db'
                   user: 'root'
                   password: 'root'
           WPFilesystem:
@@ -40,14 +40,14 @@ modules:
               dbUser: 'root'
               dbPassword: 'root'
               tablePrefix: 'wp_'
-              domain: 'rwpsl.local'
+              domain: 'localhost'
               adminEmail: 'robert2021south@gmail.com'
               title: 'Test Blog'
               plugins: [ "rw-postviewstats-lite/rw-postviewstats-lite.php" ]           # 可以指定要激活的插件，比如 ["my-plugin/my-plugin.php"]
               activatePlugins: [ "rw-postviewstats-lite/rw-postviewstats-lite.php" ]   # 同上
               loadOnly: true
           WPWebDriver:
-              url: 'http://rwpsl.local'
+              url: 'http://localhost'
               browser: chrome
               host: 127.0.0.1
               port: 4444
@@ -64,10 +64,10 @@ modules:
                     #- "--user-data-dir=/opt/selenium/tmp-profile-$$"
                   binary: "/usr/bin/google-chrome"  # 指定完整路径
                   prefs: #首选项
-                    download.default_directory: '/var/www/html/wp/wp-content/plugins/rw-postviewstats-lite/tests/_output'  #指定自动下载文件的目录
+                    download.default_directory: '/home/runner/work/rw-postviewstats-lite/rw-postviewstats-lite/tests/_output'  #指定自动下载文件的目录
                     download.prompt_for_download: false  #禁止弹窗“是否保存”
                     directory_upgrade: true     #如果目录不存在，自动创建；允许覆盖下载文件
                     plugins.always_open_pdf_externally: true    #PDF 不在浏览器打开，直接下载
               adminUsername: 'admin'
-              adminPassword: '^H0a9S1h8$~'
+              adminPassword: 'pBlaWDphJvFab5Jbi3KR9q6s'
               adminPath: '/wp-admin'

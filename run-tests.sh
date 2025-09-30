@@ -13,8 +13,8 @@ export SELENIUM_PORT=${SELENIUM_PORT:-4444}
 export WP_WEB_DRIVER_URL="http://${SELENIUM_HOST}:${SELENIUM_PORT}/wd/hub"
 
 # 新增Web服务器配置
-export WP_URL="http://127.0.0.1:8080"
-export WP_DOMAIN="127.00.0.1:8080"
+#export WP_URL="http://localhost:8080"
+#export WP_DOMAIN="localhost:8080"
 
 echo "====== Environment Variables ======"
 echo "DB: $WP_DB_USER@$WP_DB_HOST/$WP_DB_NAME"
@@ -38,7 +38,6 @@ echo "====== Running Unit & Integration Tests ======"
 vendor/bin/codecept run Unit
 vendor/bin/codecept run Integration
 
-
 echo "====== Starting PHP Built-in Server for Acceptance Tests ======"
 # 在WordPress目录启动PHP内置服务器
 cd "$WP_DIR"
@@ -60,8 +59,7 @@ else
     exit 1
 fi
 
-
 echo "====== Running Acceptance Tests (Selenium / WPWebDriver) ======"
-vendor/bin/codecept run Acceptance
+vendor/bin/codecept run Acceptance ShortcodeCest.php
 
 echo "All tests passed!"

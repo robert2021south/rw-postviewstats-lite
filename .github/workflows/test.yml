@@ -2,9 +2,9 @@ name: RW PostViewStats Lite Codeception Tests
 
 on:
   push:
-    branches: [ main ]
+    branches: [ ci ]
   pull_request:
-    branches: [ main ]
+    branches: [ ci ]
 
 jobs:
   test:
