@@ -35,8 +35,8 @@ until curl -s $WP_WEB_DRIVER_URL"/status" | grep -q '"ready":\s*true'; do
 done
 
 echo "====== Running Unit & Integration Tests ======"
-vendor/bin/codecept run unit
-vendor/bin/codecept run integration
+vendor/bin/codecept run Unit
+vendor/bin/codecept run Integration
 
 
 echo "====== Starting PHP Built-in Server for Acceptance Tests ======"
@@ -62,6 +62,6 @@ fi
 
 
 echo "====== Running Acceptance Tests (Selenium / WPWebDriver) ======"
-vendor/bin/codecept run acceptance
+vendor/bin/codecept run Acceptance
 
 echo "All tests passed!"
