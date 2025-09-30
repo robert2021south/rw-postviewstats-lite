@@ -18,7 +18,7 @@ modules:
         - WPFilesystem
     config:
           WPDb:
-              dsn: 'mysql:host=localhost;dbname=test_db'
+              dsn: 'mysql:host=127.0.0.1;dbname=test_db'
               user: 'root'
               password: 'root'
               url: 'http://localhost/'
@@ -28,7 +28,7 @@ modules:
               dump: ''
               databases:
                 default:
-                  dsn: 'mysql:host=localhost;dbname=test_db'
+                  dsn: 'mysql:host=127.0.0.1;dbname=test_db'
                   user: 'root'
                   password: 'root'
           WPFilesystem:
