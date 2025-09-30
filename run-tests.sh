@@ -40,17 +40,30 @@ vendor/bin/codecept run Integration
 
 echo "====== Starting PHP Built-in Server for Acceptance Tests ======"
 
-# 在 WordPress 根目录启动 PHP 内置服务器
-cd "$WP_DIR"
+# 确认 WordPress 根目录
+echo "WP_DIR=$WP_DIR"
+ls -la "$WP_DIR"
 
-# 指定 IPv4 地址 + 端口 + 网站根目录，日志输出到文件
+# 等待数据库就绪
+echo "Waiting for MySQL to be ready..."
+until mysqladmin ping -h 127.0.0.1 -P 3306 --silent; do
+    echo "MySQL not ready yet..."
+    sleep 1
+done
+echo "MySQL is ready"
+
+# 启动 PHP 内置服务器
+cd "$WP_DIR"
 php -S 127.0.0.1:8080 -t "$WP_DIR" > /tmp/php-server.log 2>&1 &
 SERVER_PID=$!
 echo "PHP server started with PID: $SERVER_PID"
 
-# 等待服务器启动并可访问（最长 15 秒，每 1 秒检查一次）
+# 设置 WordPress URL
+WP_URL="http://127.0.0.1:8080"
+
+# 等待服务器启动（最长 60 秒，每秒检测一次）
 echo "Waiting for PHP server to be ready..."
-MAX_RETRIES=15
+MAX_RETRIES=60
 RETRY_COUNT=0
 until curl -f -s "$WP_URL" > /dev/null; do
     sleep 1
@@ -59,12 +72,16 @@ until curl -f -s "$WP_URL" > /dev/null; do
         echo "ERROR: PHP server failed to start after $MAX_RETRIES seconds"
         echo "Server logs:"
         cat /tmp/php-server.log
+        echo "Debug: first 500 chars of homepage"
+        curl -s "$WP_URL" | head -c 500
         kill $SERVER_PID
         exit 1
     fi
 done
 
 echo "PHP server is running successfully"
+echo "Debug: first 500 chars of homepage"
+curl -s "$WP_URL" | head -c 500
 
 
 echo "====== Running Acceptance Tests (Selenium / WPWebDriver) ======"
