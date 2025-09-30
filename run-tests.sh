@@ -14,8 +14,8 @@ export SELENIUM_PORT=${SELENIUM_PORT:-4444}
 export WP_WEB_DRIVER_URL="http://${SELENIUM_HOST}:${SELENIUM_PORT}/wd/hub"
 
 
-# 新增Web服务器配置
-#export WP_URL="http://localhost:8080"
+# 新增Web服务器配置 # 设置 WordPress URL
+export WP_URL="http://127.0.0.1:8080"
 #export WP_DOMAIN="localhost:8080"
 
 echo "====== Environment Variables ======"
@@ -56,12 +56,10 @@ echo "MySQL is ready"
 
 # 启动 PHP 内置服务器
 cd "$WP_DIR"
-php -S 127.0.0.1:8080 -t "$WP_DIR" > /tmp/php-server.log 2>&1 &
+php -S 0.0.0.0:8080 -t "$WP_DIR" > /tmp/php-server.log 2>&1 &
 SERVER_PID=$!
 echo "PHP server started with PID: $SERVER_PID"
 
-# 设置 WordPress URL
-WP_URL="http://127.0.0.1:8080"
 
 # 等待服务器启动（最长 60 秒，每秒检测一次）
 echo "Waiting for PHP server to be ready..."

@@ -21,7 +21,7 @@ modules:
               dsn: 'mysql:host=127.0.0.1;dbname=test_db'
               user: 'root'
               password: 'root'
-              url: 'http://localhost/'
+              url: 'http://127.0.0.1:8080/'
               tablePrefix: 'wp_'
               populate: true
               cleanup: true
@@ -40,14 +40,14 @@ modules:
               dbUser: 'root'
               dbPassword: 'root'
               tablePrefix: 'wp_'
-              domain: 'localhost'
+              domain: '127.0.0.1'
               adminEmail: 'robert2021south@gmail.com'
               title: 'Test Blog'
               plugins: [ "rw-postviewstats-lite/rw-postviewstats-lite.php" ]           # 可以指定要激活的插件，比如 ["my-plugin/my-plugin.php"]
               activatePlugins: [ "rw-postviewstats-lite/rw-postviewstats-lite.php" ]   # 同上
               loadOnly: true
           WPWebDriver:
-              url: 'http://localhost'
+              url: 'http://127.0.0.1:8080'
               browser: chrome
               host: 127.0.0.1
               port: 4444
