@@ -7,10 +7,12 @@ export WP_DB_USER=${WP_DB_USER:-root}
 export WP_DB_PASSWORD=${WP_DB_PASSWORD:-root}
 export WP_DB_HOST=${WP_DB_HOST:-127.0.0.1}
 export WP_DIR=${WP_DIR:-$(pwd)/wp}
+export PLUGIN_DIR="$(pwd)"   # 当前目录就是仓库根目录
 
 export SELENIUM_HOST=${SELENIUM_HOST:-127.0.0.1}
 export SELENIUM_PORT=${SELENIUM_PORT:-4444}
 export WP_WEB_DRIVER_URL="http://${SELENIUM_HOST}:${SELENIUM_PORT}/wd/hub"
+
 
 # 新增Web服务器配置
 #export WP_URL="http://localhost:8080"
@@ -41,8 +43,8 @@ vendor/bin/codecept run Integration
 echo "====== Starting PHP Built-in Server for Acceptance Tests ======"
 
 # 确认 WordPress 根目录
-echo "WP_DIR=$WP_DIR"
-ls -la "$WP_DIR"
+#echo "WP_DIR=$WP_DIR"
+#ls -la "$WP_DIR"
 
 # 等待数据库就绪
 echo "Waiting for MySQL to be ready..."
@@ -85,6 +87,8 @@ curl -s "$WP_URL" | head -c 500
 
 
 echo "====== Running Acceptance Tests (Selenium / WPWebDriver) ======"
+# 回到插件根目录
+cd "$PLUGIN_DIR"
 vendor/bin/codecept run Acceptance ShortcodeCest.php
 
 echo "All tests passed!"
