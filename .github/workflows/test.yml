@@ -106,6 +106,17 @@ jobs:
           echo "define('WP_ENVIRONMENT_TYPE', 'testing');" >> wp-config.php
           echo "define('TEST_SITE_URL', 'http://127.0.0.1');" >> wp-config.php
 
+      - name: Install WordPress
+        run: |
+          cd wp
+          wp core install \
+            --url="http://127.0.0.1" \
+            --title="Test Site" \
+            --admin_user="admin" \
+            --admin_password="pBlaWDphJvFab5Jbi3KR9q6s" \
+            --admin_email="robert2021south@gmail.com" \
+            --skip-email
+
       - name: Start Selenium Server
         run: |
             nohup java -jar selenium-server.jar standalone > selenium.log 2>&1 &
