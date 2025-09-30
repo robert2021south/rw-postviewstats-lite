@@ -39,25 +39,33 @@ vendor/bin/codecept run Unit
 vendor/bin/codecept run Integration
 
 echo "====== Starting PHP Built-in Server for Acceptance Tests ======"
-# 在WordPress目录启动PHP内置服务器
+
+# 在 WordPress 根目录启动 PHP 内置服务器
 cd "$WP_DIR"
-php -S localhost:8080 > /tmp/php-server.log 2>&1 &
+
+# 指定 IPv4 地址 + 端口 + 网站根目录，日志输出到文件
+php -S 127.0.0.1:8080 -t "$WP_DIR" > /tmp/php-server.log 2>&1 &
 SERVER_PID=$!
 echo "PHP server started with PID: $SERVER_PID"
 
-# 等待服务器启动
+# 等待服务器启动并可访问（最长 15 秒，每 1 秒检查一次）
 echo "Waiting for PHP server to be ready..."
-sleep 5
+MAX_RETRIES=15
+RETRY_COUNT=0
+until curl -f -s "$WP_URL" > /dev/null; do
+    sleep 1
+    RETRY_COUNT=$((RETRY_COUNT + 1))
+    if [ $RETRY_COUNT -ge $MAX_RETRIES ]; then
+        echo "ERROR: PHP server failed to start after $MAX_RETRIES seconds"
+        echo "Server logs:"
+        cat /tmp/php-server.log
+        kill $SERVER_PID
+        exit 1
+    fi
+done
 
-# 测试服务器是否正常响应
-if curl -f -s "$WP_URL" > /dev/null; then
-    echo "PHP server is running successfully"
-else
-    echo "ERROR: PHP server failed to start"
-    echo "Server logs:"
-    cat /tmp/php-server.log
-    exit 1
-fi
+echo "PHP server is running successfully"
+
 
 echo "====== Running Acceptance Tests (Selenium / WPWebDriver) ======"
 vendor/bin/codecept run Acceptance ShortcodeCest.php
