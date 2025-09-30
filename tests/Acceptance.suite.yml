@@ -7,22 +7,21 @@
 
 actor: AcceptanceTester
 suite_namespace: Tests\Acceptance
-bootstrap: false
 modules:
     # enable helpers as array
     enabled:
         - Asserts
         - \Tests\Support\Helper\Acceptance
-        - WPLoader
         - WPDb
+        - WPLoader
         - WPWebDriver
         - WPFilesystem
     config:
           WPDb:
               dsn: 'mysql:host=127.0.0.1;dbname=test_db'
               user: 'root'
-              password: 'H0a9S1h8'
-              url: 'http://wordpress682.local/'
+              password: 'root'
+              url: 'http://rwpsl.local/'
               tablePrefix: 'wp_'
               populate: true
               cleanup: true
@@ -31,24 +30,24 @@ modules:
                 default:
                   dsn: 'mysql:host=127.0.0.1;dbname=test_db'
                   user: 'root'
-                  password: 'H0a9S1h8'
+                  password: 'root'
           WPFilesystem:
-              wpRootFolder: '/var/www/html/wp/'
+              wpRootFolder: '/home/runner/work/rw-postviewstats-lite/rw-postviewstats-lite/wp/'
           WPLoader:
-              wpRootFolder: '/var/www/html/wp/'
+              wpRootFolder: '/home/runner/work/rw-postviewstats-lite/rw-postviewstats-lite/wp/'
               dbName: 'test_db'
               dbHost: '127.0.0.1'
               dbUser: 'root'
-              dbPassword: 'H0a9S1h8'
+              dbPassword: 'root'
               tablePrefix: 'wp_'
-              domain: 'wordpress682.local'
+              domain: 'rwpsl.local'
               adminEmail: 'robert2021south@gmail.com'
               title: 'Test Blog'
               plugins: [ "rw-postviewstats-lite/rw-postviewstats-lite.php" ]           # 可以指定要激活的插件，比如 ["my-plugin/my-plugin.php"]
               activatePlugins: [ "rw-postviewstats-lite/rw-postviewstats-lite.php" ]   # 同上
               loadOnly: true
           WPWebDriver:
-              url: 'http://wordpress682.local'
+              url: 'http://rwpsl.local'
               browser: chrome
               host: 127.0.0.1
               port: 4444

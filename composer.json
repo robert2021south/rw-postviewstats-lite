@@ -19,6 +19,7 @@
     "minimum-stability": "stable",
     "require-dev": {
         "codeception/codeception": "^5.3",
-        "lucatume/wp-browser": "^4.5"
+        "lucatume/wp-browser": "^4.5",
+        "vlucas/phpdotenv": "^5.6"
     }
 }

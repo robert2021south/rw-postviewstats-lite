@@ -7,29 +7,28 @@
 
 actor: IntegrationTester
 suite_namespace: Tests\Integration
-bootstrap: false
 modules:
     enabled:
         - Asserts
         - \Tests\Support\Helper\Integration
-        - lucatume\WPBrowser\Module\WPLoader   #负责加载 WordPress 核心、安装、初始化环境
         - lucatume\WPBrowser\Module\WPDb       #负责数据库管理、创建文章/用户/元数据等
+        - lucatume\WPBrowser\Module\WPLoader   #负责加载 WordPress 核心、安装、初始化环境
     config:
-          lucatume\WPBrowser\Module\WPLoader:
-              wpRootFolder: '/var/www/html/wp/'
-              dbUrl: 'mysql://root:H0a9S1h8@127.0.0.1:3306/test_db'
-              domain: 'wordpress682.local'
+            lucatume\WPBrowser\Module\WPDb:
+                dsn: 'mysql:host=127.0.0.1;dbname=test_db'
+                user: 'root'
+                password: 'root'
+                dump: ''
+                populate: false
+                cleanup: true
+                url: 'http://rwpsl.local'
+                tablePrefix: 'wp_'
+            lucatume\WPBrowser\Module\WPLoader:
+              wpRootFolder: '/home/runner/work/rw-postviewstats-lite/rw-postviewstats-lite/wp/'
+              dbUrl: 'mysql://root:root@127.0.0.1:3306/test_db'
+              domain: 'rwpsl.local'
               adminUsername: 'admin'
               adminPassword: '^H0a9S1h8$~'
               adminEmail: 'robert2021south@gmail.com'
               loadOnly: true
-          lucatume\WPBrowser\Module\WPDb:
-              dsn: 'mysql:host=127.0.0.1;dbname=test_db'
-              user: 'root'
-              password: 'H0a9S1h8'
-              dump: ''
-              populate: false
-              cleanup: false
-              url: 'http://wordpress682.local'
-              tablePrefix: 'wp_'
 step_decorators: ~

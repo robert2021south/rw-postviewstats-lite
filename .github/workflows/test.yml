@@ -2,9 +2,9 @@ name: RW PostViewStats Lite Codeception Tests
 
 on:
   push:
-    branches: [ ci ]
+    branches: [ main ]
   pull_request:
-    branches: [ ci ]
+    branches: [ main ]
 
 jobs:
   test:
@@ -42,12 +42,20 @@ jobs:
 
     env:
       WP_DB_HOST: 127.0.0.1
+      WP_DB_PORT: 3306
       WP_DB_NAME: test_db
       WP_DB_USER: root
-      WP_DB_PASSWORD: root
-      WP_DIR: ${{ github.workspace }}/wp  #${{ github.workspace }}值为 /home/runner/work/rw-postviewstats-lite/rw-postviewstats-lite
+      WP_DB_PASS: root
+      WP_DB_TABLE_PREFIX: wp_
+
       SELENIUM_HOST: 127.0.0.1
       SELENIUM_PORT: 4444
+
+      WP_DOMAIN: rwpsl.local
+      WP_URL: http://rwpsl.local
+      WP_DIR: ${{ github.workspace }}/wp  #${{ github.workspace }}值为 /home/runner/work/rw-postviewstats-lite/rw-postviewstats-lite
+      WP_ADMIN_USER: ${{ secrets.WP_ADMIN_USER }}
+      WP_ADMIN_PASS: ${{ secrets.WP_ADMIN_PASS }}
 
     steps:
       - name: Check MySQL service
