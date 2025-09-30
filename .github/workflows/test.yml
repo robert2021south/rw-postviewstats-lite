@@ -74,6 +74,14 @@ jobs:
       - name: Install Composer dependencies
         run: composer install --no-interaction
 
+      - name: Install WP-CLI
+        run: |
+            curl -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar
+            php wp-cli.phar --info
+            chmod +x wp-cli.phar
+            sudo mv wp-cli.phar /usr/local/bin/wp
+            wp --info
+
       - name: Setup WordPress
         run: |
           wget https://wordpress.org/wordpress-${{ matrix.wp }}.tar.gz
