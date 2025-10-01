@@ -42,15 +42,15 @@ jobs:
             sleep 2
           done
 
-      - name: List workspace
-        run: ls -R $GITHUB_WORKSPACE
-
       # ---------- 4. 准备插件目录 ----------
       - name: Prepare plugins directory
         run: |
-          mkdir -p $GITHUB_WORKSPACE/wp-content/plugins
-          # 注意路径修正：插件源码在 rw-postviewstats-lite/rw-postviewstats-lite
-          cp -r $GITHUB_WORKSPACE/rw-postviewstats-lite/rw-postviewstats-lite $GITHUB_WORKSPACE/wp-content/plugins/
+          mkdir -p $GITHUB_WORKSPACE/wp-plugin-temp
+          cp -r $GITHUB_WORKSPACE/* $GITHUB_WORKSPACE/wp-plugin-temp/
+          rm -rf $GITHUB_WORKSPACE/wp-plugin-temp/wp-content
+          docker run -d --name wordpress-fpm --network wp-net \
+          -v $GITHUB_WORKSPACE/wp-plugin-temp:/var/www/html/wp-content/plugins/rw-postviewstats-lite \
+          wordpress:6.8-php8.2-fpm
 
       # ---------- 5. 启动 WordPress PHP-FPM ----------
       - name: Start WordPress PHP-FPM container
