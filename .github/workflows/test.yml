@@ -105,9 +105,9 @@ jobs:
             --admin_user="$WP_ADMIN_USER" \
             --admin_password="$WP_ADMIN_PASS" \
             --admin_email="test@example.com" \
-            --skip-email
+            --skip-email \
             --allow-root
-          docker exec wordpress-fpm wp plugin activate rw-postviewstats-lite
+          docker exec wordpress-fpm wp plugin activate rw-postviewstats-lite --allow-root
 
       # ---------- 运行 Codeception ----------
       - name: Run Unit & Integration Tests
