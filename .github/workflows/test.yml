@@ -104,7 +104,7 @@ jobs:
       # ---------- 8. 安装 WordPress 核心 ----------
       - name: Download WordPress core
         run: |
-          docker exec wordpress-fpm wp core download --allow-root --force
+          docker exec wordpress-fpm php -d memory_limit=512M /usr/local/bin/wp core download --allow-root --force
 
       # ---------- 9. 创建 wp-config.php ----------
       - name: Create wp-config.php
