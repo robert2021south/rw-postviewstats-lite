@@ -47,7 +47,7 @@ modules:
               activatePlugins: [ "rw-postviewstats-lite/rw-postviewstats-lite.php" ]   # 同上
               loadOnly: true
           WPWebDriver:
-              url: 'http://${RUNNER_IP}:8080'
+              url: 'http://127.0.0.1:8080'
               browser: chrome
               host: 127.0.0.1
               port: 4444

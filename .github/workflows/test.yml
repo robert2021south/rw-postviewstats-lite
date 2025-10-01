@@ -15,19 +15,6 @@ jobs:
         wp: [6.8]
 
     services:
-      php:
-        image: php:8.2-cli
-        options: >-
-          --health-cmd "curl --fail http://127.0.0.1:8080 || exit 1"
-          --health-interval 10s
-          --health-timeout 5s
-          --health-retries 10
-          --entrypoint "php"
-          -v ${{ github.workspace }}:/app
-          -- php -S 0.0.0.0:8080 -t /app/wp
-        ports:
-          - 8080:8080
-
       mysql:
         image: mysql:8.0
         env:
@@ -41,17 +28,6 @@ jobs:
           --health-interval=10s
           --health-timeout=5s
           --health-retries=5
-
-      selenium:
-        image: selenium/standalone-chrome:latest
-        ports:
-          - 4444:4444
-        options: >-
-          --health-cmd="curl -s http://127.0.0.1:4444/wd/hub/status | grep -q '\"ready\":\s*true'"
-          --health-interval=10s
-          --health-timeout=5s
-          --health-retries=5
-
     env:
       WP_DB_HOST: 127.0.0.1
       WP_DB_PORT: 3306
@@ -70,9 +46,6 @@ jobs:
       WP_ADMIN_PASS: ${{ secrets.WP_ADMIN_PASS }}
 
     steps:
-      - name: Check MySQL service
-        run: echo "MySQL service is running"
-
       - name: Checkout code
         uses: actions/checkout@v3
 
@@ -85,6 +58,17 @@ jobs:
 
       - name: Install Composer dependencies
         run: composer install --no-interaction
+
+      - name: Start PHP Server
+        run: |
+            php -S 127.0.0.1:8080 -t $GITHUB_WORKSPACE/wp > /tmp/php-server.log 2>&1 &
+            sleep 5
+            curl -f http://127.0.0.1:8080 || (cat /tmp/php-server.log && exit 1)
+
+      - name: Start Selenium
+        run: |
+            docker run -d --network host --shm-size=2g --name selenium \
+            selenium/standalone-chrome:120.0
 
       - name: Install WP-CLI
         run: |
@@ -158,15 +142,11 @@ jobs:
             --admin_email="robert2021south@gmail.com" \
             --skip-email
 
-      - name: Start Selenium Server
-        run: |
-            nohup java -jar selenium-server.jar standalone > selenium.log 2>&1 &
-
-      - name: Detect runner IP
-        run: echo "RUNNER_IP=$(hostname -I | awk '{print $1}')" >> $GITHUB_ENV
-
       - name: Run Codeception tests
         working-directory: wp/wp-content/plugins/rw-postviewstats-lite
         run: |
-          chmod +x run-tests.sh
-          ./run-tests.sh
+          vendor/bin/codecept run Unit
+          vendor/bin/codecept run Integration
+          vendor/bin/codecept run Acceptance ShortcodeCest.php
+#          chmod +x run-tests.sh
+#          ./run-tests.sh
