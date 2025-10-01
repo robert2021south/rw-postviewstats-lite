@@ -46,7 +46,8 @@ jobs:
       - name: Prepare plugins directory
         run: |
           mkdir -p $GITHUB_WORKSPACE/wp-content/plugins
-          cp -r $GITHUB_WORKSPACE/rw-postviewstats-lite $GITHUB_WORKSPACE/wp-content/plugins/
+          # 注意路径修正：插件源码在 rw-postviewstats-lite/rw-postviewstats-lite
+          cp -r $GITHUB_WORKSPACE/rw-postviewstats-lite/rw-postviewstats-lite $GITHUB_WORKSPACE/wp-content/plugins/
 
       # ---------- 5. 启动 WordPress PHP-FPM ----------
       - name: Start WordPress PHP-FPM container
@@ -151,3 +152,4 @@ jobs:
         run: |
           docker exec wordpress-fpm bash -c "cd /var/www/html/wp-content/plugins/rw-postviewstats-lite && \
             TEST_SELENIUM_HOST=selenium TEST_SELENIUM_PORT=4444 vendor/bin/codecept run Acceptance"
+
