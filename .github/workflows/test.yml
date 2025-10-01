@@ -15,6 +15,19 @@ jobs:
         wp: [6.8]
 
     services:
+      php:
+        image: php:8.2-cli
+        options: >-
+          --health-cmd "curl --fail http://127.0.0.1:8080 || exit 1"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 10
+        ports:
+          - 8080:8080
+        volumes:
+          - ${{ github.workspace }}:/app
+        working_directory: /app
+        command: php -S 0.0.0.0:8080 -t /app/wp
 
       mysql:
         image: mysql:8.0
