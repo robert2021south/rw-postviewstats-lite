@@ -9,61 +9,71 @@ on:
 jobs:
   test:
     runs-on: ubuntu-latest
-    services:
-      mysql:
-        image: mysql:8.0
-        env:
-          MYSQL_ROOT_PASSWORD: root
-          MYSQL_DATABASE: test_db
-        ports:
-          - 3306:3306
-        options: >-
-          --health-cmd="mysqladmin ping -uroot -proot --silent"
-          --health-interval=10s
-          --health-timeout=5s
-          --health-retries=5
 
     env:
       WP_ADMIN_USER: ${{ secrets.WP_ADMIN_USER }}
       WP_ADMIN_PASS: ${{ secrets.WP_ADMIN_PASS }}
       WP_PORT: 8080
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: test_db
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
 
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+
       - name: Create Docker network
         run: docker network create wp-net || true
 
+      # ---------- 启动 MySQL ----------
+      - name: Start MySQL container
+        run: |
+          docker run -d --name mysql --network wp-net \
+            -e MYSQL_ROOT_PASSWORD=$MYSQL_ROOT_PASSWORD \
+            -e MYSQL_DATABASE=$MYSQL_DATABASE \
+            mysql:8.0
+
+      - name: Wait for MySQL to be ready
+        run: |
+          echo "Waiting for MySQL..."
+          for i in {1..30}; do
+            docker exec mysql mysqladmin ping -uroot -p$MYSQL_ROOT_PASSWORD --silent && break
+            sleep 2
+          done
+
+      # ---------- 启动 WordPress ----------
       - name: Start WordPress container
         run: |
-          docker run -d --name wordpress \
-            --network wp-net \
+          docker run -d --name wordpress --network wp-net \
             -p $WP_PORT:80 \
             -v ${{ github.workspace }}/wp:/var/www/html/wp-content/plugins/rw-postviewstats-lite \
             -e WORDPRESS_DB_HOST=mysql:3306 \
             -e WORDPRESS_DB_USER=root \
-            -e WORDPRESS_DB_PASSWORD=root \
-            -e WORDPRESS_DB_NAME=test_db \
+            -e WORDPRESS_DB_PASSWORD=$MYSQL_ROOT_PASSWORD \
+            -e WORDPRESS_DB_NAME=$MYSQL_DATABASE \
             wordpress:6.8-php8.2-apache
 
+      - name: Wait for WordPress to be ready
+        run: |
+          echo "Waiting for WordPress..."
+          sleep 20  # 官方镜像启动慢，给 WordPress 留时间
+
+      # ---------- 启动 Selenium ----------
       - name: Start Selenium container
         run: |
-          docker run -d --name selenium \
-            --network wp-net \
+          docker run -d --name selenium --network wp-net \
             -p 4444:4444 \
             -e SE_OPTS="-host 0.0.0.0" \
             selenium/standalone-chrome:120.0
 
-      - name: Wait for services to be ready
+      - name: Wait for Selenium
         run: |
-          echo "Waiting for MySQL..."
-          docker exec mysql sh -c 'until mysqladmin ping -uroot -proot --silent; do sleep 2; done'
-          echo "Waiting for WordPress..."
-          sleep 20
           echo "Waiting for Selenium..."
           sleep 10
 
+      # ---------- 安装 WordPress 核心和插件 ----------
       - name: Install WordPress & Activate Plugin
         run: |
           docker exec wordpress wp core install \
@@ -75,12 +85,14 @@ jobs:
             --skip-email
           docker exec wordpress wp plugin activate rw-postviewstats-lite
 
-      - name: Run Codeception Unit & Integration tests
+      # ---------- 运行 Codeception Unit & Integration 测试 ----------
+      - name: Run Unit & Integration Tests
         run: |
           docker exec wordpress bash -c "cd wp-content/plugins/rw-postviewstats-lite && vendor/bin/codecept run Unit"
           docker exec wordpress bash -c "cd wp-content/plugins/rw-postviewstats-lite && vendor/bin/codecept run Integration"
 
-      - name: Run Codeception Acceptance tests
+      # ---------- 运行 Codeception Acceptance 测试 ----------
+      - name: Run Acceptance Tests
         run: |
           docker exec wordpress bash -c "cd wp-content/plugins/rw-postviewstats-lite && \
             TEST_SELENIUM_HOST=selenium TEST_SELENIUM_PORT=4444 vendor/bin/codecept run Acceptance"
