@@ -50,16 +50,12 @@ jobs:
           cp -r $GITHUB_WORKSPACE/!(wp-plugin-temp) $GITHUB_WORKSPACE/wp-plugin-temp/
           shopt -u extglob
 
-          docker run -d --name wordpress-fpm --network wp-net \
-          -v $GITHUB_WORKSPACE/wp-plugin-temp:/var/www/html/wp-content/plugins/rw-postviewstats-lite \
-          wordpress:6.8-php8.2-fpm
-
       # ---------- 5. 启动 WordPress PHP-FPM ----------
       - name: Start WordPress PHP-FPM container
         run: |
           docker run -d --name wordpress-fpm --network wp-net \
-            -v ${{ github.workspace }}/wp-content/plugins:/var/www/html/wp-content/plugins \
-            wordpress:6.8-php8.2-fpm
+          -v $GITHUB_WORKSPACE/wp-plugin-temp:/var/www/html/wp-content/plugins/rw-postviewstats-lite \
+          wordpress:6.8-php8.2-fpm
 
       # ---------- 6. 启动 Nginx ----------
       - name: Start Nginx container
