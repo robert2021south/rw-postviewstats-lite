@@ -22,13 +22,11 @@ jobs:
           --health-interval 10s
           --health-timeout 5s
           --health-retries 10
+          --entrypoint "php"
           -v ${{ github.workspace }}:/app
-          -w /app
+          -- php -S 0.0.0.0:8080 -t /app/wp
         ports:
           - 8080:8080
-        volumes:
-          - ${{ github.workspace }}:/app
-        command: php -S 0.0.0.0:8080 -t /app/wp
 
       mysql:
         image: mysql:8.0
