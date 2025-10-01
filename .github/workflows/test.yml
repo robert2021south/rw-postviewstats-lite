@@ -46,8 +46,10 @@ jobs:
       - name: Prepare plugins directory
         run: |
           mkdir -p $GITHUB_WORKSPACE/wp-plugin-temp
-          cp -r $GITHUB_WORKSPACE/* $GITHUB_WORKSPACE/wp-plugin-temp/
-          rm -rf $GITHUB_WORKSPACE/wp-plugin-temp/wp-content
+          shopt -s extglob
+          cp -r $GITHUB_WORKSPACE/!(wp-plugin-temp) $GITHUB_WORKSPACE/wp-plugin-temp/
+          shopt -u extglob
+
           docker run -d --name wordpress-fpm --network wp-net \
           -v $GITHUB_WORKSPACE/wp-plugin-temp:/var/www/html/wp-content/plugins/rw-postviewstats-lite \
           wordpress:6.8-php8.2-fpm
