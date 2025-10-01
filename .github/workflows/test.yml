@@ -150,6 +150,9 @@ jobs:
         run: |
             nohup java -jar selenium-server.jar standalone > selenium.log 2>&1 &
 
+      - name: Detect runner IP
+        run: echo "RUNNER_IP=$(hostname -I | awk '{print $1}')" >> $GITHUB_ENV
+
       - name: Run Codeception tests
         working-directory: wp/wp-content/plugins/rw-postviewstats-lite
         run: |
