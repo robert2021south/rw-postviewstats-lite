@@ -32,7 +32,7 @@ jobs:
             -e MYSQL_DATABASE=$MYSQL_DATABASE \
             mysql:8.0
 
-      - name: Wait for MySQL to be ready
+      - name: Wait for MySQL
         run: |
           echo "Waiting for MySQL..."
           for i in {1..30}; do
@@ -40,56 +40,81 @@ jobs:
             sleep 2
           done
 
-      # ---------- 启动 WordPress ----------
-      - name: Start WordPress container (with WP-CLI)
+      # ---------- 启动 PHP-FPM ----------
+      - name: Start WordPress PHP-FPM container
         run: |
-          docker run -d --name wordpress --network wp-net \
-            -p $WP_PORT:80 \
+          docker run -d --name wordpress-fpm --network wp-net \
             -v ${{ github.workspace }}/wp:/var/www/html/wp-content/plugins/rw-postviewstats-lite \
-            -e WORDPRESS_DB_HOST=mysql:3306 \
-            -e WORDPRESS_DB_USER=root \
-            -e WORDPRESS_DB_PASSWORD=$MYSQL_ROOT_PASSWORD \
-            -e WORDPRESS_DB_NAME=$MYSQL_DATABASE \
-            wordpress:6.8-php8.2-cli
+            wordpress:6.8-php8.2-fpm
 
-      - name: Wait for WordPress to be ready
+      # ---------- 启动 Nginx ----------
+      - name: Start Nginx container
         run: |
-          echo "Waiting for WordPress..."
-          sleep 20  # 官方镜像启动慢，给 WordPress 留时间
+          mkdir -p $GITHUB_WORKSPACE/nginx
+          echo '
+          server {
+              listen 80;
+              server_name localhost;
+
+              root /var/www/html;
+              index index.php index.html;
+
+              location / {
+                  try_files $uri $uri/ /index.php?$args;
+              }
+
+              location ~ \.php$ {
+                  fastcgi_pass wordpress-fpm:9000;
+                  fastcgi_index index.php;
+                  include fastcgi_params;
+                  fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+              }
+          }
+          ' > $GITHUB_WORKSPACE/nginx/default.conf
+
+          docker run -d --name wordpress-nginx --network wp-net \
+            -p $WP_PORT:80 \
+            -v ${{ github.workspace }}/wp:/var/www/html \
+            -v ${{ github.workspace }}/nginx/default.conf:/etc/nginx/conf.d/default.conf:ro \
+            nginx:stable-alpine
+
+      - name: Wait for Nginx
+        run: sleep 5
 
       # ---------- 启动 Selenium ----------
       - name: Start Selenium container
         run: |
           docker run -d --name selenium --network wp-net \
             -p 4444:4444 \
-            -e SE_OPTS="-host 0.0.0.0" \
             selenium/standalone-chrome:120.0
 
       - name: Wait for Selenium
-        run: |
-          echo "Waiting for Selenium..."
-          sleep 10
+        run: sleep 5
 
-      # ---------- 安装 WordPress 核心和插件 ----------
+      # ---------- 使用 WP-CLI 安装 WordPress ----------
+      - name: Install WP-CLI in PHP-FPM container
+        run: |
+          docker exec wordpress-fpm bash -c "curl -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar && \
+          chmod +x wp-cli.phar && mv wp-cli.phar /usr/local/bin/wp && wp --info"
+
       - name: Install WordPress & Activate Plugin
         run: |
-          docker exec wordpress wp core install \
-            --url="http://wordpress:80" \
+          docker exec wordpress-fpm wp core install \
+            --url="http://wordpress-nginx:80" \
             --title="Test Site" \
             --admin_user="$WP_ADMIN_USER" \
             --admin_password="$WP_ADMIN_PASS" \
             --admin_email="test@example.com" \
             --skip-email
-          docker exec wordpress wp plugin activate rw-postviewstats-lite
+          docker exec wordpress-fpm wp plugin activate rw-postviewstats-lite
 
-      # ---------- 运行 Codeception Unit & Integration 测试 ----------
+      # ---------- 运行 Codeception ----------
       - name: Run Unit & Integration Tests
         run: |
-          docker exec wordpress bash -c "cd wp-content/plugins/rw-postviewstats-lite && vendor/bin/codecept run Unit"
-          docker exec wordpress bash -c "cd wp-content/plugins/rw-postviewstats-lite && vendor/bin/codecept run Integration"
+          docker exec wordpress-fpm bash -c "cd wp-content/plugins/rw-postviewstats-lite && vendor/bin/codecept run Unit"
+          docker exec wordpress-fpm bash -c "cd wp-content/plugins/rw-postviewstats-lite && vendor/bin/codecept run Integration"
 
-      # ---------- 运行 Codeception Acceptance 测试 ----------
       - name: Run Acceptance Tests
         run: |
-          docker exec wordpress bash -c "cd wp-content/plugins/rw-postviewstats-lite && \
+          docker exec wordpress-fpm bash -c "cd wp-content/plugins/rw-postviewstats-lite && \
             TEST_SELENIUM_HOST=selenium TEST_SELENIUM_PORT=4444 vendor/bin/codecept run Acceptance"
