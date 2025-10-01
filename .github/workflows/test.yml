@@ -46,8 +46,9 @@ jobs:
       # ---------- 4. 启动 WordPress PHP-FPM ----------
       - name: Start WordPress PHP-FPM container
         run: |
+          # 将插件源码挂载到 WordPress 插件目录
           docker run -d --name wordpress-fpm --network wp-net \
-            -v ${{ github.workspace }}/wp:/var/www/html/wp-content/plugins/rw-postviewstats-lite \
+            -v ${{ github.workspace }}/rw-postviewstats-lite:/var/www/html/wp-content/plugins/rw-postviewstats-lite \
             wordpress:6.8-php8.2-fpm
 
       # ---------- 5. 配置 Nginx ----------
@@ -101,7 +102,7 @@ jobs:
           docker exec wordpress-fpm bash -c "curl -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar && \
           chmod +x wp-cli.phar && mv wp-cli.phar /usr/local/bin/wp && wp --info"
 
-      # ---------- 8. 安装 WordPress 核心 ----------
+      # ---------- 8. 下载 & 安装 WordPress 核心 ----------
       - name: Download WordPress core
         run: |
           docker exec wordpress-fpm php -d memory_limit=512M /usr/local/bin/wp core download --allow-root --force
@@ -109,7 +110,7 @@ jobs:
       # ---------- 9. 创建 wp-config.php ----------
       - name: Create wp-config.php
         run: |
-          docker exec wordpress-fpm wp config create \
+          docker exec wordpress-fpm php -d memory_limit=512M /usr/local/bin/wp config create \
             --dbname=$MYSQL_DATABASE \
             --dbuser=root \
             --dbpass=$MYSQL_ROOT_PASSWORD \
@@ -120,7 +121,7 @@ jobs:
       # ---------- 10. 安装 WordPress & 激活插件 ----------
       - name: Install WordPress & Activate Plugin
         run: |
-          docker exec wordpress-fpm wp core install \
+          docker exec wordpress-fpm php -d memory_limit=512M /usr/local/bin/wp core install \
             --url="http://wordpress-nginx:80" \
             --title="Test Site" \
             --admin_user="$WP_ADMIN_USER" \
@@ -129,7 +130,7 @@ jobs:
             --skip-email \
             --allow-root
 
-          docker exec wordpress-fpm wp plugin activate rw-postviewstats-lite --allow-root
+          docker exec wordpress-fpm php -d memory_limit=512M /usr/local/bin/wp plugin activate rw-postviewstats-lite --allow-root
 
       # ---------- 11. 运行 Unit & Integration 测试 ----------
       - name: Run Unit & Integration Tests
