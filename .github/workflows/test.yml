@@ -21,9 +21,6 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v2
-
       - name: Create Docker network
         run: docker network create wp-net || true
 
@@ -44,7 +41,7 @@ jobs:
           done
 
       # ---------- 启动 WordPress ----------
-      - name: Start WordPress container
+      - name: Start WordPress container (with WP-CLI)
         run: |
           docker run -d --name wordpress --network wp-net \
             -p $WP_PORT:80 \
@@ -53,7 +50,7 @@ jobs:
             -e WORDPRESS_DB_USER=root \
             -e WORDPRESS_DB_PASSWORD=$MYSQL_ROOT_PASSWORD \
             -e WORDPRESS_DB_NAME=$MYSQL_DATABASE \
-            wordpress:6.8-php8.2-apache
+            wordpress:6.8-php8.2-cli
 
       - name: Wait for WordPress to be ready
         run: |
