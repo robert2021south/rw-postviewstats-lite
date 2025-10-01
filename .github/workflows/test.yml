@@ -106,6 +106,7 @@ jobs:
             --admin_password="$WP_ADMIN_PASS" \
             --admin_email="test@example.com" \
             --skip-email
+            --allow-root
           docker exec wordpress-fpm wp plugin activate rw-postviewstats-lite
 
       # ---------- 运行 Codeception ----------
