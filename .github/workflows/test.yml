@@ -59,17 +59,6 @@ jobs:
       - name: Install Composer dependencies
         run: composer install --no-interaction
 
-      - name: Start PHP Server
-        run: |
-            php -S 127.0.0.1:8080 -t $GITHUB_WORKSPACE/wp > /tmp/php-server.log 2>&1 &
-            sleep 5
-            curl -f http://127.0.0.1:8080 || (cat /tmp/php-server.log && exit 1)
-
-      - name: Start Selenium
-        run: |
-            docker run -d --network host --shm-size=2g --name selenium \
-            selenium/standalone-chrome:120.0
-
       - name: Install WP-CLI
         run: |
             curl -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar
@@ -92,6 +81,16 @@ jobs:
           mv !(wp) wp/wp-content/plugins/rw-postviewstats-lite
           ls -la wp/wp-content/plugins/
 
+      - name: Start PHP Server
+        run: |
+          php -S 127.0.0.1:8080 -t $GITHUB_WORKSPACE/wp > /tmp/php-server.log 2>&1 &
+          sleep 5
+          curl -f http://127.0.0.1:8080 || (cat /tmp/php-server.log && exit 1)
+
+      - name: Start Selenium
+        run: |
+          docker run -d --network host --shm-size=2g --name selenium \
+          selenium/standalone-chrome:120.0
 
       - name: Configure WordPress
         run: |
