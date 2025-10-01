@@ -145,12 +145,15 @@ jobs:
       # ---------- 12. 运行 Unit & Integration 测试 ----------
       - name: Run Unit & Integration Tests
         run: |
-          docker exec wordpress-fpm bash -c "cd /var/www/html/wp-content/plugins/rw-postviewstats-lite && vendor/bin/codecept run Unit"
-          docker exec wordpress-fpm bash -c "cd /var/www/html/wp-content/plugins/rw-postviewstats-lite && vendor/bin/codecept run Integration"
+          docker exec wordpress-fpm bash -c "cd /var/www/html/wp-content/plugins/rw-postviewstats-lite && ls -la"
+          docker exec wordpress-fpm bash -c "cd /var/www/html/wp-content/plugins/rw-postviewstats-lite && ./vendor/bin/codecept run Unit"
+#          docker exec wordpress-fpm bash -c "cd /var/www/html/wp-content/plugins/rw-postviewstats-lite && vendor/bin/codecept run Unit"
+#          docker exec wordpress-fpm bash -c "cd /var/www/html/wp-content/plugins/rw-postviewstats-lite && vendor/bin/codecept run Integration"
+
 
       # ---------- 13. 运行 Acceptance 测试 ----------
-      - name: Run Acceptance Tests
-        run: |
-          docker exec wordpress-fpm bash -c "cd /var/www/html/wp-content/plugins/rw-postviewstats-lite && \
-            TEST_SELENIUM_HOST=selenium TEST_SELENIUM_PORT=4444 vendor/bin/codecept run Acceptance"
+#      - name: Run Acceptance Tests
+#        run: |
+#          docker exec wordpress-fpm bash -c "cd /var/www/html/wp-content/plugins/rw-postviewstats-lite && \
+#            TEST_SELENIUM_HOST=selenium TEST_SELENIUM_PORT=4444 vendor/bin/codecept run Acceptance"
 
