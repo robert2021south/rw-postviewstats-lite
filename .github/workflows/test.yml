@@ -42,6 +42,9 @@ jobs:
             sleep 2
           done
 
+      - name: List workspace
+        run: ls -R $GITHUB_WORKSPACE
+
       # ---------- 4. 准备插件目录 ----------
       - name: Prepare plugins directory
         run: |
