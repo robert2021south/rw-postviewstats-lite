@@ -206,7 +206,12 @@ jobs:
           docker exec wordpress-nginx sh -c "
             ls -la /var/www/html;
           "
-      
+          
+          docker exec wordpress-nginx cat /etc/nginx/conf.d/default.conf
+          docker exec wordpress-fpm netstat -tuln
+          docker exec wordpress-nginx ping -c 2 wordpress-fpm
+
+
 
       - name: Debug Selenium connectivity
         run: |
