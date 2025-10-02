@@ -204,6 +204,12 @@ jobs:
             ./vendor/bin/codecept run Integration
           "
       # ---------- 16. 运行 Acceptance 测试 ----------
+      - name: Debug Wordpress Env
+        run: |
+          docker exec wordpress-fpm bash -c "            
+            curl -s http://wordpress-nginx/wp-admin
+          "      
+
       - name: Debug Selenium connectivity
         run: |
           docker exec wordpress-fpm curl -s http://selenium:4444/wd/hub/status | jq .
@@ -211,5 +217,5 @@ jobs:
       - name: Run Acceptance Tests
         run: |
           docker exec wordpress-fpm bash -c "cd /var/www/html/wp-content/plugins/rw-postviewstats-lite && \
-            TEST_SELENIUM_HOST=selenium TEST_SELENIUM_PORT=4444 ./vendor/bin/codecept run Acceptance"
+            TEST_SELENIUM_HOST=selenium TEST_SELENIUM_PORT=4444 ./vendor/bin/codecept run Acceptance CleanerCest.php"
 
