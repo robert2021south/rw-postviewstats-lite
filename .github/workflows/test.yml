@@ -108,10 +108,12 @@ jobs:
               }
 
               location ~ \.php$ {
+                  include fastcgi_params;
                   fastcgi_pass wordpress-fpm:9000;
                   fastcgi_index index.php;
-                  include fastcgi_params;
+          
                   fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+                  fastcgi_param HTTP_HOST $host;
               }
           }
           ' > $GITHUB_WORKSPACE/nginx/default.conf
@@ -164,12 +166,18 @@ jobs:
             --skip-check \
             --allow-root \
             --path=/var/www/html
+          
+          # 强制 WP_HOME 和 WP_SITEURL 对应 Nginx 容器名
+          docker exec wordpress-fpm bash -c "
+          echo \"define('WP_HOME', 'http://wordpress-nginx');\" >> /var/www/html/wp-config.php
+          echo \"define('WP_SITEURL', 'http://wordpress-nginx');\" >> /var/www/html/wp-config.php
+          "
 
       # ---------- 13. 安装 WordPress & 激活插件 ----------
       - name: Install WordPress & Activate Plugin
         run: |
           docker exec wordpress-fpm php -d memory_limit=512M /usr/local/bin/wp core install \
-            --url="http://wordpress-nginx:80" \
+            --url="http://wordpress-nginx" \
             --title="Test Site" \
             --admin_user="$WP_ADMIN_USER" \
             --admin_password="$WP_ADMIN_PASS" \
@@ -202,11 +210,8 @@ jobs:
         run: |
           
           docker exec wordpress-fpm bash -c "
-            curl http://wordpress-nginx/wp-admin
+            curl http://wordpress-nginx/
           "
-
-          docker exec wordpress-fpm curl -L http://wordpress-nginx/
-
 
       - name: Debug Selenium connectivity
         run: |
