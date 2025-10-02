@@ -193,7 +193,8 @@ jobs:
         run: docker network inspect wp-net
 
       - name: Test PHP-FPM MySQL connection
-        run: docker exec wordpress-fpm php -r 'try { $pdo = new PDO("mysql:host=mysql;port=3306;dbname=test_db","root","root"); echo "DB OK\n"; } catch (Exception $e) { echo $e->getMessage(); exit 1; }'
+        run: docker exec wordpress-fpm php -r "try { \$pdo = new PDO('mysql:host=mysql;port=3306;dbname=test_db','root','root'); echo 'DB OK\n'; } catch (Exception \$e) { echo \$e->getMessage(); exit(1); }"
+
 
       - name: Run Integration Tests
         run: |
