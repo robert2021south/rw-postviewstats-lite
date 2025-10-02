@@ -188,9 +188,29 @@ jobs:
       - name: Debug wordpress-nginx
         run: |
           docker exec wordpress-fpm bash -c "
-            php -r 'new PDO(\"mysql:host=mysql;port=3306;dbname=test_db\",\"root\",\"root\"); echo \"DB OK\n\";'
             curl -s http://wordpress-nginx/
+            curl -s http://wordpress-nginx/wp-admin
           "
+      # ---------- 新增: Test WPWebDriver access to /wp-admin ----------
+      - name: Check WordPress admin accessibility from Selenium container
+        run: |
+          # 检查 wordpress-nginx 容器是否能访问 /wp-admin
+          echo "Testing /wp-admin accessibility from WordPress container..."
+          HTTP_STATUS=$(docker exec wordpress-fpm curl -s -o /dev/null -w "%{http_code}" http://wordpress-nginx/wp-admin/)
+          echo "HTTP status code: $HTTP_STATUS"
+          if [ "$HTTP_STATUS" -ne 200 ]; then
+            echo "ERROR: /wp-admin is not accessible! WPWebDriver login will fail."
+            exit 1
+          fi
+          
+          # 检查 Selenium 容器是否能访问 wordpress-nginx
+          echo "Testing /wp-admin accessibility from Selenium container..."
+          HTTP_STATUS_SELENIUM=$(docker exec selenium curl -s -o /dev/null -w "%{http_code}" http://wordpress-nginx/wp-admin/)
+          echo "HTTP status code from Selenium: $HTTP_STATUS_SELENIUM"
+          if [ "$HTTP_STATUS_SELENIUM" -ne 200 ]; then
+            echo "ERROR: Selenium cannot reach /wp-admin! WPWebDriver login will fail."
+            exit 1
+          fi
 
       - name: Run Integration Tests
         run: |

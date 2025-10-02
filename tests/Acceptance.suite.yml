@@ -66,6 +66,6 @@ modules:
                     download.prompt_for_download: false  #禁止弹窗“是否保存”
                     directory_upgrade: true     #如果目录不存在，自动创建；允许覆盖下载文件
                     plugins.always_open_pdf_externally: true    #PDF 不在浏览器打开，直接下载
-              adminUsername: getenv('WP_ADMIN_USER')
-              adminPassword: getenv('WP_ADMIN_PASS')
+              adminUsername: 'admin'
+              adminPassword: 'pBlaWDphJvFab5Jbi3KR9q6s'
               adminPath: '/wp-admin'
