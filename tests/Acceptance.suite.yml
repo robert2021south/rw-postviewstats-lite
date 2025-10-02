@@ -47,7 +47,7 @@ modules:
           WPWebDriver:
               url: 'http://wordpress-nginx'
               browser: chrome
-              host: 127.0.0.1
+              host: selenium
               port: 4444
               restart: true
               use_w3c: true                # W3C 协议兼容

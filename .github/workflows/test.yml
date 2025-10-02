@@ -184,29 +184,7 @@ jobs:
         run: |
           docker exec wordpress-fpm bash -c "cd /var/www/html/wp-content/plugins/rw-postviewstats-lite && ./vendor/bin/codecept run Unit"
 
-      - name: Show PHP extensions in wordpress-fpm
-        run: |
-          docker exec wordpress-fpm php -m
-
       # ---------- 15. 运行 Integration 测试 ----------
-      - name: Debug WordPress + DB
-        run: |
-          docker exec wordpress-fpm bash -c "
-            cd /var/www/html;
-            php -r 'require \"wp-load.php\"; echo \"WP OK\n\";';
-            php -r 'try { \$pdo = new PDO(\"mysql:host=mysql;port=3306;dbname=test_db\", \"root\", \"root\"); echo \"DB OK\n\"; } catch (Exception \$e) { echo \$e->getMessage(); exit(1); }'
-          "
-
-      - name: Debug WPLoader configuration
-        run: |
-          docker exec wordpress-fpm php -r "
-            require '/var/www/html/wp-load.php';
-            var_dump(lucatume\WPBrowser\Module\WPLoader::class);
-          "
-
-      - name: Test PHP-FPM MySQL connection
-        run: docker exec wordpress-fpm php -r "try { \$pdo = new PDO('mysql:host=mysql;port=3306;dbname=test_db','root','root'); echo 'DB OK\n'; } catch (Exception \$e) { echo \$e->getMessage(); exit(1); }"
-
       - name: Debug wordpress-nginx
         run: |
           docker exec wordpress-fpm bash -c "
@@ -222,6 +200,10 @@ jobs:
             ./vendor/bin/codecept run Integration --steps --debug
           "
       # ---------- 16. 运行 Acceptance 测试 ----------
+      - name: Debug Selenium connectivity
+        run: |
+          docker exec wordpress-fpm curl -s http://selenium:4444/wd/hub/status | jq .
+
       - name: Run Acceptance Tests
         run: |
           docker exec wordpress-fpm bash -c "cd /var/www/html/wp-content/plugins/rw-postviewstats-lite && \
