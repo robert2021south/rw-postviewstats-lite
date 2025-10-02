@@ -211,7 +211,7 @@ jobs:
         run: |
           docker exec wordpress-fpm bash -c "
             cd /var/www/html/wp-content/plugins/rw-postviewstats-lite;
-            ./vendor/bin/codecept bootstrap;
+            ./vendor/bin/codecept build;
             ./vendor/bin/codecept run Integration --steps --debug
           "
 
