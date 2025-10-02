@@ -96,7 +96,7 @@ jobs:
           echo '
           server {
               listen 80;
-              server_name localhost;
+              server_name wordpress-nginx;
 
               root /var/www/html;
               index index.php index.html;
