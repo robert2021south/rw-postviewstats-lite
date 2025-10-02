@@ -50,6 +50,9 @@ jobs:
               docker-php-ext-install -j"$(nproc)" pdo pdo_mysql mysqli gd; \
               rm -rf /var/lib/apt/lists/*
 
+          # 安装 Composer
+          RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
+
           EOF
 
           docker build -t wp-fpm-custom -f $GITHUB_WORKSPACE/ci/Dockerfile $GITHUB_WORKSPACE
