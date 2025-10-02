@@ -26,7 +26,35 @@ jobs:
       - name: Create Docker network
         run: docker network create wp-net || true
 
-      # ---------- 3. 启动 MySQL ----------
+      # ---------- 3. Build custom WP-FPM image (包含 pdo_mysql) ----------
+      - name: Build custom wp-fpm image (with pdo_mysql)
+        run: |
+          mkdir -p $GITHUB_WORKSPACE/ci
+          cat > $GITHUB_WORKSPACE/ci/Dockerfile <<'EOF'
+          FROM wordpress:6.8-php8.2-fpm
+
+          # 安装编译所需的依赖并启用 pdo_mysql, pdo, mysqli 等扩展
+          RUN set -eux; \
+              apt-get update; \
+              apt-get install -y --no-install-recommends \
+                default-mysql-client \
+                libzip-dev \
+                zlib1g-dev \
+                libpng-dev \
+                libjpeg-dev \
+                libfreetype6-dev \
+                libxml2-dev \
+                git \
+                unzip; \
+              docker-php-ext-configure gd --with-jpeg --with-freetype; \
+              docker-php-ext-install -j"$(nproc)" pdo pdo_mysql mysqli gd; \
+              rm -rf /var/lib/apt/lists/*
+
+          EOF
+
+          docker build -t wp-fpm-custom -f $GITHUB_WORKSPACE/ci/Dockerfile $GITHUB_WORKSPACE
+
+      # ---------- 4. 启动 MySQL ----------
       - name: Start MySQL container
         run: |
           docker run -d --name mysql --network wp-net \
@@ -43,13 +71,13 @@ jobs:
             sleep 2
           done
 
-      # ---------- 4. 安装依赖 ----------
+      # ---------- 5. 安装依赖 ----------
       - name: Install Composer dependencies
         run: |
           cd $GITHUB_WORKSPACE
           composer install --no-interaction --prefer-dist --optimize-autoloader
 
-      # ---------- 5. 准备插件目录 ----------
+      # ---------- 6. 准备插件目录 ----------
       - name: Prepare plugins directory
         run: |
           mkdir -p $GITHUB_WORKSPACE/wp-plugin-temp
@@ -57,14 +85,14 @@ jobs:
           cp -r $GITHUB_WORKSPACE/!(wp-plugin-temp) $GITHUB_WORKSPACE/wp-plugin-temp/
           shopt -u extglob
 
-      # ---------- 6. 启动 WordPress PHP-FPM （挂载插件）----------
+      # ---------- 7. 启动 WordPress PHP-FPM （挂载插件）----------
       - name: Start WordPress PHP-FPM container
         run: |
           docker run -d --name wordpress-fpm --network wp-net \
           -v $GITHUB_WORKSPACE/wp-plugin-temp:/var/www/html/wp-content/plugins/rw-postviewstats-lite \
           wordpress:6.8-php8.2-fpm
 
-      # ---------- 7. 启动 Nginx ----------
+      # ---------- 8. 启动 Nginx ----------
       - name: Start Nginx container
         run: |
           mkdir -p $GITHUB_WORKSPACE/nginx
@@ -99,7 +127,7 @@ jobs:
       - name: Wait for Nginx
         run: sleep 5
 
-      # ---------- 8. 启动 Selenium ----------
+      # ---------- 9. 启动 Selenium ----------
       - name: Start Selenium container
         run: |
           docker run -d --name selenium --network wp-net \
@@ -109,18 +137,18 @@ jobs:
       - name: Wait for Selenium
         run: sleep 5
 
-      # ---------- 9. 安装 WP-CLI ----------
+      # ---------- 10. 安装 WP-CLI ----------
       - name: Install WP-CLI in PHP-FPM container
         run: |
           docker exec wordpress-fpm bash -c "curl -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar && \
           chmod +x wp-cli.phar && mv wp-cli.phar /usr/local/bin/wp && wp --info"
 
-      # ---------- 10. 下载 WordPress 核心 ----------
+      # ---------- 11. 下载 WordPress 核心 ----------
       - name: Download WordPress core
         run: |
           docker exec wordpress-fpm php -d memory_limit=512M /usr/local/bin/wp core download --allow-root --force --path=/var/www/html
 
-      # ---------- 11. 创建 wp-config.php ----------
+      # ---------- 12. 创建 wp-config.php ----------
       - name: Create wp-config.php
         run: |
           docker exec wordpress-fpm php -d memory_limit=512M /usr/local/bin/wp config create \
@@ -132,7 +160,7 @@ jobs:
             --allow-root \
             --path=/var/www/html
 
-      # ---------- 12. 安装 WordPress & 激活插件 ----------
+      # ---------- 13. 安装 WordPress & 激活插件 ----------
       - name: Install WordPress & Activate Plugin
         run: |
           docker exec wordpress-fpm php -d memory_limit=512M /usr/local/bin/wp core install \
@@ -149,14 +177,14 @@ jobs:
             --allow-root \
             --path=/var/www/html
 
-      # ---------- 13. 运行 Unit & Integration 测试 ----------
+      # ---------- 14. 运行 Unit & Integration 测试 ----------
       - name: Run Unit & Integration Tests
         run: |
           docker exec wordpress-fpm bash -c "cd /var/www/html/wp-content/plugins/rw-postviewstats-lite && ./vendor/bin/codecept run Unit"
           docker exec wordpress-fpm bash -c "cd /var/www/html/wp-content/plugins/rw-postviewstats-lite && ./vendor/bin/codecept run Integration"
 
 
-      # ---------- 14. 运行 Acceptance 测试 ----------
+      # ---------- 15. 运行 Acceptance 测试 ----------
       - name: Run Acceptance Tests
         run: |
           docker exec wordpress-fpm bash -c "cd /var/www/html/wp-content/plugins/rw-postviewstats-lite && \
