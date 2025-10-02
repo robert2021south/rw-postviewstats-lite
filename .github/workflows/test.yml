@@ -71,13 +71,7 @@ jobs:
             sleep 2
           done
 
-      # ---------- 5. 安装依赖 ----------
-      - name: Install Composer dependencies
-        run: |
-          cd $GITHUB_WORKSPACE
-          composer install --no-interaction --prefer-dist --optimize-autoloader
-
-      # ---------- 6. 准备插件目录 ----------
+      # ---------- 5. 准备插件目录 ----------
       - name: Prepare plugins directory
         run: |
           mkdir -p $GITHUB_WORKSPACE/wp-plugin-temp
@@ -85,14 +79,14 @@ jobs:
           cp -r $GITHUB_WORKSPACE/!(wp-plugin-temp) $GITHUB_WORKSPACE/wp-plugin-temp/
           shopt -u extglob
 
-      # ---------- 7. 启动 WordPress PHP-FPM （挂载插件）----------
+      # ---------- 6. 启动 WordPress PHP-FPM （挂载插件）----------
       - name: Start WordPress PHP-FPM container
         run: |
           docker run -d --name wordpress-fpm --network wp-net \
           -v $GITHUB_WORKSPACE/wp-plugin-temp:/var/www/html/wp-content/plugins/rw-postviewstats-lite \
-          wordpress:6.8-php8.2-fpm
+          wp-fpm-custom
 
-      # ---------- 8. 启动 Nginx ----------
+      # ---------- 7. 启动 Nginx ----------
       - name: Start Nginx container
         run: |
           mkdir -p $GITHUB_WORKSPACE/nginx
@@ -119,13 +113,18 @@ jobs:
 
           docker run -d --name wordpress-nginx --network wp-net \
             -p $WP_PORT:80 \
-            -v ${{ github.workspace }}/wp-content/plugins:/var/www/html/wp-content/plugins \
+            -v ${{ github.workspace }}/wp-plugin-temp/assets:/var/www/html/wp-content/plugins/rw-postviewstats-lite/assets:ro \
             -v ${{ github.workspace }}/nginx/default.conf:/etc/nginx/conf.d/default.conf:ro \
             nginx:stable-alpine
 
       # 等待 Nginx 启动
       - name: Wait for Nginx
         run: sleep 5
+
+      # ---------- 8. 安装 Composer 依赖 ----------
+      - name: Install Composer dependencies inside container
+        run: |
+          docker exec wordpress-fpm bash -c "cd /var/www/html/wp-content/plugins/rw-postviewstats-lite && composer install --no-interaction --prefer-dist --optimize-autoloader"
 
       # ---------- 9. 启动 Selenium ----------
       - name: Start Selenium container
