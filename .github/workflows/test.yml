@@ -188,9 +188,11 @@ jobs:
       - name: Debug wordpress-nginx
         run: |
           docker exec wordpress-fpm bash -c "
-            curl -s http://wordpress-nginx/
+            cat /etc/hosts;
+            docker exec wordpress-nginx netstat -tuln;
+            curl -s http://wordpress-nginx/wp-admin
           "
-          
+
       - name: Run Integration Tests
         run: |
           docker exec wordpress-fpm bash -c "
