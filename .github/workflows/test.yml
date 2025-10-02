@@ -201,6 +201,7 @@ jobs:
       - name: Debug wordpress-nginx
         run: |
           docker exec wordpress-fpm bash -c "
+          ls -al /var/www/html
             curl http://wordpress-nginx/
           "
           docker exec wordpress-nginx sh -c "
