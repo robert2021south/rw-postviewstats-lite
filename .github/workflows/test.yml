@@ -185,10 +185,15 @@ jobs:
           docker exec wordpress-fpm bash -c "cd /var/www/html/wp-content/plugins/rw-postviewstats-lite && ./vendor/bin/codecept run Unit"
 
       # ---------- 15. 运行 Integration 测试 ----------
+
+      - name: Check wordpress-nginx port binding.
+        run: |
+          docker exec wordpress-nginx netstat -tuln
+
       - name: Debug wordpress-nginx
         run: |
           docker exec wordpress-fpm bash -c "
-            curl -s http://wordpress-nginx/wp-admin
+            curl -s http://wordpress-nginx:80/
           "
 
       - name: Run Integration Tests
