@@ -116,7 +116,8 @@ jobs:
 
           docker run -d --name wordpress-nginx --network wp-net \
             -p $WP_PORT:80 \
-            -v ${{ github.workspace }}/wp-plugin-temp/assets:/var/www/html/wp-content/plugins/rw-postviewstats-lite/assets:ro \
+#            -v ${{ github.workspace }}/wp-plugin-temp/assets:/var/www/html/wp-content/plugins/rw-postviewstats-lite/assets:ro \
+            -v /var/www/html:/var/www/html:ro
             -v ${{ github.workspace }}/nginx/default.conf:/etc/nginx/conf.d/default.conf:ro \
             nginx:stable-alpine
 
