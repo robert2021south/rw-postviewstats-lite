@@ -204,15 +204,6 @@ jobs:
             ./vendor/bin/codecept run Integration
           "
       # ---------- 16. 运行 Acceptance 测试 ----------
-
-
-      - name: Debug wordpress-nginx & wordpress-fpm
-        run: |
-          
-          docker exec wordpress-fpm bash -c "
-            curl http://wordpress-nginx/
-          "
-
       - name: Debug Selenium connectivity
         run: |
           docker exec wordpress-fpm curl -s http://selenium:4444/wd/hub/status | jq .
@@ -220,5 +211,5 @@ jobs:
       - name: Run Acceptance Tests
         run: |
           docker exec wordpress-fpm bash -c "cd /var/www/html/wp-content/plugins/rw-postviewstats-lite && \
-            TEST_SELENIUM_HOST=selenium TEST_SELENIUM_PORT=4444 ./vendor/bin/codecept run Acceptance ShortcodeCest.php"
+            TEST_SELENIUM_HOST=selenium TEST_SELENIUM_PORT=4444 ./vendor/bin/codecept run Acceptance"
 
