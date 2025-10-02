@@ -207,6 +207,9 @@ jobs:
       - name: Test PHP-FPM MySQL connection
         run: docker exec wordpress-fpm php -r "try { \$pdo = new PDO('mysql:host=mysql;port=3306;dbname=test_db','root','root'); echo 'DB OK\n'; } catch (Exception \$e) { echo \$e->getMessage(); exit(1); }"
 
+      - name: List WordPress core files in PHP-FPM
+        run: |
+          docker exec wordpress-fpm ls -R /var/www/html
 
       - name: Debug wordpress-nginx
         run: |
