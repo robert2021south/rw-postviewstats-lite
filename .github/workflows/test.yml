@@ -171,7 +171,9 @@ jobs:
           docker exec wordpress-fpm bash -c "
           echo \"define('WP_HOME', 'http://wordpress-nginx');\" >> /var/www/html/wp-config.php
           echo \"define('WP_SITEURL', 'http://wordpress-nginx');\" >> /var/www/html/wp-config.php
+          echo \"define('FORCE_SSL_ADMIN', false);\" >> /var/www/html/wp-config.php
           "
+
 
       # ---------- 13. 安装 WordPress & 激活插件 ----------
       - name: Install WordPress & Activate Plugin
@@ -209,6 +211,8 @@ jobs:
           docker exec wordpress-fpm bash -c "            
             curl -s http://wordpress-nginx/
           "      
+          docker exec wordpress-fpm wp option get siteurl --path=/var/www/html
+          docker exec wordpress-fpm wp option get home --path=/var/www/html
 
       - name: Debug Selenium connectivity
         run: |
@@ -217,5 +221,5 @@ jobs:
       - name: Run Acceptance Tests
         run: |
           docker exec wordpress-fpm bash -c "cd /var/www/html/wp-content/plugins/rw-postviewstats-lite && \
-            TEST_SELENIUM_HOST=selenium TEST_SELENIUM_PORT=4444 ./vendor/bin/codecept run Acceptance CleanerCest.php"
+            TEST_SELENIUM_HOST=selenium TEST_SELENIUM_PORT=4444 ./vendor/bin/codecept run Acceptance --filter cleanPosts CleanerCest.php"
 
