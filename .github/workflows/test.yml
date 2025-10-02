@@ -207,18 +207,6 @@ jobs:
       - name: Test PHP-FPM MySQL connection
         run: docker exec wordpress-fpm php -r "try { \$pdo = new PDO('mysql:host=mysql;port=3306;dbname=test_db','root','root'); echo 'DB OK\n'; } catch (Exception \$e) { echo \$e->getMessage(); exit(1); }"
 
-      - name: Make sure Codeception the modules that can recognize
-        run: |
-          docker exec wordpress-fpm bash -c "
-            cd /var/www/html/wp-content/plugins/rw-postviewstats-lite
-            ./vendor/bin/codecept build
-            ./vendor/bin/codecept debug          
-          "
-
-      - name: Show plugin directory in PHP-FPM
-        run: |
-
-
       - name: Debug wordpress-nginx
         run: |
           docker exec wordpress-fpm bash -c "
@@ -226,8 +214,6 @@ jobs:
             curl -s http://wordpress-nginx/
           "
 
-
-        #  Debug WPLoader in PHP-FPM
       - name: Run Integration Tests
         run: |
           docker exec wordpress-fpm bash -c "

@@ -25,8 +25,8 @@ modules:
                 tablePrefix: 'wp_'
             lucatume\WPBrowser\Module\WPLoader:
               wpRootFolder: '/var/www/html/'
-              dbUrl: 'mysql://root:root@mysql:3306/test_db'
-              domain: 'http://wordpress-nginx:80/'
+              dbUrl: 'mysql://root:root@tcp(mysql:3306)/test_db'
+              domain: 'wordpress-nginx'
               adminUsername: 'admin'
               adminPassword: 'pBlaWDphJvFab5Jbi3KR9q6s'
               adminEmail: 'robert2021south@gmail.com'
