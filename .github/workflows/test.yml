@@ -201,23 +201,11 @@ jobs:
       - name: Debug wordpress-nginx & wordpress-fpm
         run: |
           
-          docker ps -a | grep wordpress-fpm
-          docker inspect wordpress-fpm --format='{{.State.ExitCode}}'
-
-
           docker exec wordpress-fpm bash -c "
-          ls -al /var/www/html
-            curl http://wordpress-nginx/
+            curl http://wordpress-nginx/wp-admin
           "
-          docker exec wordpress-nginx sh -c "
-            ls -la /var/www/html;
-          "
-          
-          docker exec wordpress-nginx cat /etc/nginx/conf.d/default.conf
-          docker exec wordpress-nginx ping -c 2 wordpress-fpm
-          docker exec wordpress-fpm ps -ef | grep php-fpm  || true
-          docker logs wordpress-fpm
 
+          docker exec wordpress-fpm curl -L http://wordpress-nginx/
 
 
       - name: Debug Selenium connectivity
