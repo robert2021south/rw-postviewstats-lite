@@ -189,8 +189,13 @@ jobs:
           docker exec wordpress-fpm php -m
 
       # ---------- 15. 运行 Integration 测试 ----------
-      - name: Inspect Docker network
-        run: docker network inspect wp-net
+      - name: Debug WordPress + DB
+        run: |
+          docker exec wordpress-fpm bash -c "
+            cd /var/www/html;
+            php -r 'require \"wp-load.php\"; echo \"WP OK\n\";';
+            php -r 'try { \$pdo = new PDO(\"mysql:host=mysql;port=3306;dbname=test_db\", \"root\", \"root\"); echo \"DB OK\n\"; } catch (Exception \$e) { echo \$e->getMessage(); exit(1); }'
+          "
 
       - name: Test PHP-FPM MySQL connection
         run: docker exec wordpress-fpm php -r "try { \$pdo = new PDO('mysql:host=mysql;port=3306;dbname=test_db','root','root'); echo 'DB OK\n'; } catch (Exception \$e) { echo \$e->getMessage(); exit(1); }"
