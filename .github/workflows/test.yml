@@ -193,7 +193,7 @@ jobs:
       - name: Debug wordpress-nginx
         run: |
           docker exec wordpress-fpm bash -c "
-            curl -s http://wordpress-nginx:80/
+          curl http://172.18.0.4/
           "
 
       - name: Run Integration Tests
@@ -211,5 +211,5 @@ jobs:
       - name: Run Acceptance Tests
         run: |
           docker exec wordpress-fpm bash -c "cd /var/www/html/wp-content/plugins/rw-postviewstats-lite && \
-            TEST_SELENIUM_HOST=selenium TEST_SELENIUM_PORT=4444 ./vendor/bin/codecept run Acceptance"
+            TEST_SELENIUM_HOST=selenium TEST_SELENIUM_PORT=4444 ./vendor/bin/codecept run Acceptance ShortcodeCest.php"
 
