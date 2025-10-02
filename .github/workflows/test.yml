@@ -197,6 +197,13 @@ jobs:
             php -r 'try { \$pdo = new PDO(\"mysql:host=mysql;port=3306;dbname=test_db\", \"root\", \"root\"); echo \"DB OK\n\"; } catch (Exception \$e) { echo \$e->getMessage(); exit(1); }'
           "
 
+      - name: Debug WPLoader configuration
+        run: |
+          docker exec wordpress-fpm php -r "
+            require '/var/www/html/wp-load.php';
+            var_dump(lucatume\WPBrowser\Module\WPLoader::class);
+          "
+
       - name: Test PHP-FPM MySQL connection
         run: docker exec wordpress-fpm php -r "try { \$pdo = new PDO('mysql:host=mysql;port=3306;dbname=test_db','root','root'); echo 'DB OK\n'; } catch (Exception \$e) { echo \$e->getMessage(); exit(1); }"
 
