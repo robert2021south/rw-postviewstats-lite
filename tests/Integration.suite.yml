@@ -25,10 +25,15 @@ modules:
                 tablePrefix: 'wp_'
             lucatume\WPBrowser\Module\WPLoader:
               wpRootFolder: '/var/www/html/'
-              dbUrl: 'mysql://root:root@mysql:3306/test_db'
+              dbName: 'test_db'
+              dbHost: 'mysql'
+              dbUser: 'root'
+              dbPassword: 'root'
+              tablePrefix: 'wp_'
               domain: 'wordpress-nginx'
               adminUsername: 'admin'
               adminPassword: 'pBlaWDphJvFab5Jbi3KR9q6s'
               adminEmail: 'robert2021south@gmail.com'
+              title: 'Test Blog'
               loadOnly: true
 step_decorators: ~
