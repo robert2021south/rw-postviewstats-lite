@@ -208,7 +208,7 @@ jobs:
           "
           
           docker exec wordpress-nginx cat /etc/nginx/conf.d/default.conf
-          docker exec wordpress-fpm netstat -tuln
+          docker exec wordpress-fpm ps -ef | grep php-fpm
           docker exec wordpress-nginx ping -c 2 wordpress-fpm
 
 
