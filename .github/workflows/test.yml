@@ -210,9 +210,10 @@ jobs:
 
       - name: Debug wordpress-nginx
         run: |
-          docker exec -it wordpress-fpm bash
-          php -r "new PDO('mysql:host=mysql;port=3306;dbname=test_db','root','root'); echo 'OK';"
-          curl http://wordpress-nginx/
+          docker exec wordpress-fpm bash -c "
+            php -r 'new PDO(\"mysql:host=mysql;port=3306;dbname=test_db\",\"root\",\"root\"); echo \"DB OK\n\";'
+            curl -s http://wordpress-nginx/
+          "
 
 
         #  Debug WPLoader in PHP-FPM
