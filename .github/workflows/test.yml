@@ -207,7 +207,7 @@ jobs:
       - name: Debug Wordpress Env
         run: |
           docker exec wordpress-fpm bash -c "            
-            curl -s http://wordpress-nginx/wp-admin
+            curl -s http://wordpress-nginx/
           "      
 
       - name: Debug Selenium connectivity
