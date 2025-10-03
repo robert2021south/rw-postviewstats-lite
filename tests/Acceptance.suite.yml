@@ -7,6 +7,7 @@
 
 actor: AcceptanceTester
 suite_namespace: Tests\Acceptance
+bootstrap: _bootstrap.php
 modules:
     # enable helpers as array
     enabled:
@@ -46,6 +47,7 @@ modules:
               loadOnly: true
           WPWebDriver:
               url: 'http://wordpress-nginx/'
+              adminPath: '/wp-login.php'
               browser: chrome
               host: selenium
               port: 4444
@@ -66,8 +68,5 @@ modules:
                     download.prompt_for_download: false  #禁止弹窗“是否保存”
                     directory_upgrade: true     #如果目录不存在，自动创建；允许覆盖下载文件
                     plugins.always_open_pdf_externally: true    #PDF 不在浏览器打开，直接下载
-              adminUsername: 'admin'
-              adminPassword: '%env(WP_ADMIN_PASS)%'
-              adminPath: '/wp-login.php'
               debug: true  # 启用调试模式
               verbose: true  # 详细输出
