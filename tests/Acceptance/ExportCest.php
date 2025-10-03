@@ -65,11 +65,15 @@ class ExportCest{
         // 5. 等待文件下载（需要 WebDriver 配置 downloadPath）
         // 下载目录
         $downloadDir = codecept_root_dir() . 'tests/_output/';
-
+        codecept_debug($downloadDir);
         //$downloadPath = codecept_output_dir() . 'page-views-export-'.$postType.'.csv';
 
         // 找到最新的文件
         $files = glob($downloadDir . "page-views-export-{$postType}-*.csv");
+
+        // 确保有文件
+        $I->assertNotEmpty($files, "No CSV file found in $downloadDir");
+
         sort($files);
         $latestFile = end($files);
 
