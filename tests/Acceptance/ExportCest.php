@@ -47,7 +47,7 @@ class ExportCest{
 
 
         // 2. 打开导出页面
-        $I->amOnPage('/wp-admin/admin.php?page=rwpsl-export');
+        $I->amOnAdminPage('admin.php?page=rwpsl-export');
         //$I->see('数据导出'); // 页面标题断言
 
         // 3. 选择文章类型（比如文章 post）
@@ -63,19 +63,29 @@ class ExportCest{
         sleep(5); // 等待浏览器接收请求并开始下载
 
         // 5. 等待文件下载（需要 WebDriver 配置 downloadPath）
-        //$downloadPath = codecept_output_dir() . 'page-views-export-post.csv';
-        //$filename = 'page-views-export-post.csv';
+        // 下载目录
+        $downloadDir = codecept_root_dir() . 'tests/_output/';
 
-        $downloadPath  = $I->waitForFileDownload($postType, 15); // 10 秒超时，返回 _output 下的绝对路径
+        //$downloadPath = codecept_output_dir() . 'page-views-export-'.$postType.'.csv';
 
+        // 找到最新的文件
+        $files = glob($downloadDir . "page-views-export-{$postType}-*.csv");
+        sort($files);
+        $latestFile = end($files);
+
+        // 断言文件存在
+        $I->assertFileExists($latestFile);
+
+        // 可选
         // 6. 验证 CSV 文件内容
         //$csvContent = file_get_contents($downloadPath);
-        $csvContent = file($downloadPath, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
+        $csvContent = file($latestFile, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
 
         // 去掉第一行的 BOM
         $firstLine = preg_replace('/^\xEF\xBB\xBF/', '', $csvContent[0]);
         $header = str_getcsv($firstLine);
-        Assert::assertEquals(['Post ID', 'Title', 'Views'], $header);
+        //Assert::assertEquals(['Post ID', 'Title', 'Views'], $header);
+        $I->assertEquals(['Post ID', 'Title', 'Views'],$header);
 
         //$csvContent = preg_replace('/^\xEF\xBB\xBF/', '', $csvContent);
         //Assert::assertStringContainsString('Post ID,Title,Views', $csvContent);

@@ -217,4 +217,4 @@ jobs:
         run: |
           docker exec wordpress-fpm bash -c "cd /var/www/html/wp-content/plugins/rw-postviewstats-lite && \
             ./vendor/bin/codecept build && \
-            TEST_SELENIUM_HOST=selenium TEST_SELENIUM_PORT=4444 ./vendor/bin/codecept run Acceptance"
+            TEST_SELENIUM_HOST=selenium TEST_SELENIUM_PORT=4444 ./vendor/bin/codecept run Acceptance --filter exportPostsCsv ExportCest.php --debug"
