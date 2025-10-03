@@ -219,32 +219,38 @@ jobs:
       # ---------- 运行 Acceptance 测试 ----------
       - name: Try logging in manually
         run: |
-            docker exec wordpress-nginx sh -c '
-              COOKIE_FILE=/tmp/wp_cookies.txt
-            
-              # 第一步：访问登录页，拿到测试 cookie
-              curl -s -c $COOKIE_FILE http://wordpress-nginx/wp-login.php > /dev/null
-            
-              echo ">>> Step 1 Done. Cookies saved:"
-              cat $COOKIE_FILE
-            
-              # 第二步：带上 cookie 和表单参数，提交登录
-              curl -i -s -c $COOKIE_FILE -b $COOKIE_FILE \
-              -d "log=admin" \
-              -d "pwd=pBlaWDphJvFab5Jbi3KR9q6s" \
-              -d "wp-submit=Log+In" \
-              -d "redirect_to=/wp-admin/" \
-              -d "testcookie=1" \
-              http://wordpress-nginx/wp-login.php > /tmp/login_response.html
-            
-              echo ">>> Step 2 Done. Cookies after login:"
-              cat $COOKIE_FILE
-            
-              echo ">>> Checking if login succeeded (wordpress_logged_in cookie should exist):"
-              grep wordpress_logged_in $COOKIE_FILE || echo "!! Login failed, no wordpress_logged_in cookie"
-            
-              echo ">>> Response contains redirect to wp-admin?"
-              grep "Location:" /tmp/login_response.html || echo "!! No redirect found"
+          docker exec wordpress-nginx sh -c '
+            COOKIE_FILE=/tmp/wp_cookies.txt
+            RESPONSE_FILE=/tmp/login_response.html
+          
+            echo ">>> Step 1: Get login page"
+            curl -s -c $COOKIE_FILE http://wordpress-nginx/wp-login.php > /dev/null
+          
+            echo ">>> Step 2: Post login form"
+            curl -i -s -c $COOKIE_FILE -b $COOKIE_FILE \
+            -H "Content-Type: application/x-www-form-urlencoded" \
+            -d "log=admin" \
+            -d "pwd=pBlaWDphJvFab5Jbi3KR9q6s" \
+            -d "wp-submit=Log In" \
+            -d "redirect_to=/wp-admin/" \
+            -d "testcookie=1" \
+            http://wordpress-nginx/wp-login.php > $RESPONSE_FILE
+          
+            echo
+            echo ">>> Cookies after login:"
+            cat $COOKIE_FILE
+          
+            echo
+            echo ">>> Checking if login succeeded (wordpress_logged_in cookie should exist):"
+            grep wordpress_logged_in $COOKIE_FILE || echo "!! Login failed, no wordpress_logged_in cookie"
+          
+            echo
+            echo ">>> Checking if response contains redirect to wp-admin:"
+            grep "Location:" $RESPONSE_FILE || echo "!! No redirect found"
+          
+            echo
+            echo ">>> Extracting WordPress login error (if exists):"
+            grep -oP "<div id=\"login_error\".*?</div>" $RESPONSE_FILE | sed "s/<[^>]*>//g" || echo "No login_error found"
             '
 
       - name: 18. Run Acceptance Tests
@@ -252,4 +258,3 @@ jobs:
           docker exec wordpress-fpm bash -c "cd /var/www/html/wp-content/plugins/rw-postviewstats-lite && \
             ./vendor/bin/codecept build && \
             TEST_SELENIUM_HOST=selenium TEST_SELENIUM_PORT=4444 ./vendor/bin/codecept run Acceptance --filter cleanPosts CleanerCest.php --debug"
-
