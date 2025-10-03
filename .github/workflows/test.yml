@@ -236,19 +236,15 @@ jobs:
             -d "testcookie=1" \
             http://wordpress-nginx/wp-login.php > $RESPONSE_FILE
           
-            echo
             echo ">>> Cookies after login:"
             cat $COOKIE_FILE
           
-            echo
             echo ">>> Checking if login succeeded (wordpress_logged_in cookie should exist):"
             grep wordpress_logged_in $COOKIE_FILE || echo "!! Login failed, no wordpress_logged_in cookie"
           
-            echo
             echo ">>> Checking if response contains redirect to wp-admin:"
             grep "Location:" $RESPONSE_FILE || echo "!! No redirect found"
           
-            echo
             echo ">>> Extracting WordPress login error (if exists):"
             sed -n '/<div id="login_error"/,/<\/div>/p' $RESPONSE_FILE | sed 's/<[^>]*>//g' | sed '/^[[:space:]]*$/d' || echo "No login_error found"
             '
