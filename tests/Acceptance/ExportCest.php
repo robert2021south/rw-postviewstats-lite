@@ -65,7 +65,15 @@ class ExportCest{
         // 5. 等待文件下载（需要 WebDriver 配置 downloadPath）
         // 下载目录
         $downloadDir = codecept_root_dir() . 'tests/_output/';
-        codecept_debug($downloadDir);
+
+        $files = scandir(codecept_output_dir());
+        foreach ($files as $file) {
+            if ($file === '.' || $file === '..') {
+                continue;
+            }
+            codecept_debug("Found file: " . $file);
+        }
+
         //$downloadPath = codecept_output_dir() . 'page-views-export-'.$postType.'.csv';
 
         // 找到最新的文件
