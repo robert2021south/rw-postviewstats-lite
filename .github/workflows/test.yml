@@ -120,17 +120,8 @@ jobs:
           -v wp-data:/var/www/html \
           wp-fpm-custom
 
-      # ---------- Fix PHP sessions for WordPress ----------
-      - name: 11. Fix PHP sessions directory
-        run: |
-          # 在 FPM 容器里创建可写 session 目录
-          docker exec wordpress-fpm bash -c "mkdir -p /var/www/html/wp-sessions && chown -R www-data:www-data /var/www/html/wp-sessions"
-          
-          # 在 wp-config.php 中添加 session.save_path 设置
-          docker exec wordpress-fpm bash -c "grep -q 'session.save_path' /var/www/html/wp-config.php || echo '@ini_set(\"session.save_path\", \"/var/www/html/wp-sessions\");' >> /var/www/html/wp-config.php"
-
       # ---------- 启动 wordpress-nginx 容器（4） ----------
-      - name: 12. Start Nginx container
+      - name: 11. Start Nginx container
         run: |
           mkdir -p $GITHUB_WORKSPACE/nginx
           echo '
@@ -171,18 +162,18 @@ jobs:
           sleep 5
 
       # ---------- 安装 WP-CLI ----------
-      - name: 13. Install WP-CLI in PHP-FPM container
+      - name: 12. Install WP-CLI in PHP-FPM container
         run: |
           docker exec wordpress-fpm bash -c "curl -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar && \
           chmod +x wp-cli.phar && mv wp-cli.phar /usr/local/bin/wp && wp --info"
 
       # ---------- 下载 WordPress 核心 ----------
-      - name: 14. Download WordPress core
+      - name: 13. Download WordPress core
         run: |
           docker exec wordpress-fpm php -d memory_limit=512M /usr/local/bin/wp core download --allow-root --force --path=/var/www/html
 
       # ---------- 创建 wp-config.php ----------
-      - name: 15. Create wp-config.php
+      - name: 14. Create wp-config.php
         run: |
           docker exec wordpress-fpm php -d memory_limit=512M /usr/local/bin/wp config create \
             --dbhost=mysql:3306 \
@@ -192,6 +183,15 @@ jobs:
             --skip-check \
             --allow-root \
             --path=/var/www/html
+
+      # ---------- Fix PHP sessions for WordPress ----------
+      - name: 15. Fix PHP sessions directory
+        run: |
+          # 在 FPM 容器里创建可写 session 目录
+          docker exec wordpress-fpm bash -c "mkdir -p /var/www/html/wp-sessions && chown -R www-data:www-data /var/www/html/wp-sessions"
+          
+          # 在 wp-config.php 中添加 session.save_path 设置
+          docker exec wordpress-fpm bash -c "grep -q 'session.save_path' /var/www/html/wp-config.php || echo '@ini_set(\"session.save_path\", \"/var/www/html/wp-sessions\");' >> /var/www/html/wp-config.php"
 
       # ---------- 安装 WordPress & 激活插件 ----------
       - name: 16. Install WordPress & Activate Plugin
