@@ -94,7 +94,7 @@ jobs:
           shopt -u extglob
 
       # ---------- 8. 安装 Composer 依赖 ----------
-      - name: Install Composer dependencies inside container
+      - name: Install Composer dependencies
         run: |
           cd $GITHUB_WORKSPACE/wp-plugin-temp/
           composer install --no-interaction --prefer-dist --optimize-autoloader
