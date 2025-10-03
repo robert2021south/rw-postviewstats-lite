@@ -248,6 +248,11 @@ jobs:
           echo ">>> Extracting WordPress login error (if exists):"
           sed -n "/<div id=\"login_error\"/,/<\/div>/p" $RESPONSE_FILE | sed "s/<[^>]*>//g" | sed "/^[[:space:]]*$/d" || echo "No login_error found"
           '
+          
+          docker exec wordpress-fpm bash -c "mysql -u root -p\$MYSQL_ROOT_PASSWORD -e 'SELECT user_login FROM test_db.wp_users;'"
+          
+          echo "Length of WP_ADMIN_USER: ${WP_ADMIN_USER}"
+          echo "Length of WP_ADMIN_PASS: ${WP_ADMIN_PASS}"
 
       - name: 18. Run Acceptance Tests
         run: |
