@@ -105,9 +105,13 @@ jobs:
           # 创建 volume
           docker volume create wp-data
 
-          # 先把 WordPress core 拷贝到 volume
+          # 先把 WordPress core 拷贝到 volume， 并在/var/www/html下创建wp-sessions目录
           docker run --rm -v wp-data:/var/www/html wordpress:6.8-php8.2-fpm \
-           bash -c "cp -R /usr/src/wordpress/* /var/www/html/"
+           bash -c "
+            cp -R /usr/src/wordpress/* /var/www/html/;
+            mkdir -p /var/www/html/wp-sessions;
+            chown -R www-data:www-data /var/www/html/wp-sessions
+          "
 
           # 再把插件（包含 vendor）拷贝到 volume
           docker run --rm -v wp-data:/var/www/html -v $GITHUB_WORKSPACE/wp-plugin-temp:/tmp/plugin \
@@ -183,25 +187,18 @@ jobs:
             --skip-check \
             --allow-root \
             --path=/var/www/html
-
-      # ---------- Fix PHP sessions for WordPress ----------
-      - name: 15. Fix PHP sessions directory
-        run: |
-          
-          # 在 FPM 容器里创建可写 session 目录
-          docker exec wordpress-fpm bash -c "mkdir -p /var/www/html/wp-sessions && chown -R www-data:www-data /var/www/html/wp-sessions"
           
           # 在 wp-config.php 中添加 session.save_path 设置
-          docker exec wordpress-fpm bash -c "grep -q 'session.save_path' /var/www/html/wp-config.php || echo '@ini_set(\"session.save_path\", \"/var/www/html/wp-sessions\");' >> /var/www/html/wp-config.php"
+          docker exec wordpress-fpm bash -c "
+            grep -q 'session.save_path' /var/www/html/wp-config.php || 
+            echo '@ini_set(\"session.save_path\", \"/var/www/html/wp-sessions\");' >> /var/www/html/wp-config.php
+          "
           
           # 重启 wordpress-fpm 容器
           docker restart wordpress-fpm
-          
-          docker exec wordpress-fpm bash -c "cat /var/www/html/wp-config.php"
-          docker exec wordpress-fpm bash -c "ls -la /var/www/html/"
 
       # ---------- 安装 WordPress & 激活插件 ----------
-      - name: 16. Install WordPress & Activate Plugin
+      - name: 15. Install WordPress & Activate Plugin
         run: |
           docker exec wordpress-fpm php -d memory_limit=512M /usr/local/bin/wp core install \
             --url="http://wordpress-nginx/" \
@@ -218,12 +215,12 @@ jobs:
 #            --path=/var/www/html
 
       # ---------- 运行 Unit 测试 ----------
-      - name: 17. Run Unit Tests
+      - name: 16. Run Unit Tests
         run: |
           docker exec wordpress-fpm bash -c "cd /var/www/html/wp-content/plugins/rw-postviewstats-lite && ./vendor/bin/codecept run Unit"
 
       # ---------- 运行 Integration 测试 ----------
-      - name: 18. Run Integration Tests
+      - name: 17. Run Integration Tests
         run: |
           docker exec wordpress-fpm bash -c "cd /var/www/html/wp-content/plugins/rw-postviewstats-lite && ./vendor/bin/codecept run Integration"
 
@@ -235,7 +232,7 @@ jobs:
 
       #          docker exec wordpress-nginx sh -c "curl -s http://wordpress-nginx/wp-login.php"
 
-      - name: 19. Run Acceptance Tests
+      - name: 18. Run Acceptance Tests
         run: |
           docker exec wordpress-fpm bash -c "cd /var/www/html/wp-content/plugins/rw-postviewstats-lite && \
             ./vendor/bin/codecept build && \
