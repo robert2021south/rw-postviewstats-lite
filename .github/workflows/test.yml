@@ -23,6 +23,12 @@ jobs:
         uses: actions/checkout@v3
 
       # ---------- 创建 Docker 网络 ----------
+      - name: Make sure the path of default downloads dir
+        run: |
+          ls -la /home/runner/
+          ls -la /home/runner/Downloads
+          ls -la /home/runner/downloads
+
       - name: 2. Create Docker network
         run: docker network create wp-net || true
 
