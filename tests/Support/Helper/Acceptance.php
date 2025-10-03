@@ -7,6 +7,9 @@ namespace Tests\Support\Helper;
 // here you can define custom actions
 // all public methods declared in helper class will be available in $I
 
+use Codeception\Exception\ModuleConfigException;
+use Codeception\Exception\ModuleException;
+
 class Acceptance extends \Codeception\Module
 {
 
@@ -34,4 +37,19 @@ class Acceptance extends \Codeception\Module
         throw new \Exception("No file with prefix '$prefix' downloaded in $downloadsDir");
     }
 
+    /**
+     * @throws ModuleConfigException
+     * @throws ModuleException
+     */
+    public function _beforeSuite($settings = []): void
+    {
+        $wp = $this->getModule('WPWebDriver');
+
+        if (getenv('WP_ADMIN_USER') && getenv('WP_ADMIN_PASS')) {
+            $wp->_setConfig([
+                'adminUsername' => getenv('WP_ADMIN_USER'),
+                'adminPassword' => getenv('WP_ADMIN_PASS'),
+            ]);
+        }
+    }
 }
