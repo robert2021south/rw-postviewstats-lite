@@ -219,9 +219,10 @@ jobs:
       # ---------- 运行 Acceptance 测试 ----------
       - name: Try logging in manually
         run: |
-          docker exec wordpress-nginx sh -c "
-            curl -i -d "log=admin&pwd=pBlaWDphJvFab5Jbi3KR9q6s&wp-submit=Log+In&redirect_to=/wp-admin/&testcookie=1" http://wordpress-nginx/wp-login.php
-          "          
+            docker exec wordpress-nginx sh -c '
+              curl -i -d "log=admin&pwd=pBlaWDphJvFab5Jbi3KR9q6s&wp-submit=Log+In&redirect_to=/wp-admin/&testcookie=1" \
+              http://wordpress-nginx/wp-login.php
+            '
 
       - name: 18. Run Acceptance Tests
         run: |
