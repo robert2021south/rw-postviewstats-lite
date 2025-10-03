@@ -181,7 +181,6 @@ jobs:
           docker exec wordpress-fpm bash -c "echo 'define(\"WP_SITEURL\", \"http://wordpress-nginx\");' >> /var/www/html/wp-config.php"
 
 
-
       # ---------- 14. 安装 WordPress & 激活插件 ----------
       - name: Install WordPress & Activate Plugin
         run: |
@@ -210,10 +209,6 @@ jobs:
           docker exec wordpress-fpm bash -c "cd /var/www/html/wp-content/plugins/rw-postviewstats-lite && ./vendor/bin/codecept run Integration"
 
       # ---------- 17. 运行 Acceptance 测试 ----------
-      - name: Check Selenium network
-        run: |
-          docker exec selenium curl -I http://wordpress-nginx/wp-login.php || echo "Cannot reach wordpress-nginx"
-
       - name: Run Acceptance Tests
         run: |
           docker exec wordpress-fpm bash -c "cd /var/www/html/wp-content/plugins/rw-postviewstats-lite && \
