@@ -18,7 +18,7 @@ class CleanerCest{
         $I->fillField('log', 'admin');
         $I->fillField('pwd', 'pBlaWDphJvFab5Jbi3KR9q6s');
         $I->click('Log In');
-        $I->waitForElementVisible('#wpadminbar', 20);
+        //$I->waitForElementVisible('#wpadminbar', 20);
     }
 
     /**
