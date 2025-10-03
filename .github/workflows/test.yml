@@ -26,7 +26,18 @@ jobs:
       - name: Create Docker network
         run: docker network create wp-net || true
 
-      # ---------- 3. 启动 MySQL 容器（1）  ----------
+      # ---------- 3. 启动 Selenium 容器（1）----------
+      - name: Start Selenium container
+        run: |
+          docker run -d --name selenium --network wp-net \
+            -p 4444:4444 \
+            selenium/standalone-chrome:120.0
+
+          # 等待 Selenium 启动
+          echo "Waiting for Selenium to start..."
+          sleep 5
+
+      # ---------- 4. 启动 MySQL 容器（2）  ----------
       - name: Start MySQL container
         run: |
           docker run -d --name mysql --network wp-net \
@@ -34,7 +45,7 @@ jobs:
             -e MYSQL_ROOT_PASSWORD=$MYSQL_ROOT_PASSWORD \
             mysql:8.0
 
-      # ---------- 4. 等待 MySQL 启动----------
+      # ---------- 5. 等待 MySQL 启动----------
       - name: Wait for MySQL
         run: |
           echo "Waiting for MySQL..."
@@ -43,7 +54,7 @@ jobs:
             sleep 2
           done
 
-      # ---------- 5. 编译 自定义 WP-FPM 镜像 (包含 pdo_mysql) ----------
+      # ---------- 6. 编译 自定义 WP-FPM 镜像 (包含 pdo_mysql) ----------
       - name: Build custom wp-fpm image (with pdo_mysql)
         run: |
           mkdir -p $GITHUB_WORKSPACE/ci
@@ -74,7 +85,7 @@ jobs:
 
           docker build -t wp-fpm-custom -f $GITHUB_WORKSPACE/ci/Dockerfile $GITHUB_WORKSPACE
 
-      # ---------- 6. 准备插件目录 ----------
+      # ---------- 7. 准备插件目录 ----------
       - name: Prepare plugins directory
         run: |
           mkdir -p $GITHUB_WORKSPACE/wp-plugin-temp
@@ -82,7 +93,13 @@ jobs:
           cp -r $GITHUB_WORKSPACE/!(wp-plugin-temp) $GITHUB_WORKSPACE/wp-plugin-temp/
           shopt -u extglob
 
-      # ---------- 7. 启动 WordPress PHP-FPM 容器（2） （挂载插件）----------
+      # ---------- 8. 安装 Composer 依赖 ----------
+      - name: Install Composer dependencies inside container
+        run: |
+          cd $GITHUB_WORKSPACE/wp-plugin-temp/
+          composer install --no-interaction --prefer-dist --optimize-autoloader
+
+      # ---------- 9. 启动 WordPress PHP-FPM 容器（3） （挂载插件）----------
       - name: Start WordPress PHP-FPM container
         run: |
           docker volume create wp-data
@@ -91,12 +108,7 @@ jobs:
           -v $GITHUB_WORKSPACE/wp-plugin-temp:/var/www/html/wp-content/plugins/rw-postviewstats-lite \
           wp-fpm-custom
 
-      # ---------- 8. 安装 Composer 依赖 ----------
-      - name: Install Composer dependencies inside container
-        run: |
-          docker exec wordpress-fpm bash -c "cd /var/www/html/wp-content/plugins/rw-postviewstats-lite && composer install --no-interaction --prefer-dist --optimize-autoloader"
-
-      # ---------- 9. 启动 wordpress-nginx 容器（3） ----------
+      # ---------- 10. 启动 wordpress-nginx 容器（4） ----------
       - name: Start Nginx container
         run: |
           mkdir -p $GITHUB_WORKSPACE/nginx
@@ -135,17 +147,6 @@ jobs:
 
           # 等待 Nginx 启动
           echo "Waiting for Nginx to start..."
-          sleep 5
-
-      # ---------- 10. 启动 Selenium 容器（4）----------
-      - name: Start Selenium container
-        run: |
-          docker run -d --name selenium --network wp-net \
-            -p 4444:4444 \
-            selenium/standalone-chrome:120.0
-
-          # 等待 Selenium 启动
-          echo "Waiting for Selenium to start..."
           sleep 5
 
       # ---------- 11. 安装 WP-CLI ----------
