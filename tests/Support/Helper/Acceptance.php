@@ -12,7 +12,7 @@ class Acceptance extends \Codeception\Module
 
     public function waitForFileDownload(string $postType, int $timeout = 15): string
     {
-        $downloadsDir = 'E:\\Downloads'; // 实际 Chrome 下载目录
+        $downloadsDir = '/var/www/html/wp-content/uploads'; // 实际 Chrome 下载目录
         $destDir = rtrim(codecept_output_dir(), '\\/') . '\\';
         $prefix = "page-views-export-{$postType}-";
         $elapsed = 0;
