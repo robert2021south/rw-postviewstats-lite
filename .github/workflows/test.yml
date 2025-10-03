@@ -10,10 +10,19 @@ jobs:
   test:
     runs-on: ubuntu-latest
 
+    services:
+      wordpress-fpm:
+        volumes:
+          - ./src:/var/www/html
+
+      wordpress-nginx:
+        volumes:
+          - ./src:/var/www/html
+
     env:
       WP_ADMIN_USER: ${{ secrets.WP_ADMIN_USER }}
       WP_ADMIN_PASS: ${{ secrets.WP_ADMIN_PASS }}
-      WP_PORT: 8080
+      WP_PORT: 80
       MYSQL_DATABASE: test_db
       MYSQL_ROOT_PASSWORD: root
 
@@ -102,9 +111,7 @@ jobs:
       # ---------- 9. 启动 WordPress PHP-FPM 容器（3） （挂载插件）----------
       - name: Start WordPress PHP-FPM container
         run: |
-          docker volume create wp-data
           docker run -d --name wordpress-fpm --network wp-net \
-          -v wp-data:/var/www/html \
           -v $GITHUB_WORKSPACE/wp-plugin-temp:/var/www/html/wp-content/plugins/rw-postviewstats-lite \
           wp-fpm-custom
 
@@ -141,7 +148,6 @@ jobs:
 
           docker run -d --name wordpress-nginx --network wp-net \
             -p $WP_PORT:80 \
-            -v wp-data:/var/www/html:ro \
             -v ${{ github.workspace }}/nginx/default.conf:/etc/nginx/conf.d/default.conf:ro \
             nginx:stable-alpine
 
