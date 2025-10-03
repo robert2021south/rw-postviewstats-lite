@@ -31,6 +31,7 @@ jobs:
         run: |
           docker run -d --name selenium --network wp-net \
             -p 4444:4444 \
+            --shm-size=2g \
             selenium/standalone-chrome:120.0
 
           # 等待 Selenium 启动
