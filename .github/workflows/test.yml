@@ -188,7 +188,7 @@ jobs:
       - name: 15. Install WordPress & Activate Plugin
         run: |
           docker exec wordpress-fpm php -d memory_limit=512M /usr/local/bin/wp core install \
-            --url="http://localhost:8080/" \
+            --url="http://wordpress-nginx/" \
             --title="Test Site" \
             --admin_user="$WP_ADMIN_USER" \
             --admin_password="$WP_ADMIN_PASS" \
