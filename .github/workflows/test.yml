@@ -212,9 +212,7 @@ jobs:
       # ---------- 16. 运行 Acceptance 测试 ----------
       - name: Debug Wordpress Env
         run: |
-          docker exec wordpress-fpm bash -c "            
-           curl -i -H "Host: wordpress-nginx" http://wordpress-nginx/wp-admin/
-          "      
+          docker exec wordpress-fpm bash -c "curl -i -H 'Host: wordpress-nginx' http://wordpress-nginx/wp-admin/"
 
       - name: Debug Selenium connectivity
         run: |
