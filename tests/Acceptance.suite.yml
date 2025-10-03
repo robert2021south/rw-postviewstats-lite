@@ -46,7 +46,7 @@ modules:
               loadOnly: true
           WPWebDriver:
               url: 'http://wordpress-nginx/'
-              adminPath: '/wp-login.php'
+              adminPath: '/wp-admin'
               adminUsername: 'admin'
               adminPassword: 'pBlaWDphJvFab5Jbi3KR9q6s'
               browser: chrome

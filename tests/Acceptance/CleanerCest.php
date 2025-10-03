@@ -56,7 +56,7 @@ class CleanerCest{
         ]);
 
         // 打开清理页面并选择 post 类型
-        $I->amOnAdminPage('/wp-admin/admin.php?page=rwpsl-cleaner');
+        $I->amOnAdminPage('admin.php?page=rwpsl-cleaner');
         $I->waitForElement('select[name=post_type]', 10); // 最多等10秒
         $I->selectOption('select[name=post_type]', 'post');
         $I->click('#submit');
