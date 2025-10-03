@@ -113,21 +113,21 @@ jobs:
           docker run --rm -v wp-data:/var/www/html -v $GITHUB_WORKSPACE/wp-plugin-temp:/tmp/plugin \
            bash -c "mkdir -p /var/www/html/wp-content/plugins/ && cp -R /tmp/plugin /var/www/html/wp-content/plugins/rw-postviewstats-lite"
 
+      # ---------- 启动 WordPress PHP-FPM 容器（3） （挂载插件）----------
+      - name: 10. Start WordPress PHP-FPM container
+        run: |
+          docker run -d --name wordpress-fpm --network wp-net \
+          -v wp-data:/var/www/html \
+          wp-fpm-custom
+
       # ---------- Fix PHP sessions for WordPress ----------
-      - name: 10. Fix PHP sessions directory
+      - name: 11. Fix PHP sessions directory
         run: |
           # 在 FPM 容器里创建可写 session 目录
           docker exec wordpress-fpm bash -c "mkdir -p /var/www/html/wp-sessions && chown -R www-data:www-data /var/www/html/wp-sessions"
           
           # 在 wp-config.php 中添加 session.save_path 设置
           docker exec wordpress-fpm bash -c "grep -q 'session.save_path' /var/www/html/wp-config.php || echo '@ini_set(\"session.save_path\", \"/var/www/html/wp-sessions\");' >> /var/www/html/wp-config.php"
-
-      # ---------- 启动 WordPress PHP-FPM 容器（3） （挂载插件）----------
-      - name: 11. Start WordPress PHP-FPM container
-        run: |
-          docker run -d --name wordpress-fpm --network wp-net \
-          -v wp-data:/var/www/html \
-          wp-fpm-custom
 
       # ---------- 启动 wordpress-nginx 容器（4） ----------
       - name: 12. Start Nginx container
