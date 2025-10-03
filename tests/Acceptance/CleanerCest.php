@@ -8,18 +8,18 @@ class CleanerCest{
     /**
      * 前置准备：管理员登录
      */
-//    public function _before(AcceptanceTester $I): void
-//    {
-//        $I->loginAsAdmin(); // 假设有封装好的登录方法
-//    }
     public function _before(AcceptanceTester $I): void
     {
-        $I->amOnPage('/wp-login.php');
-        $I->fillField('log', 'admin');
-        $I->fillField('pwd', 'pBlaWDphJvFab5Jbi3KR9q6s');
-        $I->click('Log In');
-        //$I->waitForElementVisible('#wpadminbar', 20);
+        $I->loginAsAdmin(); // 假设有封装好的登录方法
     }
+//    public function _before(AcceptanceTester $I): void
+//    {
+//        $I->amOnPage('/wp-login.php');
+//        $I->fillField('log', 'admin');
+//        $I->fillField('pwd', 'pBlaWDphJvFab5Jbi3KR9q6s');
+//        $I->click('Log In');
+//        //$I->waitForElementVisible('#wpadminbar', 20);
+//    }
 
     /**
      * 1. 管理员清理文章数据  post 清理
