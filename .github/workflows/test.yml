@@ -13,7 +13,7 @@ jobs:
     env:
       WP_ADMIN_USER: ${{ secrets.WP_ADMIN_USER }}
       WP_ADMIN_PASS: ${{ secrets.WP_ADMIN_PASS }}
-      WP_PORT: 80
+      WP_PORT: 8080
       MYSQL_DATABASE: test_db
       MYSQL_ROOT_PASSWORD: root
 
@@ -115,7 +115,7 @@ jobs:
           echo '
           server {
               listen 80;
-              server_name wordpress-nginx;
+              server_name _;
 
               root /var/www/html;
               index index.php index.html;
@@ -156,6 +156,11 @@ jobs:
           chmod +x wp-cli.phar && mv wp-cli.phar /usr/local/bin/wp && wp --info"
 
       # ---------- 12. 下载 WordPress 核心 ----------
+      - name: Check if vendor both in wordpress-fpm and wordpress-nginx container
+        run: |
+          docker exec wordpress-fpm bash -c "ls -la /var/www/html/wp-content/plugins/rw-postviewstats-lite"
+          docker exec wordpress-nginx sh -c "ls -la /var/www/html/wp-content/plugins/rw-postviewstats-lite"
+
       - name: Download WordPress core
         run: |
           docker exec wordpress-fpm php -d memory_limit=512M /usr/local/bin/wp core download --allow-root --force --path=/var/www/html
@@ -171,21 +176,12 @@ jobs:
             --skip-check \
             --allow-root \
             --path=/var/www/html
-          
-          docker exec wordpress-fpm bash -c "echo 'if (!defined(\"WP_DEBUG\")) define(\"WP_DEBUG\", false);' >> /var/www/html/wp-config.php"
-          docker exec wordpress-fpm bash -c "echo 'if (!defined(\"WP_DEBUG_DISPLAY\")) define(\"WP_DEBUG_DISPLAY\", false);' >> /var/www/html/wp-config.php"
-          docker exec wordpress-fpm bash -c "echo '@ini_set(\"display_errors\", 0);' >> /var/www/html/wp-config.php"
-          docker exec wordpress-fpm bash -c "echo '@ini_set(\"display_startup_errors\", 0);' >> /var/www/html/wp-config.php"
-          docker exec wordpress-fpm bash -c "echo 'if (!defined(\"FORCE_SSL_ADMIN\")) define(\"FORCE_SSL_ADMIN\", false);' >> /var/www/html/wp-config.php"
-          docker exec wordpress-fpm bash -c "echo 'define(\"WP_HOME\", \"http://wordpress-nginx\");' >> /var/www/html/wp-config.php"
-          docker exec wordpress-fpm bash -c "echo 'define(\"WP_SITEURL\", \"http://wordpress-nginx\");' >> /var/www/html/wp-config.php"
-
 
       # ---------- 14. 安装 WordPress & 激活插件 ----------
       - name: Install WordPress & Activate Plugin
         run: |
           docker exec wordpress-fpm php -d memory_limit=512M /usr/local/bin/wp core install \
-            --url="http://wordpress-nginx/" \
+            --url="http://localhost:8080/" \
             --title="Test Site" \
             --admin_user="$WP_ADMIN_USER" \
             --admin_password="$WP_ADMIN_PASS" \

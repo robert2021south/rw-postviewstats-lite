@@ -35,7 +35,6 @@ modules:
               wpRootFolder: '/var/www/html/'
           WPLoader:
               wpRootFolder: '/var/www/html/'
-              dsn: 'mysql:host=mysql;port=3306;dbname=test_db'
               dbName: 'test_db'
               dbHost: 'mysql'
               dbUser: 'root'
@@ -46,7 +45,7 @@ modules:
               title: 'Test Blog'
               loadOnly: true
           WPWebDriver:
-              url: 'http://wordpress-nginx:80'
+              url: 'http://localhost:8080'
               browser: chrome
               host: selenium
               port: 4444
