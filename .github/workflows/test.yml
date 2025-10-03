@@ -28,6 +28,7 @@ jobs:
           ls -la /home
           ls -la /home/runner/
           ls -la /home/runner/work
+          ls -la /tmp
           ls -la /home/runner/Downloads
 
       - name: 2. Create Docker network
