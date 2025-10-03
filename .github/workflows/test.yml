@@ -254,35 +254,30 @@ jobs:
           WP_ADMIN_USER: ${{ secrets.WP_ADMIN_USER }}
           WP_ADMIN_PASS: ${{ secrets.WP_ADMIN_PASS }}
         run: |
-          docker exec wordpress-nginx sh -c '
+          docker exec wordpress-nginx sh -c "
             COOKIE_FILE=/tmp/wp_cookies.txt
             RESPONSE_FILE=/tmp/login_response.html
           
-            # 1) 访问登录页，保存测试 cookie
-            curl -s -c "$COOKIE_FILE" http://wordpress-nginx/wp-login.php > /dev/null
+            curl -s -c \"\$COOKIE_FILE\" http://wordpress-nginx/wp-login.php > /dev/null
           
-            # 2) 提交登录表单（使用环境变量，不在日志中回显密码）
-            #    注意：这里不 echo 密码或写到日志
-            curl -i -s -c "$COOKIE_FILE" -b "$COOKIE_FILE" \
-              -H "Content-Type: application/x-www-form-urlencoded" \
-              -d "log=${WP_ADMIN_USER}" \
-              -d "pwd=${WP_ADMIN_PASS}" \
-              -d "wp-submit=Log In" \
-              -d "redirect_to=/wp-admin/" \
-              -d "testcookie=1" \
-              http://wordpress-nginx/wp-login.php > "$RESPONSE_FILE"
+            curl -i -s -c \"\$COOKIE_FILE\" -b \"\$COOKIE_FILE\" \
+            -H \"Content-Type: application/x-www-form-urlencoded\" \
+            -d \"log=${WP_ADMIN_USER}\" \
+            -d \"pwd=${WP_ADMIN_PASS}\" \
+            -d \"wp-submit=Log In\" \
+            -d \"redirect_to=/wp-admin/\" \
+            -d \"testcookie=1\" \
+            http://wordpress-nginx/wp-login.php > \"\$RESPONSE_FILE\"
           
-            # 3) 检查 cookie 文件里是否包含 wordpress_logged_in_ 前缀
-            if grep -q "wordpress_logged_in_" "$COOKIE_FILE"; then
-              echo ">>> LOGIN OK: wordpress_logged_in cookie present"
-              exit 0
+            if grep -q \"wordpress_logged_in_\" \"\$COOKIE_FILE\"; then
+            echo '>>> LOGIN OK'
             else
-              echo ">>> LOGIN FAIL: wordpress_logged_in cookie NOT present"
-              echo ">>> Login response snippet:"
-              sed -n '1,40p' "$RESPONSE_FILE"
-              exit 1
+            echo '>>> LOGIN FAIL'
+            sed -n '/<div id=\"login_error\"/,/<\/div>/p' \"\$RESPONSE_FILE\" | sed 's/<[^>]*>//g' | sed '/^[[:space:]]*$/d'
+            exit 1
             fi
-          '
+            "
+
 
       - name: 18. Run Acceptance Tests
         run: |
