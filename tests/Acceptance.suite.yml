@@ -57,7 +57,7 @@ modules:
               capabilities:
                 chromeOptions:
                   args:
-                    - "--headless"
+                    - "--headless=new"
                     - "--disable-gpu"
                     - "--window-size=1280,1024"
                     - "--no-sandbox"
