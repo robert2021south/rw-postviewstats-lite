@@ -25,6 +25,7 @@ modules:
                 tablePrefix: 'wp_'
             lucatume\WPBrowser\Module\WPLoader:
               wpRootFolder: '/var/www/html/'
+              dsn: 'mysql:host=mysql;port=3306;dbname=test_db'
               dbName: 'test_db'
               dbHost: 'mysql'
               dbUser: 'root'
