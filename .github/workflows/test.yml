@@ -249,12 +249,40 @@ jobs:
           sed -n "/<div id=\"login_error\"/,/<\/div>/p" $RESPONSE_FILE | sed "s/<[^>]*>//g" | sed "/^[[:space:]]*$/d" || echo "No login_error found"
           '
           
-      - name: Make sure admin user and admin password
+      - name: Check admin password by doing a real login (no secret printed)
+        env:
+          WP_ADMIN_USER: ${{ secrets.WP_ADMIN_USER }}
+          WP_ADMIN_PASS: ${{ secrets.WP_ADMIN_PASS }}
         run: |
-
-          echo "WP_ADMIN_USER: ${WP_ADMIN_USER}"
-          echo "WP_ADMIN_PASS: ${WP_ADMIN_PASS}"
-          docker exec wordpress-fpm bash -c "mysql -h mysql -P 3306 -u root -p\$MYSQL_ROOT_PASSWORD -e 'SELECT user_login FROM test_db.wp_users;'"
+          docker exec wordpress-nginx sh -c '
+            COOKIE_FILE=/tmp/wp_cookies.txt
+            RESPONSE_FILE=/tmp/login_response.html
+          
+            # 1) 访问登录页，保存测试 cookie
+            curl -s -c "$COOKIE_FILE" http://wordpress-nginx/wp-login.php > /dev/null
+          
+            # 2) 提交登录表单（使用环境变量，不在日志中回显密码）
+            #    注意：这里不 echo 密码或写到日志
+            curl -i -s -c "$COOKIE_FILE" -b "$COOKIE_FILE" \
+              -H "Content-Type: application/x-www-form-urlencoded" \
+              -d "log=${WP_ADMIN_USER}" \
+              -d "pwd=${WP_ADMIN_PASS}" \
+              -d "wp-submit=Log In" \
+              -d "redirect_to=/wp-admin/" \
+              -d "testcookie=1" \
+              http://wordpress-nginx/wp-login.php > "$RESPONSE_FILE"
+          
+            # 3) 检查 cookie 文件里是否包含 wordpress_logged_in_ 前缀
+            if grep -q "wordpress_logged_in_" "$COOKIE_FILE"; then
+              echo ">>> LOGIN OK: wordpress_logged_in cookie present"
+              exit 0
+            else
+              echo ">>> LOGIN FAIL: wordpress_logged_in cookie NOT present"
+              echo ">>> Login response snippet:"
+              sed -n '1,40p' "$RESPONSE_FILE"
+              exit 1
+            fi
+          '
 
       - name: 18. Run Acceptance Tests
         run: |
