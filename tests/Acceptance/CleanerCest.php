@@ -45,8 +45,7 @@ class CleanerCest{
                 codecept_debug("Error detected on page");
             }
 
-            $files = $I->grabWpSessionFiles();
-            codecept_debug("WP session files: " . implode(', ', $files));
+            codecept_debug('session.save_path: ' . ini_get('session.save_path'));
 
             throw $e;
         }
