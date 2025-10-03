@@ -18,15 +18,15 @@ jobs:
       MYSQL_ROOT_PASSWORD: root
 
     steps:
-      # ---------- 1. Checkout 代码 ----------
+      # ---------- Checkout 代码 ----------
       - name: 1. Checkout code
         uses: actions/checkout@v3
 
-      # ---------- 2. 创建 Docker 网络 ----------
+      # ---------- 创建 Docker 网络 ----------
       - name: 2. Create Docker network
         run: docker network create wp-net || true
 
-      # ---------- 3. 启动 Selenium 容器（1）----------
+      # ---------- 启动 Selenium 容器（1）----------
       - name: 3. Start Selenium container
         run: |
           docker run -d --name selenium --network wp-net \
@@ -37,7 +37,7 @@ jobs:
           echo "Waiting for Selenium to start..."
           sleep 5
 
-      # ---------- 4. 启动 MySQL 容器（2）  ----------
+      # ---------- 启动 MySQL 容器（2）  ----------
       - name: 4. Start MySQL container
         run: |
           docker run -d --name mysql --network wp-net \
@@ -45,7 +45,7 @@ jobs:
             -e MYSQL_ROOT_PASSWORD=$MYSQL_ROOT_PASSWORD \
             mysql:8.0
 
-      # ---------- 5. 等待 MySQL 启动----------
+      # ---------- 等待 MySQL 启动----------
       - name: 5. Wait for MySQL
         run: |
           echo "Waiting for MySQL..."
@@ -54,7 +54,7 @@ jobs:
             sleep 2
           done
 
-      # ---------- 6. 编译 自定义 WP-FPM 镜像 (包含 pdo_mysql) ----------
+      # ---------- 编译 自定义 WP-FPM 镜像 (包含 pdo_mysql) ----------
       - name: 6. Build custom wp-fpm image (with pdo_mysql)
         run: |
           mkdir -p $GITHUB_WORKSPACE/ci
@@ -85,7 +85,7 @@ jobs:
 
           docker build -t wp-fpm-custom -f $GITHUB_WORKSPACE/ci/Dockerfile $GITHUB_WORKSPACE
 
-      # ---------- 7. 准备插件目录 ----------
+      # ---------- 准备插件目录 ----------
       - name: 7. Prepare plugins directory
         run: |
           mkdir -p $GITHUB_WORKSPACE/wp-plugin-temp
@@ -93,13 +93,13 @@ jobs:
           cp -r $GITHUB_WORKSPACE/!(wp-plugin-temp) $GITHUB_WORKSPACE/wp-plugin-temp/
           shopt -u extglob
 
-      # ---------- 8. 安装 Composer 依赖 ----------
+      # ---------- 安装 Composer 依赖 ----------
       - name: 8. Install Composer dependencies
         run: |
           cd $GITHUB_WORKSPACE/wp-plugin-temp/
           composer install --no-interaction --prefer-dist --optimize-autoloader
 
-      # ---------- 9. 初始化 wp-data volume 并拷贝 WordPress core + 插件 ----------
+      # ---------- 初始化 wp-data volume 并拷贝 WordPress core + 插件 ----------
       - name: 9. Init wp-data volume with WordPress core and plugin
         run: |
           # 创建 volume
@@ -113,14 +113,14 @@ jobs:
           docker run --rm -v wp-data:/var/www/html -v $GITHUB_WORKSPACE/wp-plugin-temp:/tmp/plugin \
            bash -c "mkdir -p /var/www/html/wp-content/plugins/ && cp -R /tmp/plugin /var/www/html/wp-content/plugins/rw-postviewstats-lite"
 
-      # ---------- 10. 启动 WordPress PHP-FPM 容器（3） （挂载插件）----------
+      # ---------- 启动 WordPress PHP-FPM 容器（3） （挂载插件）----------
       - name: 10. Start WordPress PHP-FPM container
         run: |
           docker run -d --name wordpress-fpm --network wp-net \
           -v wp-data:/var/www/html \
           wp-fpm-custom
 
-      # ---------- 11. 启动 wordpress-nginx 容器（4） ----------
+      # ---------- 启动 wordpress-nginx 容器（4） ----------
       - name: 11. Start Nginx container
         run: |
           mkdir -p $GITHUB_WORKSPACE/nginx
@@ -161,17 +161,17 @@ jobs:
           echo "Waiting for Nginx to start..."
           sleep 5
 
-      # ---------- 12. 安装 WP-CLI ----------
+      # ---------- 安装 WP-CLI ----------
       - name: 12. Install WP-CLI in PHP-FPM container
         run: |
           docker exec wordpress-fpm bash -c "curl -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar && \
           chmod +x wp-cli.phar && mv wp-cli.phar /usr/local/bin/wp && wp --info"
 
-      # ---------- 13. 下载 WordPress 核心 ----------
+      # ---------- 下载 WordPress 核心 ----------
       - name: Check if vendor both in wordpress-fpm and wordpress-nginx container
         run: |
           echo 'Runner:'
-          echo ls -la $GITHUB_WORKSPACE
+          ls -la $GITHUB_WORKSPACE
           echo 'Container: wordpress-fpm'
           docker exec wordpress-fpm bash -c "ls -la /var/www/html/"
           docker exec wordpress-fpm bash -c "ls -la /var/www/html/wp-content/plugins/rw-postviewstats-lite"
@@ -183,7 +183,7 @@ jobs:
         run: |
           docker exec wordpress-fpm php -d memory_limit=512M /usr/local/bin/wp core download --allow-root --force --path=/var/www/html
 
-      # ---------- 14. 创建 wp-config.php ----------
+      # ---------- 创建 wp-config.php ----------
       - name: 14. Create wp-config.php
         run: |
           docker exec wordpress-fpm php -d memory_limit=512M /usr/local/bin/wp config create \
@@ -195,7 +195,7 @@ jobs:
             --allow-root \
             --path=/var/www/html
 
-      # ---------- 15. 安装 WordPress & 激活插件 ----------
+      # ---------- 安装 WordPress & 激活插件 ----------
       - name: 15. Install WordPress & Activate Plugin
         run: |
           docker exec wordpress-fpm php -d memory_limit=512M /usr/local/bin/wp core install \
@@ -212,17 +212,17 @@ jobs:
             --allow-root \
             --path=/var/www/html
 
-      # ---------- 16. 运行 Unit 测试 ----------
+      # ---------- 运行 Unit 测试 ----------
       - name: 16. Run Unit Tests
         run: |
           docker exec wordpress-fpm bash -c "cd /var/www/html/wp-content/plugins/rw-postviewstats-lite && ./vendor/bin/codecept run Unit"
 
-      # ---------- 17. 运行 Integration 测试 ----------
+      # ---------- 运行 Integration 测试 ----------
       - name: 17. Run Integration Tests
         run: |
           docker exec wordpress-fpm bash -c "cd /var/www/html/wp-content/plugins/rw-postviewstats-lite && ./vendor/bin/codecept run Integration"
 
-      # ---------- 18. 运行 Acceptance 测试 ----------
+      # ---------- 运行 Acceptance 测试 ----------
       - name: 18. Run Acceptance Tests
         run: |
           docker exec wordpress-fpm bash -c "cd /var/www/html/wp-content/plugins/rw-postviewstats-lite && \
