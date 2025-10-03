@@ -168,17 +168,6 @@ jobs:
           chmod +x wp-cli.phar && mv wp-cli.phar /usr/local/bin/wp && wp --info"
 
       # ---------- 下载 WordPress 核心 ----------
-      - name: Check if vendor both in wordpress-fpm and wordpress-nginx container
-        run: |
-          echo 'Runner:'
-          ls -la $GITHUB_WORKSPACE
-          echo 'Container: wordpress-fpm'
-          docker exec wordpress-fpm bash -c "ls -la /var/www/html/"
-          docker exec wordpress-fpm bash -c "ls -la /var/www/html/wp-content/plugins/rw-postviewstats-lite"
-          echo 'Container: wordpress-nginx'
-          docker exec wordpress-nginx sh -c "ls -la /var/www/html/"
-          docker exec wordpress-nginx sh -c "ls -la /var/www/html/wp-content/plugins/rw-postviewstats-lite"
-
       - name: 13. Download WordPress core
         run: |
           docker exec wordpress-fpm php -d memory_limit=512M /usr/local/bin/wp core download --allow-root --force --path=/var/www/html
@@ -223,6 +212,15 @@ jobs:
           docker exec wordpress-fpm bash -c "cd /var/www/html/wp-content/plugins/rw-postviewstats-lite && ./vendor/bin/codecept run Integration"
 
       # ---------- 运行 Acceptance 测试 ----------
+      - name: Check curl wordpress-nginx login.php
+        run: |
+          echo "-----------------------------------------------------------------------"
+          docker exec wordpress-nginx sh -c "curl -s http://wordpress-nginx/"
+          echo "-----------------------------------------------------------------------"
+          docker exec wordpress-nginx sh -c "curl -s http://wordpress-nginx/wp-admin/"
+          echo "-----------------------------------------------------------------------"
+          docker exec wordpress-nginx sh -c "curl -s http://wordpress-nginx/wp-login.php"
+
       - name: 18. Run Acceptance Tests
         run: |
           docker exec wordpress-fpm bash -c "cd /var/www/html/wp-content/plugins/rw-postviewstats-lite && \
