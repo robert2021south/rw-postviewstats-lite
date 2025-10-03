@@ -1,12 +1,14 @@
 <?php
 namespace Tests\Acceptance;
 
+use Exception;
 use Tests\Support\AcceptanceTester;
 
 class CleanerCest{
 
     /**
      * 前置准备：管理员登录
+     * @throws Exception
      */
 //    public function _before(AcceptanceTester $I): void
 //    {
@@ -23,20 +25,40 @@ class CleanerCest{
 
     public function _before(AcceptanceTester $I): void
     {
-        // 等待WordPress完全启动
-        $I->waitForElementVisible('body', 30);
+        try {
+            $I->loginAsAdmin();
+        } catch (Exception $e) {
+            // 获取当前页面信息
+            $currentUrl = $I->grabFromCurrentUrl();
+            $pageSource = $I->grabPageSource();
+            //$pageText = $I->grabPageTextContent(); //old version use
+            // 新方法 - 使用 grabPageSource() 然后提取文本
+            $pageSource = $I->grabPageSource();
+            // 或者使用 grabTextFrom() 获取整个body的文本
+            $pageText = $I->grabTextFrom('body');
 
-        // 登录前等待登录页面加载完成
-        $I->amOnPage('/wp-login.php');
-        $I->waitForElement('#loginform', 30);
-        $I->see('Log In');
+            codecept_debug("=== LOGIN ERROR DEBUG INFO ===");
+            codecept_debug("Error message: " . $e->getMessage());
+            codecept_debug("Current URL: " . $currentUrl);
+            codecept_debug("Page contains login form: " . (str_contains($pageSource, 'loginform') ? 'YES' : 'NO'));
 
-        $I->fillField('log', 'admin');
-        $I->fillField('pwd', 'pBlaWDphJvFab5Jbi3KR9q6s');
-        $I->click('wp-submit');
+            $pageTitle = $I->grabFromCurrentUrl(); // 获取当前URL
+            codecept_debug("Page title: " . $pageTitle);
 
-        // 登录后等待重定向
-        $I->waitForElement('#adminmenu', 30);
+            // 检查是否有错误消息
+            if (str_contains($pageText, 'error')) {
+                codecept_debug("Error detected on page");
+            }
+
+            // 保存页面截图
+            $I->makeScreenshot('login_error_' . date('Y-m-d_H-i-s'));
+
+            // 保存页面HTML用于分析
+            file_put_contents('/tmp/login_error_page.html', $pageSource);
+            codecept_debug("Page source saved to /tmp/login_error_page.html");
+
+            throw $e;
+        }
     }
 
     /**

@@ -226,5 +226,5 @@ jobs:
       - name: 18. Run Acceptance Tests
         run: |
           docker exec wordpress-fpm bash -c "cd /var/www/html/wp-content/plugins/rw-postviewstats-lite && \
-            TEST_SELENIUM_HOST=selenium TEST_SELENIUM_PORT=4444 ./vendor/bin/codecept run Acceptance --filter cleanPosts CleanerCest.php"
+            TEST_SELENIUM_HOST=selenium TEST_SELENIUM_PORT=4444 ./vendor/bin/codecept run Acceptance --filter cleanPosts CleanerCest.php --debug"
 

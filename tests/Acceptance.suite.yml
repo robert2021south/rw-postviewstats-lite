@@ -69,3 +69,5 @@ modules:
               adminUsername: 'admin'
               adminPassword: 'pBlaWDphJvFab5Jbi3KR9q6s'
               adminPath: '/wp-login.php'
+              debug: true  # 启用调试模式
+              verbose: true  # 详细输出
