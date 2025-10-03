@@ -172,16 +172,15 @@ jobs:
             --allow-root \
             --path=/var/www/html
           
-          # 强制 WP_HOME 和 WP_SITEURL 对应 Nginx 容器名
-          docker exec wordpress-fpm bash -c "
-          echo \"if (!defined('WP_DEBUG')) define('WP_DEBUG', false);\" >> /var/www/html/wp-config.php
-          echo \"if (!defined('WP_DEBUG_DISPLAY')) define('WP_DEBUG_DISPLAY', false);\" >> /var/www/html/wp-config.php
-          echo \"@ini_set('display_errors', 0);\" >> /var/www/html/wp-config.php
-          echo \"@ini_set('display_startup_errors', 0);\" >> /var/www/html/wp-config.php
-          echo \"define('FORCE_SSL_ADMIN', false);\" >> /var/www/html/wp-config.php
-          echo \"define('WP_HOME', 'http://wordpress-nginx');\" >> /var/www/html/wp-config.php
-          echo \"define('WP_SITEURL', 'http://wordpress-nginx');\" >> /var/www/html/wp-config.php
-         "
+          docker exec wordpress-fpm bash -c "echo 'if (!defined(\"WP_DEBUG\")) define(\"WP_DEBUG\", false);' >> /var/www/html/wp-config.php"
+          docker exec wordpress-fpm bash -c "echo 'if (!defined(\"WP_DEBUG_DISPLAY\")) define(\"WP_DEBUG_DISPLAY\", false);' >> /var/www/html/wp-config.php"
+          docker exec wordpress-fpm bash -c "echo '@ini_set(\"display_errors\", 0);' >> /var/www/html/wp-config.php"
+          docker exec wordpress-fpm bash -c "echo '@ini_set(\"display_startup_errors\", 0);' >> /var/www/html/wp-config.php"
+          docker exec wordpress-fpm bash -c "echo 'if (!defined(\"FORCE_SSL_ADMIN\")) define(\"FORCE_SSL_ADMIN\", false);' >> /var/www/html/wp-config.php"
+          docker exec wordpress-fpm bash -c "echo 'define(\"WP_HOME\", \"http://wordpress-nginx\");' >> /var/www/html/wp-config.php"
+          docker exec wordpress-fpm bash -c "echo 'define(\"WP_SITEURL\", \"http://wordpress-nginx\");' >> /var/www/html/wp-config.php"
+
+
 
       # ---------- 14. 安装 WordPress & 激活插件 ----------
       - name: Install WordPress & Activate Plugin
