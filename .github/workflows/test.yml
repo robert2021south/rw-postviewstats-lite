@@ -105,12 +105,13 @@ jobs:
           # 创建 volume
           docker volume create wp-data
 
-          # 先把 WordPress core 拷贝到 volume， 并在/var/www/html下创建wp-sessions目录
+          # 先把 WordPress core 拷贝到 volume
           docker run --rm -v wp-data:/var/www/html wordpress:6.8-php8.2-fpm \
            bash -c "
             cp -R /usr/src/wordpress/* /var/www/html/;
-            mkdir -p /var/www/html/wp-sessions;
-            chown -R www-data:www-data /var/www/html/wp-sessions
+            echo '<?php phpinfo();' > /var/www/html/info.php;
+            chown www-data:www-data /var/www/html/info.php;
+            chmod 644 /var/www/html/info.php
           "
 
           # 再把插件（包含 vendor）拷贝到 volume
@@ -187,15 +188,6 @@ jobs:
             --skip-check \
             --allow-root \
             --path=/var/www/html
-          
-          # 在 wp-config.php 中添加 session.save_path 设置
-          docker exec wordpress-fpm bash -c "
-            grep -q 'session.save_path' /var/www/html/wp-config.php || 
-            echo '@ini_set(\"session.save_path\", \"/var/www/html/wp-sessions\");' >> /var/www/html/wp-config.php
-          "
-          
-          # 重启 wordpress-fpm 容器
-          docker restart wordpress-fpm
 
       # ---------- 安装 WordPress & 激活插件 ----------
       - name: 15. Install WordPress & Activate Plugin
@@ -225,12 +217,10 @@ jobs:
           docker exec wordpress-fpm bash -c "cd /var/www/html/wp-content/plugins/rw-postviewstats-lite && ./vendor/bin/codecept run Integration"
 
       # ---------- 运行 Acceptance 测试 ----------
-#      - name: Check curl wordpress-nginx login.php
-#        run: |
-#          docker exec -it wordpress-nginx /bin/sh
+      - name: Check info.php
+        run: |
+          docker exec wordpress-nginx sh -c "curl -s http://wordpress-nginx/info.php"
 #          curl -i -d "log=admin&pwd=pBlaWDphJvFab5Jbi3KR9q6s&wp-submit=Log+In&redirect_to=/wp-admin/&testcookie=1" http://wordpress-nginx/wp-login.php
-
-      #          docker exec wordpress-nginx sh -c "curl -s http://wordpress-nginx/wp-login.php"
 
       - name: 18. Run Acceptance Tests
         run: |
