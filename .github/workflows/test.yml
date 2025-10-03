@@ -191,7 +191,7 @@ jobs:
             --url="http://wordpress-nginx/" \
             --title="Test Site" \
             --admin_user="$WP_ADMIN_USER" \
-            --admin_password="$WP_ADMIN_PASS" \
+            --admin_password="12345678" \
             --admin_email="robert2021south@gmail.com" \
             --skip-email \
             --allow-root \
