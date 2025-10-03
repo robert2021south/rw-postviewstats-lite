@@ -68,4 +68,4 @@ modules:
                     plugins.always_open_pdf_externally: true    #PDF 不在浏览器打开，直接下载
               adminUsername: 'admin'
               adminPassword: 'pBlaWDphJvFab5Jbi3KR9q6s'
-              adminPath: '/wp-admin'
+              adminPath: '/wp-login.php'

@@ -175,7 +175,6 @@ jobs:
           docker exec wordpress-fpm bash -c "
           echo \"define('WP_HOME', 'http://wordpress-nginx');\" >> /var/www/html/wp-config.php
           echo \"define('WP_SITEURL', 'http://wordpress-nginx');\" >> /var/www/html/wp-config.php
-          echo \"define('FORCE_SSL_ADMIN', false);\" >> /var/www/html/wp-config.php
           "
 
 
@@ -210,13 +209,6 @@ jobs:
             ./vendor/bin/codecept run Integration
           "
       # ---------- 16. 运行 Acceptance 测试 ----------
-      - name: Debug Wordpress Env
-        run: |
-          docker exec wordpress-fpm bash -c "curl -i -H 'Host: wordpress-nginx' http://wordpress-nginx/wp-admin"
-          docker exec wordpress-fpm bash -c "curl -i -H 'Host: wordpress-nginx' http://wordpress-nginx/wp-admin/"
-          docker exec wordpress-fpm bash -c 'curl -sL -H "Host: wordpress-nginx" http://wordpress-nginx/wp-admin/ | head -n 20'
-
-
       - name: Debug Selenium connectivity
         run: |
           docker exec wordpress-fpm curl -s http://selenium:4444/wd/hub/status | jq .
