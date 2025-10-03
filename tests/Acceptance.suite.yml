@@ -45,7 +45,7 @@ modules:
               title: 'Test Blog'
               loadOnly: true
           WPWebDriver:
-              url: 'http://localhost:8080'
+              url: 'http://wordpress-nginx/'
               browser: chrome
               host: selenium
               port: 4444

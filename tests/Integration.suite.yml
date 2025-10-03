@@ -18,7 +18,7 @@ modules:
                 dsn: 'mysql:host=mysql;port=3306;dbname=test_db'
                 user: 'root'
                 password: 'root'
-                url: 'http://wordpress-nginx:80/'
+                url: 'http://wordpress-nginx/'
                 dump: ''
                 populate: false
                 cleanup: true
