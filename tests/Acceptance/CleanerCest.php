@@ -10,10 +10,11 @@ class CleanerCest{
      * 前置准备：管理员登录
      * @throws Exception
      */
-//    public function _before(AcceptanceTester $I): void
-//    {
-//        //$I->loginAsAdmin(); // 假设有封装好的登录方法
-//    }
+    public function _before(AcceptanceTester $I): void
+    {
+        $I->loginAsAdmin(); // 假设有封装好的登录方法
+    }
+//
 //    public function _before(AcceptanceTester $I): void
 //    {
 //        $I->amOnPage('/wp-login.php');
@@ -22,37 +23,6 @@ class CleanerCest{
 //        $I->click('Log In');
 //        //$I->waitForElementVisible('#wpadminbar', 20);
 //    }
-
-    public function _before(AcceptanceTester $I): void
-    {
-        try {
-            $I->loginAsAdmin();
-        } catch (Exception $e) {
-            // 获取当前页面信息
-            $currentUrl = $I->grabFromCurrentUrl();
-            $pageSource = $I->grabPageSource();
-
-            codecept_debug("=== LOGIN ERROR DEBUG INFO ===");
-            codecept_debug("Error message: " . $e->getMessage());
-            codecept_debug("Current URL: " . $currentUrl);
-            codecept_debug("Page contains login form: " . (str_contains($pageSource, 'loginform') ? 'YES' : 'NO'));
-
-            $pageTitle = $I->grabFromCurrentUrl(); // 获取当前URL
-            codecept_debug("Page title: " . $pageTitle);
-
-            // 检查是否有错误消息
-            if (str_contains($pageSource, 'error')) {
-                codecept_debug("Error detected on page");
-            }
-
-            codecept_debug('session.save_path: ' . ini_get('session.save_path'));
-            $output = shell_exec('ls -la /var/www/html/wp-sessions');
-            codecept_debug("WP session files in container: $output");
-
-
-            throw $e;
-        }
-    }
 
     /**
      * 1. 管理员清理文章数据  post 清理
