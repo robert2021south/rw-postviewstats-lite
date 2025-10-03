@@ -200,6 +200,10 @@ jobs:
           docker exec wordpress-fpm bash -c "cd /var/www/html/wp-content/plugins/rw-postviewstats-lite && ./vendor/bin/codecept run Integration"
 
       # ---------- 17. 运行 Acceptance 测试 ----------
+      - name: Check Selenium network
+        run: |
+          docker exec selenium ping wordpress-nginx
+
       - name: Run Acceptance Tests
         run: |
           docker exec wordpress-fpm bash -c "cd /var/www/html/wp-content/plugins/rw-postviewstats-lite && \
