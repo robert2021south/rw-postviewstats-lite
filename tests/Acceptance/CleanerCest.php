@@ -45,8 +45,8 @@ class CleanerCest{
                 codecept_debug("Error detected on page");
             }
 
-            $output = shell_exec('docker exec wordpress-fpm php -r "print_r(scandir(\'/var/www/html/wp-sessions\'));"');
-            codecept_debug("WP session files in container: $output");
+            $files = $I->grabWpSessionFiles();
+            codecept_debug("WP session files: " . implode(', ', $files));
 
             throw $e;
         }
