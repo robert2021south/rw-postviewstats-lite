@@ -263,7 +263,7 @@ jobs:
             curl -i -s -c \"\$COOKIE_FILE\" -b \"\$COOKIE_FILE\" \
             -H \"Content-Type: application/x-www-form-urlencoded\" \
             -d \"log=${WP_ADMIN_USER}\" \
-            -d \"pwd=${WP_ADMIN_PASS}\" \
+            -d \"pwd=pBlaWDphJvFab5Jbi3KR9q6s\" \
             -d \"wp-submit=Log In\" \
             -d \"redirect_to=/wp-admin/\" \
             -d \"testcookie=1\" \
