@@ -48,7 +48,7 @@ modules:
               url: 'http://wordpress-nginx/'
               adminPath: '/wp-login.php'
               adminUsername: 'admin'
-              adminPassword: 'changeme'
+              adminPassword: 'pBlaWDphJvFab5Jbi3KR9q6s'
               browser: chrome
               host: selenium
               port: 4444
