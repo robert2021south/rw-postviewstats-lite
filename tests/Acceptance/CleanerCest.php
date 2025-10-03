@@ -31,11 +31,6 @@ class CleanerCest{
             // 获取当前页面信息
             $currentUrl = $I->grabFromCurrentUrl();
             $pageSource = $I->grabPageSource();
-            //$pageText = $I->grabPageTextContent(); //old version use
-            // 新方法 - 使用 grabPageSource() 然后提取文本
-            $pageSource = $I->grabPageSource();
-            // 或者使用 grabTextFrom() 获取整个body的文本
-            $pageText = $I->grabTextFrom('body');
 
             codecept_debug("=== LOGIN ERROR DEBUG INFO ===");
             codecept_debug("Error message: " . $e->getMessage());
@@ -46,16 +41,10 @@ class CleanerCest{
             codecept_debug("Page title: " . $pageTitle);
 
             // 检查是否有错误消息
-            if (str_contains($pageText, 'error')) {
+            if (str_contains($pageSource, 'error')) {
                 codecept_debug("Error detected on page");
             }
 
-            // 保存页面截图
-            $I->makeScreenshot('login_error_' . date('Y-m-d_H-i-s'));
-
-            // 保存页面HTML用于分析
-            file_put_contents('/tmp/login_error_page.html', $pageSource);
-            codecept_debug("Page source saved to /tmp/login_error_page.html");
 
             throw $e;
         }

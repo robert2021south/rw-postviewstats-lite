@@ -192,6 +192,11 @@ jobs:
           
           # 在 wp-config.php 中添加 session.save_path 设置
           docker exec wordpress-fpm bash -c "grep -q 'session.save_path' /var/www/html/wp-config.php || echo '@ini_set(\"session.save_path\", \"/var/www/html/wp-sessions\");' >> /var/www/html/wp-config.php"
+          
+          # 重启 wordpress-fpm 容器
+          docker restart wordpress-fpm
+          
+          cat /var/www/html/wp-config.php
 
       # ---------- 安装 WordPress & 激活插件 ----------
       - name: 16. Install WordPress & Activate Plugin
