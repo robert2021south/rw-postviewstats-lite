@@ -209,10 +209,10 @@ jobs:
       - name: Debug Wordpress Env
         run: |
           docker exec wordpress-fpm bash -c "            
-            curl -s http://wordpress-nginx/
+            curl -s http://wordpress-nginx/wp-admin
           "      
-          docker exec wordpress-fpm wp option get siteurl --path=/var/www/html
-          docker exec wordpress-fpm wp option get home --path=/var/www/html
+          docker exec wordpress-fpm wp option get siteurl --path=/var/www/html --allow-root
+          docker exec wordpress-fpm wp option get home --path=/var/www/html --allow-root
 
       - name: Debug Selenium connectivity
         run: |
