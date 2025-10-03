@@ -197,9 +197,9 @@ jobs:
             --allow-root \
             --path=/var/www/html
 
-          docker exec wordpress-fpm php -d memory_limit=512M /usr/local/bin/wp plugin activate rw-postviewstats-lite \
-            --allow-root \
-            --path=/var/www/html
+#          docker exec wordpress-fpm php -d memory_limit=512M /usr/local/bin/wp plugin activate rw-postviewstats-lite \
+#            --allow-root \
+#            --path=/var/www/html
 
       # ---------- 运行 Unit 测试 ----------
       - name: 16. Run Unit Tests
@@ -214,12 +214,13 @@ jobs:
       # ---------- 运行 Acceptance 测试 ----------
       - name: Check curl wordpress-nginx login.php
         run: |
-          echo "-----------------------------------------------------------------------"
-          docker exec wordpress-nginx sh -c "curl -s http://wordpress-nginx/"
-          echo "-----------------------------------------------------------------------"
-          docker exec wordpress-nginx sh -c "curl -s http://wordpress-nginx/wp-admin/"
-          echo "-----------------------------------------------------------------------"
-          docker exec wordpress-nginx sh -c "curl -s http://wordpress-nginx/wp-login.php"
+          php -i | grep session.save_path
+          ls -la /var/lib/php/sessions
+          
+          docker exec -it wordpress-nginx /bin/sh
+          curl -i -d "log=admin&pwd=pBlaWDphJvFab5Jbi3KR9q6s&wp-submit=Log+In&redirect_to=/wp-admin/&testcookie=1" http://wordpress-nginx/wp-login.php
+
+      #          docker exec wordpress-nginx sh -c "curl -s http://wordpress-nginx/wp-login.php"
 
       - name: 18. Run Acceptance Tests
         run: |
