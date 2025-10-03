@@ -48,6 +48,8 @@ modules:
           WPWebDriver:
               url: 'http://wordpress-nginx/'
               adminPath: '/wp-login.php'
+              adminUser: 'admin'
+              adminPassword: 'changeme'
               browser: chrome
               host: selenium
               port: 4444
