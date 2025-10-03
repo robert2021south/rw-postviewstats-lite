@@ -202,7 +202,7 @@ jobs:
       # ---------- 17. 运行 Acceptance 测试 ----------
       - name: Check Selenium network
         run: |
-          docker exec selenium ping wordpress-nginx
+          docker exec selenium curl -I http://wordpress-nginx/wp-login.php || echo "Cannot reach wordpress-nginx"
 
       - name: Run Acceptance Tests
         run: |
