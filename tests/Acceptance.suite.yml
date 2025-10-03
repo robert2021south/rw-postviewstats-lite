@@ -54,16 +54,18 @@ modules:
               port: 4444
               restart: true
               use_w3c: true                # W3C 协议兼容
+              waitForElement: 10
               capabilities:
                 chromeOptions:
                   args:
-                    - "--headless=new"
-                    - "--disable-gpu"
-                    - "--window-size=1280,1024"
+                    - "--headless=new"          # 使用新版 headless，稳定性更好
                     - "--no-sandbox"
                     - "--disable-dev-shm-usage"
-                    #- "--user-data-dir=/opt/selenium/tmp-profile-$$"
-                  binary: "/usr/bin/google-chrome"  # 指定完整路径
+                    - "--window-size=1280,1024"
+                    - "--disable-gpu"
+                    - "--disable-extensions"
+                    - "--disable-software-rasterizer"
+                  #binary: "/usr/bin/google-chrome"  # 指定完整路径
                   prefs: #首选项
                     download.default_directory: '/var/www/html/wp-content/plugins/rw-postviewstats-lite/tests/_output'  #指定自动下载文件的目录
                     download.prompt_for_download: false  #禁止弹窗“是否保存”
