@@ -219,15 +219,7 @@ jobs:
       # ---------- 运行 Acceptance 测试 ----------
       - name: Check info.php
         run: |
-          docker exec wordpress-fpm ls -la /var/www/html/info.php
-          docker exec wordpress-nginx ls -la /var/www/html/info.php
-  
-          docker exec wordpress-fpm bash -c "
-            ls -la /var/www/html;
-            cat /var/www/html/info.php
-            curl -s http://wordpress-nginx/info.php
-          "
-#          curl -i -d "log=admin&pwd=pBlaWDphJvFab5Jbi3KR9q6s&wp-submit=Log+In&redirect_to=/wp-admin/&testcookie=1" http://wordpress-nginx/wp-login.php
+          curl -i -d "log=admin&pwd=pBlaWDphJvFab5Jbi3KR9q6s&wp-submit=Log+In&redirect_to=/wp-admin/&testcookie=1" http://wordpress-nginx/wp-login.php
 
       - name: 18. Run Acceptance Tests
         run: |
