@@ -187,6 +187,7 @@ jobs:
       # ---------- Fix PHP sessions for WordPress ----------
       - name: 15. Fix PHP sessions directory
         run: |
+          
           # 在 FPM 容器里创建可写 session 目录
           docker exec wordpress-fpm bash -c "mkdir -p /var/www/html/wp-sessions && chown -R www-data:www-data /var/www/html/wp-sessions"
           
@@ -196,7 +197,8 @@ jobs:
           # 重启 wordpress-fpm 容器
           docker restart wordpress-fpm
           
-          cat /var/www/html/wp-config.php
+          docker exec wordpress-fpm bash -c "cat /var/www/html/wp-config.php"
+          docker exec wordpress-fpm bash -c "ls -la /var/www/html/"
 
       # ---------- 安装 WordPress & 激活插件 ----------
       - name: 16. Install WordPress & Activate Plugin
