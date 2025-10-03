@@ -46,6 +46,9 @@ class CleanerCest{
             }
 
             codecept_debug('session.save_path: ' . ini_get('session.save_path'));
+            $output = shell_exec('ls -la /var/www/html/wp-sessions');
+            codecept_debug("WP session files in container: $output");
+
 
             throw $e;
         }
