@@ -67,7 +67,7 @@ modules:
                     directory_upgrade: true     #如果目录不存在，自动创建；允许覆盖下载文件
                     plugins.always_open_pdf_externally: true    #PDF 不在浏览器打开，直接下载
               adminUsername: 'admin'
-              adminPassword: 'pBlaWDphJvFab5Jbi3KR9q6s'
+              adminPassword: '%env(WP_ADMIN_PASS)%'
               adminPath: '/wp-login.php'
               debug: true  # 启用调试模式
               verbose: true  # 详细输出

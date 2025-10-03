@@ -202,9 +202,9 @@ jobs:
             --allow-root \
             --path=/var/www/html
 
-#          docker exec wordpress-fpm php -d memory_limit=512M /usr/local/bin/wp plugin activate rw-postviewstats-lite \
-#            --allow-root \
-#            --path=/var/www/html
+          docker exec wordpress-fpm php -d memory_limit=512M /usr/local/bin/wp plugin activate rw-postviewstats-lite \
+            --allow-root \
+            --path=/var/www/html
 
       # ---------- 运行 Unit 测试 ----------
       - name: 16. Run Unit Tests
@@ -217,68 +217,6 @@ jobs:
           docker exec wordpress-fpm bash -c "cd /var/www/html/wp-content/plugins/rw-postviewstats-lite && ./vendor/bin/codecept run Integration"
 
       # ---------- 运行 Acceptance 测试 ----------
-      - name: Try logging in manually
-        run: |
-          docker exec wordpress-nginx sh -c '
-          COOKIE_FILE=/tmp/wp_cookies.txt
-          RESPONSE_FILE=/tmp/login_response.html
-        
-          echo ">>> Step 1: Get login page"
-          curl -s -c $COOKIE_FILE http://wordpress-nginx/wp-login.php > /dev/null
-        
-          echo ">>> Step 2: Post login form"
-          curl -i -s -c $COOKIE_FILE -b $COOKIE_FILE \
-          -H "Content-Type: application/x-www-form-urlencoded" \
-          -d "log=admin" \
-          -d "pwd=pBlaWDphJvFab5Jbi3KR9q6s" \
-          -d "wp-submit=Log In" \
-          -d "redirect_to=/wp-admin/" \
-          -d "testcookie=1" \
-          http://wordpress-nginx/wp-login.php > $RESPONSE_FILE
-        
-          echo ">>> Cookies after login:"
-          cat $COOKIE_FILE
-        
-          echo ">>> Checking if login succeeded (wordpress_logged_in cookie should exist):"
-          grep wordpress_logged_in $COOKIE_FILE || echo "!! Login failed, no wordpress_logged_in cookie"
-        
-          echo ">>> Checking if response contains redirect to wp-admin:"
-          grep "Location:" $RESPONSE_FILE || echo "!! No redirect found"
-        
-          echo ">>> Extracting WordPress login error (if exists):"
-          sed -n "/<div id=\"login_error\"/,/<\/div>/p" $RESPONSE_FILE | sed "s/<[^>]*>//g" | sed "/^[[:space:]]*$/d" || echo "No login_error found"
-          '
-          
-      - name: Check admin password by doing a real login (no secret printed)
-        env:
-          WP_ADMIN_USER: ${{ secrets.WP_ADMIN_USER }}
-          WP_ADMIN_PASS: ${{ secrets.WP_ADMIN_PASS }}
-        run: |
-          docker exec wordpress-nginx sh -c "
-            COOKIE_FILE=/tmp/wp_cookies.txt
-            RESPONSE_FILE=/tmp/login_response.html
-          
-            curl -s -c \"\$COOKIE_FILE\" http://wordpress-nginx/wp-login.php > /dev/null
-          
-            curl -i -s -c \"\$COOKIE_FILE\" -b \"\$COOKIE_FILE\" \
-            -H \"Content-Type: application/x-www-form-urlencoded\" \
-            -d \"log=${WP_ADMIN_USER}\" \
-            -d \"pwd=pBlaWDphJvFab5Jbi3KR9q6s\" \
-            -d \"wp-submit=Log In\" \
-            -d \"redirect_to=/wp-admin/\" \
-            -d \"testcookie=1\" \
-            http://wordpress-nginx/wp-login.php > \"\$RESPONSE_FILE\"
-          
-            if grep -q \"wordpress_logged_in_\" \"\$COOKIE_FILE\"; then
-            echo '>>> LOGIN OK'
-            else
-            echo '>>> LOGIN FAIL'
-            sed -n '/<div id=\"login_error\"/,/<\/div>/p' \"\$RESPONSE_FILE\" | sed 's/<[^>]*>//g' | sed '/^[[:space:]]*$/d'
-            exit 1
-            fi
-            "
-
-
       - name: 18. Run Acceptance Tests
         run: |
           docker exec wordpress-fpm bash -c "cd /var/www/html/wp-content/plugins/rw-postviewstats-lite && \
