@@ -63,7 +63,7 @@ modules:
                     - "--no-sandbox"
                     - "--disable-dev-shm-usage"
                     #- "--user-data-dir=/opt/selenium/tmp-profile-$$"
-#                  binary: "/usr/bin/google-chrome"  # 指定完整路径
+                  binary: "/usr/bin/google-chrome"  # 指定完整路径
                   prefs: #首选项
                     download.default_directory: '/var/www/html/wp-content/plugins/rw-postviewstats-lite/tests/_output'  #指定自动下载文件的目录
                     download.prompt_for_download: false  #禁止弹窗“是否保存”

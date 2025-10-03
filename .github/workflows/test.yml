@@ -26,15 +26,7 @@ jobs:
       - name: 2. Create Docker network
         run: docker network create wp-net || true
 
-      - name: which google-chrome
-        run: |
-            echo "which google-chrome:";
-            which google-chrome
-            echo "which chromium-browser:";
-            which chromium-browser
-
-
-# ---------- 启动 Selenium 容器（1）----------
+      # ---------- 启动 Selenium 容器（1）----------
       - name: 3. Start Selenium container
         run: |
           docker run -d --name selenium --network wp-net \
