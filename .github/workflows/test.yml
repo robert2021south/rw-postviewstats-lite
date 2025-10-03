@@ -250,7 +250,7 @@ jobs:
           
             echo
             echo ">>> Extracting WordPress login error (if exists):"
-            grep -oP "<div id=\"login_error\".*?</div>" $RESPONSE_FILE | sed "s/<[^>]*>//g" || echo "No login_error found"
+            sed -n '/<div id="login_error"/,/<\/div>/p' $RESPONSE_FILE | sed 's/<[^>]*>//g' | sed '/^[[:space:]]*$/d' || echo "No login_error found"
             '
 
       - name: 18. Run Acceptance Tests
