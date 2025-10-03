@@ -107,12 +107,7 @@ jobs:
 
           # 先把 WordPress core 拷贝到 volume
           docker run --rm -v wp-data:/var/www/html wordpress:6.8-php8.2-fpm \
-           bash -c "
-            cp -R /usr/src/wordpress/* /var/www/html/;
-            echo '<?php phpinfo();' > /var/www/html/info.php;
-            chown www-data:www-data /var/www/html/info.php;
-            chmod 644 /var/www/html/info.php
-          "
+           bash -c " cp -R /usr/src/wordpress/* /var/www/html/ "
 
           # 再把插件（包含 vendor）拷贝到 volume
           docker run --rm -v wp-data:/var/www/html -v $GITHUB_WORKSPACE/wp-plugin-temp:/tmp/plugin \
@@ -196,7 +191,7 @@ jobs:
             --url="http://wordpress-nginx/" \
             --title="Test Site" \
             --admin_user="$WP_ADMIN_USER" \
-            --admin_password="pBlaWDphJvFab5Jbi3KR9q6s" \
+            --admin_password="$WP_ADMIN_PASS" \
             --admin_email="robert2021south@gmail.com" \
             --skip-email \
             --allow-root \
