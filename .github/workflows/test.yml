@@ -39,6 +39,7 @@ jobs:
           pwd
           docker compose version
           cd docker
+          ls -la
           docker compose up -d --build
           docker ps
 
