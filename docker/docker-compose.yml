@@ -61,6 +61,7 @@ services:
       - "4444:4444"
     networks:
       - wpnet
+    user: "1000:1000"  # seluser UID:GID
     volumes:
       - ./wordpress/wp-content/plugins/rw-postviewstats-lite/tests/_output:/home/seluser/Downloads
 

@@ -82,6 +82,7 @@ jobs:
         run: |
           echo "Checking /home/seluser/Downloads inside Selenium container..."
           docker exec wp_selenium bash -c "touch /home/seluser/Downloads/test_file && echo 'Write OK' || echo 'Cannot write!'"
+          docker exec wp_selenium bash -c "ls -la /home/seluser/Downloads"
 
       # 运行 Unit 测试
       - name: 8. Run Unit Tests
