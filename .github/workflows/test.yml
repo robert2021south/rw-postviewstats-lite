@@ -19,38 +19,31 @@ jobs:
       WP_PORT: 8080
 
     steps:
-      # 1 检出代码
+      # 检出代码
       - name: 1. Checkout code
         uses: actions/checkout@v3
 
-      # 2. 创建临时插件目录
-      - name: Prepare plugin directory
+      # 创建临时插件目录
+      - name: 2. Prepare plugin directory
         run: |
-          pwd
-          ls -la ./
           mkdir -p docker/wordpress/wp-content/plugins/rw-postviewstats-lite
           rsync -a --exclude='docker' ./* docker/wordpress/wp-content/plugins/rw-postviewstats-lite/
-          ls -la docker/wordpress/wp-content/plugins/rw-postviewstats-lite/
 
-
-      # 3. 启动 Docker Compose 环境
-      - name: Start Docker Compose
+      # 启动 Docker Compose 环境
+      - name: 3. Start Docker Compose
         run: |
-          pwd
-          docker compose version
           cd docker
-          ls -la
           docker compose up -d --build
           docker ps
 
-      # 4. 等待 WordPress/PHP-FPM/MySQL 就绪
-      - name: Wait for services
+      # 等待 WordPress/PHP-FPM/MySQL 就绪
+      - name: 4. Wait for services
         run: |
           echo "⏳ Waiting for MySQL and PHP-FPM to start..."
           sleep 30
 
-      # 5. 安装 Composer（在容器内）
-      - name: Install Composer inside wp_fpm container
+      # 安装 Composer（在容器内）
+      - name: 5. Install Composer inside wp_fpm container
         run: |
           docker exec wp_fpm bash -lc '\
             if [ ! -f /usr/local/bin/composer ]; then \
@@ -60,16 +53,23 @@ jobs:
             fi
           '
 
-      # 6. 在容器内安装插件依赖
-      - name: Install plugin dependencies
+      # 在容器内安装插件依赖
+      - name: 6. Install plugin dependencies
         run: |
           docker exec wp_fpm bash -lc '\
             cd /var/www/html/wp-content/plugins/rw-postviewstats-lite && \
             composer install --no-interaction --prefer-dist --optimize-autoloader;
           '
+      # 安装 WP-CLI
+      - name: 7. Install WP-CLI inside wp_fpm container
+        run: |
+          docker exec wp_fpm bash -c '
+            curl -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar &&
+            chmod +x wp-cli.phar &&
+            mv wp-cli.phar /usr/local/bin/wp
 
-      # 7. 安装 WordPress
-      - name: Install WordPress
+      # 安装 WordPress
+      - name: 8. Install WordPress
         run: |
           docker exec wp_fpm bash -lc '\
             wp core install \
@@ -83,8 +83,8 @@ jobs:
               --path=/var/www/html
           '
 
-      # 8. 激活插件
-      - name: Activate plugin
+      # 激活插件
+      - name: 9. Activate plugin
         run: |
           docker exec wp_fpm bash -lc '\
             wp plugin activate rw-postviewstats-lite \
@@ -92,8 +92,8 @@ jobs:
               --path=/var/www/html
           '
 
-      # 9. 运行 Unit 测试
-      - name: Run Unit Tests
+      # 运行 Unit 测试
+      - name: 10. Run Unit Tests
         run: |
           docker exec wp_fpm bash -lc '\
             cd /var/www/html/wp-content/plugins/rw-postviewstats-lite && \
@@ -101,16 +101,16 @@ jobs:
             ./vendor/bin/codecept run Unit
           '
 
-      # 10. 运行 Integration 测试
-      - name: Run Integration Tests
+      # 运行 Integration 测试
+      - name: 11. Run Integration Tests
         run: |
           docker exec wp_fpm bash -lc '\
             cd /var/www/html/wp-content/plugins/rw-postviewstats-lite && \
             ./vendor/bin/codecept run Integration
           '
 
-      # 11. 运行 Acceptance 测试
-      - name: Run Acceptance Tests
+      # 运行 Acceptance 测试
+      - name: 12. Run Acceptance Tests
         run: |
           docker exec wp_fpm bash -lc '\
             cd /var/www/html/wp-content/plugins/rw-postviewstats-lite && \
