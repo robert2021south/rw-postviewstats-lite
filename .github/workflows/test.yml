@@ -26,13 +26,18 @@ jobs:
       # 2. 创建临时插件目录
       - name: Prepare plugin directory
         run: |
+          pwd
+          ls -la ./
           mkdir -p docker/wordpress/wp-content/plugins/rw-postviewstats-lite
-          rsync -a --exclude='docker' --exclude='wp-plugin-temp' ./* docker/wordpress/wp-content/plugins/rw-postviewstats-lite/
+          rsync -a --exclude='docker' ./* docker/wordpress/wp-content/plugins/rw-postviewstats-lite/
           ls -la docker/wordpress/wp-content/plugins/rw-postviewstats-lite/
+
 
       # 3. 启动 Docker Compose 环境
       - name: Start Docker Compose
         run: |
+          pwd
+          docker compose version
           cd docker
           docker compose up -d --build
           docker ps
