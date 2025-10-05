@@ -10,17 +10,17 @@ suite_namespace: Tests\Acceptance
 modules:
     # enable helpers as array
     enabled:
-        - Asserts
-        - \Tests\Support\Helper\Acceptance
         - WPDb
         - WPLoader
-        - WPWebDriver
         - WPFilesystem
+        - WPWebDriver
+        - Asserts
+        - \Tests\Support\Helper\Acceptance
     config:
       WPDb:
-        dsn: 'mysql:host=mysql;port=3306;dbname=dbname'
-        user: 'user'
-        password: 'password'
+        dsn: 'mysql:host=dummy;dbname=dummy'
+        user: 'dummy'
+        password: 'dummy'
         url: 'http://nginx/'
         tablePrefix: 'wp_'
         populate: true

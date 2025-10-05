@@ -75,9 +75,7 @@ jobs:
           "
 
           docker exec wp_fpm bash -lc '\
-            wp plugin activate rw-postviewstats-lite \
-              --allow-root \
-              --path=/var/www/html
+            wp plugin activate rw-postviewstats-lite --allow-root --path=/var/www/html
           '
 
       # 运行 Unit 测试

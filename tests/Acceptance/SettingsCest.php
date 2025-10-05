@@ -13,7 +13,10 @@ class SettingsCest
             $webDriver->manage()->deleteAllCookies();
         });
 
-        $I->loginAsAdmin(); // 假设有封装好的登录方法
+        // -------------------------
+        // Step 1: 登录后台  (WPBrowser 内置登录方法)
+        // -------------------------
+        $I->loginAsAdmin();
     }
 
     public function testToggleStatEnabled(AcceptanceTester $I): void
@@ -30,18 +33,6 @@ class SettingsCest
 
         // 初始化浏览量
         $I->havePostMetaInDatabase($postId, Tracker::RWPSL_META_KEY_TOTAL, 0);
-//        $realValue = $I->grabFromDatabase(
-//            'wp_postmeta',
-//            'meta_value',
-//            ['post_id' => $postId, 'meta_key' => Tracker::RWPSL_META_KEY_TOTAL]
-//        );
-//
-//        codecept_debug("1, 实际 meta_value: " . var_export($realValue, true));
-
-        // -------------------------
-        // Step 1: 登录后台
-        // -------------------------
-        //$I->loginAsAdmin(); // WPBrowser 内置登录方法
 
         // -------------------------
         // Step 2: 进入插件设置页面
@@ -49,7 +40,7 @@ class SettingsCest
         $I->amOnAdminPage('admin.php?page=rwpsl-settings');
 
         // -------------------------
-        // Step 2: 勾选“禁止统计浏览量”并保存  // 禁止统计
+        // Step 3: 勾选“禁止统计浏览量”并保存  // 禁止统计
         // -------------------------
         // 假设 checkbox 名称为 stat_enabled
         $I->uncheckOption('stat_enabled'); // 禁止统计   先取消，后选中，两次测试
@@ -64,14 +55,14 @@ class SettingsCest
         //$I->see('Settings saved', 'div.notice-success');
 
         // -------------------------
-        // Step 3: 访问文章页面 // 再次访问文章 → 浏览量增加
+        // Step 4: 访问文章页面 // 再次访问文章 → 浏览量增加
         // -------------------------
         $I->amOnPage("/?p={$postId}"); // 或文章固定链接
         //$viewsBefore = (int)$I->grabTextFrom('#rwpsl_post_views'); // 根据前端渲染元素 id 修改
         $I->wait(2);
 
         // -------------------------
-        // Step 4: 验证浏览量不增加
+        // Step 5: 验证浏览量不增加
         // -------------------------
         // 验证浏览量为 0
         $I->seeInDatabase(

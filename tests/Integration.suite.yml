@@ -9,10 +9,10 @@ actor: IntegrationTester
 suite_namespace: Tests\Integration
 modules:
     enabled:
-        - Asserts
-        - \Tests\Support\Helper\Integration
         - lucatume\WPBrowser\Module\WPDb       #负责数据库管理、创建文章/用户/元数据等
         - lucatume\WPBrowser\Module\WPLoader   #负责加载 WordPress 核心、安装、初始化环境
+        - Asserts
+        - \Tests\Support\Helper\Integration
     config:
       lucatume\WPBrowser\Module\WPDb:
         dsn: 'mysql:host=mysql;port=3306;dbname=wordpress'   # db 是 MySQL 容器名

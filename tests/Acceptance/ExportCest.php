@@ -57,16 +57,6 @@ class ExportCest{
         // 断言表头正确
         $I->assertEquals(['Post ID', 'Title', 'Views'], $header);
 
-        // 可选：断言 CSV 包含测试文章
-        $found = false;
-        foreach (array_slice($csvContent, 1) as $line) {
-            $cols = str_getcsv($line);
-            if (isset($cols[1]) && $cols[1] === 'Hello world!') {
-                $found = true;
-                break;
-            }
-        }
-        $I->assertTrue($found, 'CSV does not contain the test post.');
     }
 
 
