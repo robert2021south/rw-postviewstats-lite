@@ -26,7 +26,6 @@ class ExportCest{
 
         // 3. 选择文章类型
         $postType = 'post';
-        $I->waitForElement('select[name=post_type]', 10); // 最多等待 10 秒
         $I->selectOption('select[name=post_type]', $postType);
 
         $I->waitForElementVisible('#submit', 5);
@@ -108,7 +107,6 @@ class ExportCest{
         $I->amOnPage('/wp-admin/admin.php?page=rwpsl-export');
 
         // 3. 选择 page
-        $I->waitForElement('select[name=post_type]', 10); // 最多等待 10 秒
         $I->selectOption('select[name=post_type]', $postType);
 
         //$I->waitForElementVisible('#submit', 5);

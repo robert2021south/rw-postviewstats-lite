@@ -48,7 +48,6 @@ class CleanerCest{
 
         // 打开清理页面并选择 post 类型
         $I->amOnAdminPage('admin.php?page=rwpsl-cleaner');
-        $I->waitForElement('select[name=post_type]', 10); // 最多等待 10 秒
         $I->selectOption('select[name=post_type]', 'post');
         $I->click('#submit');
 
@@ -97,7 +96,6 @@ class CleanerCest{
         ]);
 
         $I->amOnAdminPage('admin.php?page=rwpsl-cleaner');
-        $I->waitForElement('select[name=post_type]', 10); // 最多等待 10 秒
         $I->selectOption('select[name=post_type]', 'page');
         $I->click('#submit');
 
@@ -139,7 +137,6 @@ class CleanerCest{
         ]);
 
         $I->amOnAdminPage('admin.php?page=rwpsl-cleaner');
-        $I->waitForElement('select[name=post_type]', 10); // 最多等待 10 秒
         $I->selectOption('select[name=post_type]', 'post');
         $I->executeJS("document.querySelector('select[name=post_type]').value = 'invalid_type';");
         $I->click('#submit');
@@ -182,7 +179,6 @@ class CleanerCest{
         ]);
 
         $I->amOnAdminPage('admin.php?page=rwpsl-cleaner');
-        $I->waitForElement('select[name=post_type]', 10); // 最多等待 10 秒
         $I->selectOption('select[name=post_type]', 'post');
         $I->click('#submit');
 
@@ -229,7 +225,6 @@ class CleanerCest{
         ]);
 
         $I->amOnAdminPage('admin.php?page=rwpsl-cleaner');
-        $I->waitForElement('select[name=post_type]', 10); // 最多等待 10 秒
         $I->selectOption('select[name=post_type]', 'post');
         $I->click('#submit');
 
