@@ -64,7 +64,7 @@ jobs:
         run: |
           docker exec wp_fpm bash -lc "\
           wp core install \
-          --url='http://wp_nginx/' \
+          --url='http://nginx/' \
           --title='Test Site' \
           --admin_user='$WP_ADMIN_USER' \
           --admin_password='$WP_ADMIN_PASS' \
@@ -100,8 +100,6 @@ jobs:
       - name: 10. Run Acceptance Tests
         run: |
           docker exec wp_fpm bash -lc '\
-            wp option get siteurl --allow-root && \
-            wp option get home --allow-root && \
             curl http://nginx/wp-admin/admin.php?page=rwpsl-cleaner && \
             cd /var/www/html/wp-content/plugins/rw-postviewstats-lite && \
             TEST_SELENIUM_HOST=wp_selenium TEST_SELENIUM_PORT=4444 \
