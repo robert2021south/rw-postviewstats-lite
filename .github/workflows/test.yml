@@ -82,21 +82,25 @@ jobs:
 
       # 运行 Unit 测试
       - name: 8. Run Unit Tests
-        working-directory: /var/www/html/wp-content/plugins/rw-postviewstats-lite
         run: |
-          docker exec wp_fpm bash -lc './vendor/bin/codecept run Unit'
+          docker exec wp_fpm bash -lc '\
+            cd /var/www/html/wp-content/plugins/rw-postviewstats-lite && \
+            ./vendor/bin/codecept run Unit
+          '
 
       # 运行 Integration 测试
       - name: 9. Run Integration Tests
-        working-directory: /var/www/html/wp-content/plugins/rw-postviewstats-lite
         run: |
-          docker exec wp_fpm bash -lc './vendor/bin/codecept run Integration'
+          docker exec wp_fpm bash -lc '\
+            cd /var/www/html/wp-content/plugins/rw-postviewstats-lite && \
+            ./vendor/bin/codecept run Integration
+          '
 
       # 运行 Acceptance 测试
       - name: 10. Run Acceptance Tests
-        working-directory: /var/www/html/wp-content/plugins/rw-postviewstats-lite
         run: |
           docker exec wp_fpm bash -lc '\
+            cd /var/www/html/wp-content/plugins/rw-postviewstats-lite && \
             TEST_SELENIUM_HOST=wp_selenium TEST_SELENIUM_PORT=4444 \
-            ./vendor/bin/codecept run Acceptance
+            ./vendor/bin/codecept run Acceptance --steps --debug
           '
