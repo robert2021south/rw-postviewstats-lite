@@ -43,6 +43,18 @@ jobs:
         run: |
           echo "⏳ Waiting for MySQL and PHP-FPM to start..."
           sleep 30
+      # 等待 Selenium 容器 ready
+      - name: 4b. Wait for Selenium to be ready
+        run: |
+          for i in {1..30}; do
+            status=$(curl -s http://selenium:4444/status | jq -r '.value.ready')
+            if [ "$status" = "true" ]; then
+              echo "Selenium ready!"
+              break
+            fi
+            echo "Waiting for Selenium..."
+            sleep 2
+          done
 
       # 在容器内安装插件依赖
       - name: 5. Install plugin dependencies
