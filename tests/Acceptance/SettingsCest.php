@@ -50,7 +50,8 @@ class SettingsCest
         //$I->click('Save Settings'); // 根据实际按钮文本填写
 
         // 可选：验证保存成功
-        $I->seeInCurrentUrl('notice=success');
+        //$I->seeInCurrentUrl('notice=success');
+        $I->waitForElementVisible('div.notice-success', 5);
         //$I->seeInCurrentUrl('context=settings');
         //$I->see('Settings saved', 'div.notice-success');
 
