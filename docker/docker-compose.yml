@@ -55,6 +55,7 @@ services:
 
   selenium:
     image: selenium/standalone-chrome:latest
+    shm_size: 2g
     container_name: wp_selenium
     restart: unless-stopped
     ports:
