@@ -77,6 +77,10 @@ jobs:
           docker exec wp_fpm bash -lc '\
             wp plugin activate rw-postviewstats-lite --allow-root --path=/var/www/html
           '
+      - name: Check write permission inside Selenium container
+        run: |
+          echo "Checking /home/seluser/Downloads inside Selenium container..."
+          docker exec wp_selenium bash -c "touch /home/seluser/Downloads/test_file && echo 'Write OK' || echo 'Cannot write!'"
 
       # 运行 Unit 测试
       - name: 8. Run Unit Tests
@@ -97,6 +101,12 @@ jobs:
       # 运行 Acceptance 测试
       - name: 10. Run Acceptance Tests
         run: |
+          
+          docker exec wp_fpm bash -lc '\
+            
+          
+          '
+          
           docker exec wp_fpm bash -lc '\
             cd /var/www/html/wp-content/plugins/rw-postviewstats-lite && \
             TEST_SELENIUM_HOST=wp_selenium TEST_SELENIUM_PORT=4444 \
