@@ -94,7 +94,9 @@ class SettingsCest
         //$I->click('Save Settings');
 
         // 可选：验证保存成功
-        $I->seeInCurrentUrl('notice=success');
+        //$I->seeInCurrentUrl('notice=success');
+        $I->waitForElementVisible('div.notice-success', 5);
+
         //$I->seeInCurrentUrl('context=settings');
         //$I->see('Settings saved', 'div.notice-success');
 
@@ -158,7 +160,11 @@ class SettingsCest
         $I->amOnAdminPage('admin.php?page=rwpsl-settings');
         $I->checkOption('sort_enabled');
         $I->click('#submit');
-        $I->seeInCurrentUrl('notice=success');
+
+
+        //$I->seeInCurrentUrl('notice=success');
+        $I->waitForElementVisible('div.notice-success', 5);
+
 
         // Step 4: 再次访问归档页，检查按浏览量排序生效
         $I->amOnAdminPage('edit.php?orderby=views&order=desc');
