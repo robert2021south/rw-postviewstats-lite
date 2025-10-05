@@ -17,60 +17,59 @@ modules:
         - WPWebDriver
         - WPFilesystem
     config:
-          WPDb:
-              dsn: 'mysql:host=mysql;dbname=test_db'
-              user: 'root'
-              password: 'root'
-              url: 'http://wordpress-nginx/'
-              tablePrefix: 'wp_'
-              populate: true
-              cleanup: true
-              dump: ''
-              databases:
-                default:
-                  dsn: 'mysql:host=mysql;dbname=test_db'
-                  user: 'root'
-                  password: 'root'
-          WPFilesystem:
-              wpRootFolder: '/var/www/html/'
-          WPLoader:
-              wpRootFolder: '/var/www/html/'
-              dbName: 'test_db'
-              dbHost: 'mysql'
-              dbUser: 'root'
-              dbPassword: 'root'
-              tablePrefix: 'wp_'
-              domain: 'wordpress-nginx'
-              adminEmail: 'robert2021south@gmail.com'
-              title: 'Test Blog'
-              loadOnly: true
-          WPWebDriver:
-              url: 'http://wordpress-nginx/'
-              adminPath: '/wp-admin'
-              adminUsername: 'admin'
-              adminPassword: 'pBlaWDphJvFab5Jbi3KR9q6s'
-              browser: chrome
-              host: selenium
-              port: 4444
-              restart: true
-              use_w3c: true                # W3C 协议兼容
-              waitForElement: 10
-              capabilities:
-                chromeOptions:
-                  args:
-                    - "--headless=new"          # 使用新版 headless，稳定性更好
-                    - "--no-sandbox"
-                    - "--disable-dev-shm-usage"
-                    - "--window-size=1280,1024"
-                    - "--disable-gpu"
-                    - "--disable-extensions"
-                    - "--disable-software-rasterizer"
-                  #binary: "/usr/bin/google-chrome"  # 指定完整路径
-                  prefs: #首选项
-                    download.default_directory: '/var/www/html/wp-content/plugins/rw-postviewstats-lite/tests/_output'  #指定自动下载文件的目录
-                    download.prompt_for_download: false  #禁止弹窗“是否保存”
-                    directory_upgrade: true     #如果目录不存在，自动创建；允许覆盖下载文件
-                    safebrowsing.enabled: true
-                    plugins.always_open_pdf_externally: true    #PDF 不在浏览器打开，直接下载
-              debug: true  # 启用调试模式
-              verbose: true  # 详细输出
+      WPDb:
+        dsn: 'mysql:host=mysql;port=3306;dbname=dbname'
+        user: 'user'
+        password: 'password'
+        url: 'http://nginx/'
+        tablePrefix: 'wp_'
+        populate: true
+        cleanup: true
+        dump: ''
+        databases:
+          default:
+            dsn: 'mysql:host=mysql;port=3306;dbname=wordpress'
+            user: 'wpuser'
+            password: 'wppass'
+      WPFilesystem:
+        wpRootFolder: '/var/www/html/'
+      WPLoader:
+        wpRootFolder: '/var/www/html/'
+        dbName: 'wordpress'
+        dbHost: 'mysql'
+        dbUser: 'wpuser'
+        dbPassword: 'wppass'
+        tablePrefix: 'wp_'
+        domain: 'nginx'
+        adminEmail: 'robert2021south@gmail.com'
+        title: 'Test Blog'
+        loadOnly: true
+      WPWebDriver:
+        url: 'http://nginx/'
+        adminPath: '/wp-admin'
+        adminUsername: 'admin'
+        adminPassword: 'pBlaWDphJvFab5Jbi3KR9q6s'
+        browser: chrome
+        host: selenium   # 修改为本地 Selenium 服务名
+        port: 4444
+        restart: true
+        use_w3c: true
+        waitForElement: 10
+        capabilities:
+          chromeOptions:
+            args:
+              - "--headless=new"
+              - "--no-sandbox"
+              - "--disable-dev-shm-usage"
+              - "--window-size=1280,1024"
+              - "--disable-gpu"
+              - "--disable-extensions"
+              - "--disable-software-rasterizer"
+            prefs:
+              download.default_directory: '/var/www/html/wp-content/plugins/rw-postviewstats-lite/tests/_output'
+              download.prompt_for_download: false
+              directory_upgrade: true
+              safebrowsing.enabled: true
+              plugins.always_open_pdf_externally: true
+        debug: true
+        verbose: true
