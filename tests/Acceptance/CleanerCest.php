@@ -13,6 +13,8 @@ class CleanerCest{
     public function _before(AcceptanceTester $I): void
     {
         $I->loginAsAdmin(); // 假设有封装好的登录方法
+        $I->amOnAdminPage('index.php');
+        $I->see('Dashboard'); // 确认真的在后台
     }
 
     /**

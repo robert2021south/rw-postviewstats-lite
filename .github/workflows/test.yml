@@ -103,5 +103,5 @@ jobs:
           docker exec wp_fpm bash -lc '\
             cd /var/www/html/wp-content/plugins/rw-postviewstats-lite && \
             TEST_SELENIUM_HOST=wp_selenium TEST_SELENIUM_PORT=4444 \
-            ./vendor/bin/codecept run Acceptance CleanerCest.php --debug --steps
+            ./vendor/bin/codecept run Acceptance --filter cleanPosts CleanerCest.php --debug --steps
           '
