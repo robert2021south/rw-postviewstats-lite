@@ -14,8 +14,9 @@ jobs:
       WP_ADMIN_USER: ${{ secrets.WP_ADMIN_USER }}
       WP_ADMIN_PASS: ${{ secrets.WP_ADMIN_PASS }}
       WP_ADMIN_EMAIL: robert2021south@gmail.com
-      MYSQL_ROOT_PASSWORD: rootpass
+
       MYSQL_DATABASE: wordpress
+      MYSQL_ROOT_PASSWORD: rootpass
       WP_PORT: 8080
 
     steps:
@@ -72,17 +73,17 @@ jobs:
       # 安装 WordPress
       - name: 8. Install WordPress
         run: |
-          docker exec wp_fpm bash -lc '\
-            wp core install \
-              --url="http://wp_nginx/" \
-              --title="Test Site" \
-              --admin_user="$WP_ADMIN_USER" \
-              --admin_password="$WP_ADMIN_PASS" \
-              --admin_email="$WP_ADMIN_EMAIL" \
-              --skip-email \
-              --allow-root \
-              --path=/var/www/html
-          '
+          docker exec wp_fpm bash -lc "\
+          wp core install \
+          --url='http://wp_nginx/' \
+          --title='Test Site' \
+          --admin_user='$WP_ADMIN_USER' \
+          --admin_password='$WP_ADMIN_PASS' \
+          --admin_email='$WP_ADMIN_EMAIL' \
+          --skip-email \
+          --allow-root \
+          --path=/var/www/html
+          "
 
       # 激活插件
       - name: 9. Activate plugin
