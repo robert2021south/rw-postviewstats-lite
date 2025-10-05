@@ -26,6 +26,7 @@ class ExportCest{
 
         // 3. 选择文章类型
         $postType = 'post';
+        $I->waitForElement('select[name=post_type]', 10); // 最多等待 10 秒
         $I->selectOption('select[name=post_type]', $postType);
 
         $I->waitForElementVisible('#submit', 5);
@@ -43,7 +44,6 @@ class ExportCest{
 
         // 7. 获取最新下载的 CSV 文件
         $files = glob($downloadDir . "page-views-export-{$postType}-*.csv");
-        codecept_debug(print_r($files,true));
         $I->assertNotEmpty($files, "No CSV file found in $downloadDir");
 
         sort($files);
@@ -108,6 +108,7 @@ class ExportCest{
         $I->amOnPage('/wp-admin/admin.php?page=rwpsl-export');
 
         // 3. 选择 page
+        $I->waitForElement('select[name=post_type]', 10); // 最多等待 10 秒
         $I->selectOption('select[name=post_type]', $postType);
 
         //$I->waitForElementVisible('#submit', 5);

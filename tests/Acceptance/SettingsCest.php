@@ -52,6 +52,7 @@ class SettingsCest
         // Step 2: 勾选“禁止统计浏览量”并保存  // 禁止统计
         // -------------------------
         // 假设 checkbox 名称为 stat_enabled
+        $I->waitForElementVisible('input[name=stat_enabled]', 10); // 等待最多 10 秒
         $I->uncheckOption('stat_enabled'); // 禁止统计   先取消，后选中，两次测试
 
         $I->waitForElementVisible('#submit', 5);
@@ -151,8 +152,12 @@ class SettingsCest
         // Step 1: 登录后台，关闭排序
         //$I->loginAsAdmin();
         $I->amOnAdminPage('admin.php?page=rwpsl-settings');
+
+        $I->waitForElementVisible('input[name=stat_enabled]', 10); // 等待最多 10 秒
         $I->uncheckOption('sort_enabled');
+
         $I->click('#submit');
+
         $I->seeInCurrentUrl('notice=success');
 
         // Step 2: 后台访问文章列表页，确认“按浏览量排序”不可用
@@ -194,8 +199,12 @@ class SettingsCest
         // Step 1: 登录后台，关闭 REST API
         //$I->loginAsAdmin();
         $I->amOnAdminPage('admin.php?page=rwpsl-settings');
+
+        $I->waitForElementVisible('input[name=stat_enabled]', 10); // 等待最多 10 秒
         $I->uncheckOption('rest_api_enabled');
+
         $I->click('#submit');
+        
         $I->seeInCurrentUrl('notice=success');
 
         // Step 2: 尝试访问 REST API，应失败

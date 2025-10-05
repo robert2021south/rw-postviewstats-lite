@@ -18,3 +18,5 @@ RUN chown -R www-data:www-data /var/www/html
 
 WORKDIR /var/www/html
 
+# 安装 Composer（用于 Codeception）
+RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer

@@ -41,28 +41,17 @@ jobs:
       - name: 4. Wait for services
         run: |
           echo "⏳ Waiting for MySQL and PHP-FPM to start..."
-          sleep 30
-
-      # 安装 Composer（在容器内）
-      - name: 5. Install Composer inside wp_fpm container
-        run: |
-          docker exec wp_fpm bash -lc '\
-            if [ ! -f /usr/local/bin/composer ]; then \
-              curl -sS https://getcomposer.org/installer | php && \
-              mv composer.phar /usr/local/bin/composer && \
-              chmod +x /usr/local/bin/composer ; \
-            fi
-          '
+          sleep 10
 
       # 在容器内安装插件依赖
-      - name: 6. Install plugin dependencies
+      - name: 5. Install plugin dependencies
         run: |
           docker exec wp_fpm bash -lc '\
             cd /var/www/html/wp-content/plugins/rw-postviewstats-lite && \
             composer install --no-interaction --prefer-dist --optimize-autoloader;
           '
       # 安装 WP-CLI
-      - name: 7. Install WP-CLI inside wp_fpm container
+      - name: 6. Install WP-CLI inside wp_fpm container
         run: |
           docker exec wp_fpm bash -c '
             curl -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar &&
@@ -70,8 +59,8 @@ jobs:
             mv wp-cli.phar /usr/local/bin/wp
           '
 
-      # 安装 WordPress
-      - name: 8. Install WordPress
+      # 安装 WordPress && 激活插件
+      - name: 7. Install WordPress && Activate plugin
         run: |
           docker exec wp_fpm bash -lc "\
           wp core install \
@@ -85,9 +74,6 @@ jobs:
           --path=/var/www/html
           "
 
-      # 激活插件
-      - name: 9. Activate plugin
-        run: |
           docker exec wp_fpm bash -lc '\
             wp plugin activate rw-postviewstats-lite \
               --allow-root \
@@ -95,7 +81,7 @@ jobs:
           '
 
       # 运行 Unit 测试
-      - name: 10. Run Unit Tests
+      - name: 8. Run Unit Tests
         run: |
           docker exec wp_fpm bash -lc '\
             cd /var/www/html/wp-content/plugins/rw-postviewstats-lite && \
@@ -104,7 +90,7 @@ jobs:
           '
 
       # 运行 Integration 测试
-      - name: 11. Run Integration Tests
+      - name: 9. Run Integration Tests
         run: |
           docker exec wp_fpm bash -lc '\
             cd /var/www/html/wp-content/plugins/rw-postviewstats-lite && \
@@ -112,10 +98,10 @@ jobs:
           '
 
       # 运行 Acceptance 测试
-      - name: 12. Run Acceptance Tests
+      - name: 10. Run Acceptance Tests
         run: |
           docker exec wp_fpm bash -lc '\
             cd /var/www/html/wp-content/plugins/rw-postviewstats-lite && \
             TEST_SELENIUM_HOST=wp_selenium TEST_SELENIUM_PORT=4444 \
-            ./vendor/bin/codecept run Acceptance
+            ./vendor/bin/codecept run Acceptance --debug --steps
           '
