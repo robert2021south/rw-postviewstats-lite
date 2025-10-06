@@ -50,8 +50,9 @@ class SettingsCest
         //$I->click('Save Settings'); // 根据实际按钮文本填写
 
         // 可选：验证保存成功
-        //$I->seeInCurrentUrl('notice=success');
         $I->waitForElementVisible('div.notice-success', 5);
+        //$I->seeInCurrentUrl('notice=success');
+        $I->seeElement('div.notice-success');
         //$I->seeInCurrentUrl('context=settings');
         //$I->see('Settings saved', 'div.notice-success');
 
@@ -94,8 +95,9 @@ class SettingsCest
         //$I->click('Save Settings');
 
         // 可选：验证保存成功
-        //$I->seeInCurrentUrl('notice=success');
         $I->waitForElementVisible('div.notice-success', 5);
+        //$I->seeInCurrentUrl('notice=success');
+        $I->seeElement('div.notice-success');
 
         //$I->seeInCurrentUrl('context=settings');
         //$I->see('Settings saved', 'div.notice-success');
@@ -150,7 +152,9 @@ class SettingsCest
 
         $I->click('#submit');
 
-        $I->seeInCurrentUrl('notice=success');
+        //$I->seeInCurrentUrl('notice=success');
+        $I->waitForElementVisible('div.notice-success', 5);
+        $I->seeElement('div.notice-success' );
 
         // Step 2: 后台访问文章列表页，确认“按浏览量排序”不可用
         $I->amOnAdminPage('edit.php?orderby=views&order=desc');
@@ -161,9 +165,10 @@ class SettingsCest
         $I->checkOption('sort_enabled');
         $I->click('#submit');
 
-
+        $I->waitForElementVisible('div.notice-success', 5);
         //$I->seeInCurrentUrl('notice=success');
         $I->waitForElementVisible('div.notice-success', 5);
+        $I->seeElement('div.notice-success' );
 
 
         // Step 4: 再次访问归档页，检查按浏览量排序生效
@@ -200,7 +205,9 @@ class SettingsCest
 
         $I->click('#submit');
 
-        $I->seeInCurrentUrl('notice=success');
+        //$I->seeInCurrentUrl('notice=success');
+        $I->waitForElementVisible('div.notice-success', 5);
+        $I->seeElement('div.notice-success' );
 
         // Step 2: 尝试访问 REST API，应失败
         $I->amOnPage("/?rest_route=/rwpsl/v1/views/{$postId}/");
@@ -211,7 +218,10 @@ class SettingsCest
         $I->amOnAdminPage('admin.php?page=rwpsl-settings');
         $I->checkOption('rest_api_enabled');
         $I->click('#submit');
-        $I->seeInCurrentUrl('notice=success');
+
+        //$I->seeInCurrentUrl('notice=success');
+        $I->waitForElementVisible('div.notice-success', 5);
+        $I->seeElement('div.notice-success' );
 
         // Step 4: 再次访问 REST API，应成功
         $I->amOnPage("/?rest_route=/rwpsl/v1/views/{$postId}/");
