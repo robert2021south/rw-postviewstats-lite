@@ -119,7 +119,8 @@ class Cleaner {
             }
         }
 
-        wp_redirect(admin_url('admin.php?page=rwpsl-cleaner&cleaned=1&nonce='.wp_create_nonce( 'rwpsl_cleaned_notice' )));
+        //wp_redirect(admin_url('admin.php?page=rwpsl-cleaner&cleaned=1&nonce='.wp_create_nonce( 'rwpsl_cleaned_notice' )));
+        wp_redirect(admin_url('admin.php?page=rwpsl-cleaner&cleaned=1&notice=success'));
         Helper::terminate();
     }
 }

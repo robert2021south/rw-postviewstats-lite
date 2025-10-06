@@ -31,9 +31,10 @@ class ShortcodeCest{
 
         // Step 3: 访问该页面
         //$permalink = $I->grabPostPermalinkFromDatabase($pageId);
-        $siteUrl = rtrim(codecept_root_dir('wp'), '/'); // 或者用 WPBrowser 提供的 url 配置
-        $permalink = $siteUrl . '/?p='.$postId;
-        $I->amOnPage($permalink); // 文章详情页 如果你只想写相对路径，直接用 amOnPage()，更简单、推荐。
+        //$siteUrl = rtrim(codecept_root_dir('wp'), '/'); // 或者用 WPBrowser 提供的 url 配置
+        //$siteUrl = rtrim(codecept_root_dir('wp'), '/'); // 或者用 WPBrowser 提供的 url 配置
+        //$permalink = $siteUrl . '/?p='.$postId;
+        $I->amOnPage('/?p='.$postId); // 文章详情页 如果你只想写相对路径，直接用 amOnPage()，更简单、推荐。
         //$I->amOnUrl($permalink); //如果你已经有完整的 URL（带 http://），用 amOnUrl()。
 
         // Step 4: 验证页面中是否显示正确的浏览量

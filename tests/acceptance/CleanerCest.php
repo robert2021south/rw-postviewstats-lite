@@ -1,16 +1,20 @@
 <?php
 namespace Tests\Acceptance;
 
+use Exception;
 use Tests\Support\AcceptanceTester;
 
 class CleanerCest{
 
     /**
      * 前置准备：管理员登录
+     * @throws Exception
      */
     public function _before(AcceptanceTester $I): void
     {
         $I->loginAsAdmin(); // 假设有封装好的登录方法
+        $I->amOnAdminPage('index.php');
+        $I->see('Dashboard'); // 确认真的在后台
     }
 
     /**
@@ -50,7 +54,9 @@ class CleanerCest{
         $I->click('#submit');
 
         // 验证跳转
-        $I->seeInCurrentUrl('page=rwpsl-cleaner&cleaned=1');
+        //$I->seeInCurrentUrl('page=rwpsl-cleaner&cleaned=1');
+        $I->waitForElementVisible('div.notice-success', 5);
+        $I->seeElement('div.notice-success' );
 
         // 验证数据库
         $I->dontSeeInDatabase('wp_postmeta', [
@@ -97,7 +103,10 @@ class CleanerCest{
         $I->selectOption('select[name=post_type]', 'page');
         $I->click('#submit');
 
-        $I->seeInCurrentUrl('page=rwpsl-cleaner&cleaned=1');
+        //$I->seeInCurrentUrl('page=rwpsl-cleaner&cleaned=1');
+        $I->waitForElementVisible('div.notice-success', 5);
+        $I->seeElement('div.notice-success');
+
 
         $I->seeInDatabase('wp_postmeta', [
             'post_id'  => $page_id,
@@ -139,7 +148,10 @@ class CleanerCest{
         $I->executeJS("document.querySelector('select[name=post_type]').value = 'invalid_type';");
         $I->click('#submit');
 
-        $I->seeInCurrentUrl('page=rwpsl-cleaner&cleaned=1');
+        $I->waitForElementVisible('div.notice-success', 5);
+        //$I->see('Cleaner completed', 'div.notice-success');
+        $I->seeElement('div.notice-success');
+        //$I->seeInCurrentUrl('page=rwpsl-cleaner&cleaned=1');
 
         $I->seeInDatabase('wp_postmeta', [
             'post_id'  => $post_id,
@@ -180,7 +192,9 @@ class CleanerCest{
         $I->selectOption('select[name=post_type]', 'post');
         $I->click('#submit');
 
-        $I->seeInCurrentUrl('page=rwpsl-cleaner&cleaned=1');
+        //$I->seeInCurrentUrl('page=rwpsl-cleaner&cleaned=1');
+        $I->waitForElementVisible('div.notice-success', 5);
+        $I->seeElement('div.notice-success');
 
         $I->dontSeeInDatabase('wp_postmeta', [
             'post_id'  => $post_id,
@@ -226,7 +240,9 @@ class CleanerCest{
         $I->selectOption('select[name=post_type]', 'post');
         $I->click('#submit');
 
-        $I->seeInCurrentUrl('page=rwpsl-cleaner&cleaned=1');
+        //$I->seeInCurrentUrl('page=rwpsl-cleaner&cleaned=1');
+        $I->waitForElementVisible('div.notice-success', 5);
+        $I->seeElement('div.notice-success');
 
         $I->dontSeeInDatabase('wp_postmeta', [
             'post_id'  => $post_id,

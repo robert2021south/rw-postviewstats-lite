@@ -7,29 +7,33 @@
 
 actor: IntegrationTester
 suite_namespace: Tests\Integration
-bootstrap: false
 modules:
     enabled:
+        - lucatume\WPBrowser\Module\WPDb       #负责数据库管理、创建文章/用户/元数据等
+        - lucatume\WPBrowser\Module\WPLoader   #负责加载 WordPress 核心、安装、初始化环境
         - Asserts
         - \Tests\Support\Helper\Integration
-        - lucatume\WPBrowser\Module\WPLoader   #负责加载 WordPress 核心、安装、初始化环境
-        - lucatume\WPBrowser\Module\WPDb       #负责数据库管理、创建文章/用户/元数据等
     config:
-          lucatume\WPBrowser\Module\WPLoader:
-              wpRootFolder: 'D:\projects\test\wordpress-6.8.2\'
-              dbUrl: 'mysql://root:H0a9S1h8@127.0.0.1:3306/wordpress682'
-              domain: 'wordpress-6.8.2.local'
-              adminUsername: 'admin'
-              adminPassword: '^H0a9S1h8$~'
-              adminEmail: 'robert2021south@gmail.com'
-              loadOnly: true
-          lucatume\WPBrowser\Module\WPDb:
-              dsn: 'mysql:host=127.0.0.1;dbname=wordpress682'
-              user: 'root'
-              password: 'H0a9S1h8'
-              dump: ''
-              populate: false
-              cleanup: false
-              url: 'http://wordpress-6.8.2.local'
-              tablePrefix: 'wp_'
-step_decorators: ~
+      lucatume\WPBrowser\Module\WPDb:
+        dsn: 'mysql:host=mysql;port=3306;dbname=wordpress'   # db 是 MySQL 容器名
+        user: 'wpuser'                                 # 数据库用户名
+        password: 'wppass'                             # 数据库密码
+        url: 'http://nginx/'                           # 容器内访问 URL
+        dump: ''
+        populate: false
+        cleanup: true
+        tablePrefix: 'wp_'
+      lucatume\WPBrowser\Module\WPLoader:
+        wpRootFolder: '/var/www/html/'                    # WordPress 根目录在容器内
+        dbName: 'wordpress'
+        dbHost: 'mysql'                                     # MySQL 容器名
+        dbUser: 'wpuser'
+        dbPassword: 'wppass'
+        tablePrefix: 'wp_'
+        domain: 'wp_nginx'                               # 容器内访问域名
+        adminUsername: 'admin'
+        adminPassword: 'pBlaWDphJvFab5Jbi3KR9q6s'
+        adminEmail: 'robert2021south@gmail.com'
+        title: 'Test Blog'
+        loadOnly: true
+    step_decorators: ~

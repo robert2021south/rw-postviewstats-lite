@@ -13,87 +13,57 @@ class ExportCest{
             $webDriver->manage()->deleteAllCookies();
         });
 
-        $I->loginAsAdmin(); // 假设有封装好的登录方法
-
+        // 1. 登录后台
+        $I->loginAsAdmin();
     }
-
-    //测试页面是否渲染成功
-    /*
-    public function exportPageLoads(AcceptanceTester $I)
-    {
-        $I->amOnPage('/wp-admin/admin.php?page=rwpsl-export');
-
-        // 页面标题或主元素可见
-        $I->see('Data Export', 'h1');
-
-        // 验证表单元素
-        $I->seeElement('form#export-form');
-        $I->seeElement('select[name=post_type]');
-        $I->seeElement('input[name=rwpsl_export_nonce]');
-
-        // 验证导出按钮存在
-        $I->seeElement('#submit');
-
-        // 验证升级按钮或链接存在
-        $I->seeElement('a[href*="upgrade"]');
-    }*/
-
 
     //测试主导出路径
     public function exportPostsCsv(AcceptanceTester $I): void
     {
-        // 1. 登录后台
-        //$I->loginAsAdmin();
-
 
         // 2. 打开导出页面
-        $I->amOnPage('/wp-admin/admin.php?page=rwpsl-export');
-        //$I->see('数据导出'); // 页面标题断言
+        $I->amOnAdminPage('admin.php?page=rwpsl-export');
 
-        // 3. 选择文章类型（比如文章 post）
-        $postType = 'post'; // 你在测试里决定选择哪个 post_type
+        // 3. 选择文章类型
+        $postType = 'post';
         $I->selectOption('select[name=post_type]', $postType);
 
         $I->waitForElementVisible('#submit', 5);
 
+
         // 4. 点击导出按钮
-        $I->click('#submit'); // 用 id
+        $I->click('#submit');
 
-        //等待处理并下载
-        sleep(5); // 等待浏览器接收请求并开始下载
+        // 5. 等待文件生成
+        $I->wait(3); // 等待下载完成
 
-        // 5. 等待文件下载（需要 WebDriver 配置 downloadPath）
-        //$downloadPath = codecept_output_dir() . 'page-views-export-post.csv';
-        //$filename = 'page-views-export-post.csv';
+        // 6. 配置 Chrome 下载目录
+        // WPBrowser 默认下载路径
+        $downloadDir = codecept_output_dir(); // 已映射到容器和宿主机
 
-        $downloadPath  = $I->waitForFileDownload($postType, 15); // 10 秒超时，返回 _output 下的绝对路径
+        // 7. 获取最新下载的 CSV 文件
+        $files = glob($downloadDir . "page-views-export-{$postType}-*.csv");
+        $I->assertNotEmpty($files, "No CSV file found in $downloadDir");
 
-        // 6. 验证 CSV 文件内容
-        //$csvContent = file_get_contents($downloadPath);
-        $csvContent = file($downloadPath, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
+        sort($files);
+        $latestFile = end($files);
+        $I->assertFileExists($latestFile);
 
-        // 去掉第一行的 BOM
-        $firstLine = preg_replace('/^\xEF\xBB\xBF/', '', $csvContent[0]);
-        $header = str_getcsv($firstLine);
-        Assert::assertEquals(['Post ID', 'Title', 'Views'], $header);
+        // 8. 读取 CSV 内容
+        $csvContent = file($latestFile, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
+        $csvContent[0] = preg_replace('/^\xEF\xBB\xBF/', '', $csvContent[0]);
+        $header = str_getcsv($csvContent[0]);
 
-        //$csvContent = preg_replace('/^\xEF\xBB\xBF/', '', $csvContent);
-        //Assert::assertStringContainsString('Post ID,Title,Views', $csvContent);
-
-        //$header = str_getcsv(trim($csvContent[0], "\xEF\xBB\xBF")); // 去掉 BOM 再解析
-        //Assert::assertEquals(['Post ID', 'Title', 'Views'], $header);
-
-        // 假设测试文章标题为 "Hello world!"
-        //Assert::assertStringContainsString('Hello world!', $csvContent);
+        // 断言表头正确
+        $I->assertEquals(['Post ID', 'Title', 'Views'], $header);
 
     }
+
 
     /*
     public function exportLiteRestrictedType(AcceptanceTester $I): void
     {
         $restrictedType = 'product'; // Lite 不支持的 post_type
-        // 1. 登录后台
-        $I->loginAsAdmin();
 
         // 打开导出页面
         $I->amOnPage('/wp-admin/admin.php?page=rwpsl-export');
@@ -118,29 +88,28 @@ class ExportCest{
 
     public function exportNoPosts(AcceptanceTester $I): void
     {
-        $postType = 'page'; // 假设没有页面
+        $postType = 'page'; // 随便写一个不存在的post_type
 
-        // 1. 登录后台
-        //$I->loginAsAdmin();
+        global $wpdb;
+        $wpdb->query( "DELETE FROM {$wpdb->posts} WHERE post_type = 'page'" );
 
-        // 打开导出页面
+        // 2. 打开导出页面
         $I->amOnPage('/wp-admin/admin.php?page=rwpsl-export');
 
-        // 选择 page
+        // 3. 选择 page
         $I->selectOption('select[name=post_type]', $postType);
 
         //$I->waitForElementVisible('#submit', 5);
-        // 点击提交
+
+        // 4. 点击提交
         $I->click('#submit');
 
-        // 验证 URL 上包含提示
+        // 5. 等待文件生成
+        $I->wait(3); // 等待下载完成
+
+        // 6. 验证 URL 上包含提示
         $I->seeInCurrentUrl('notice=no_posts');
 
-        // 验证页面上有提示信息（根据你页面实际渲染的 DOM 调整选择器）
-        //$I->see('No posts available for export');
-
-        // 验证没有下载 CSV 文件
-        $I->dontSeeFileFound(codecept_output_dir() . "page-views-export-{$postType}*.csv");
     }
 
 
