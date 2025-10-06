@@ -1,4 +1,4 @@
-name: RW PostViewStats Lite Codeception Tests (docker-compose)
+name: RW PostViewStats Lite Codeception Matrix Tests (docker-compose)
 
 on:
   push:
@@ -10,16 +10,23 @@ jobs:
   test:
     runs-on: ubuntu-latest
 
+    strategy:
+      fail-fast: false
+      matrix:
+        php_version: [7.4, 8.1, 8.2]
+        wp_version: [6.6, 6.8]
+        mysql_version: [5.7, 8.0]
+
     env:
       WP_ADMIN_USER: ${{ secrets.WP_ADMIN_USER }}
       WP_ADMIN_PASS: ${{ secrets.WP_ADMIN_PASS }}
       WP_ADMIN_EMAIL: robert2021south@gmail.com
-
+      WP_PORT: 8080
       MYSQL_DATABASE: wordpress
       MYSQL_ROOT_PASSWORD: rootpass
-      WP_PORT: 8080
 
     steps:
+
       # 检出代码
       - name: 1. Checkout code
         uses: actions/checkout@v3
@@ -31,28 +38,39 @@ jobs:
           rsync -a --exclude='docker' ./* docker/wordpress/wp-content/plugins/rw-postviewstats-lite/
           chmod -R 777 docker/wordpress/wp-content/plugins/rw-postviewstats-lite/tests/_output
 
-      # 启动 Docker Compose 环境
-      - name: 3. Start Docker Compose
+      # 为矩阵创建 Docker Compose 配置文件
+      - name: 3. Generate Docker Compose config for matrix
+        run: |
+          echo "PHP_VERSION=${{ matrix.php_version }}" > docker/.env
+          echo "WP_VERSION=${{ matrix.wp_version }}" >> docker/.env
+          echo "MYSQL_VERSION=${{ matrix.mysql_version }}" >> docker/.env
+          
+          echo "MYSQL_DATABASE=${MYSQL_DATABASE}" >> docker/.env
+          echo "MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}" >> docker/.env
+
+      - name: 4. Start Docker Compose (Matrix)
         run: |
           cd docker
-          docker compose up -d --build
+          docker compose build --build-arg PHP_VERSION=${{ matrix.php_version }}
+          docker compose up -d
           docker ps
 
       # 等待 WordPress/PHP-FPM/MySQL 就绪
-      - name: 4. Wait for services
+      - name: 5. Wait for services
         run: |
           echo "⏳ Waiting for MySQL and PHP-FPM to start..."
           sleep 10
 
       # 在容器内安装插件依赖
-      - name: 5. Install plugin dependencies
+      - name: 6. Install plugin dependencies
         run: |
           docker exec wp_fpm bash -lc '\
             cd /var/www/html/wp-content/plugins/rw-postviewstats-lite && \
             composer install --no-interaction --prefer-dist --optimize-autoloader;
           '
+
       # 安装 WP-CLI
-      - name: 6. Install WP-CLI inside wp_fpm container
+      - name: 7. Install WP-CLI inside wp_fpm container
         run: |
           docker exec wp_fpm bash -c '
             curl -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar &&
@@ -61,26 +79,26 @@ jobs:
           '
 
       # 安装 WordPress && 激活插件
-      - name: 7. Install WordPress && Activate plugin
+      - name: 8. Install WordPress && Activate plugin
         run: |
           docker exec wp_fpm bash -lc "\
-          wp core install \
-          --url='http://nginx/' \
-          --title='Test Site' \
-          --admin_user='$WP_ADMIN_USER' \
-          --admin_password='$WP_ADMIN_PASS' \
-          --admin_email='$WP_ADMIN_EMAIL' \
-          --skip-email \
-          --allow-root \
-          --path=/var/www/html
+            wp core download --version=${{ matrix.wp_version }} --allow-root --path=/var/www/html && \
+            wp core install \
+              --url='http://nginx/' \
+              --title='Test Site' \
+              --admin_user='$WP_ADMIN_USER' \
+              --admin_password='$WP_ADMIN_PASS' \
+              --admin_email='$WP_ADMIN_EMAIL' \
+              --skip-email \
+              --allow-root \
+              --path=/var/www/html
           "
-
           docker exec wp_fpm bash -lc '\
             wp plugin activate rw-postviewstats-lite --allow-root --path=/var/www/html
           '
 
       # 运行 Unit 测试
-      - name: 8. Run Unit Tests
+      - name: 9. Run Unit Tests
         run: |
           docker exec wp_fpm bash -lc '\
             cd /var/www/html/wp-content/plugins/rw-postviewstats-lite && \
@@ -88,7 +106,7 @@ jobs:
           '
 
       # 运行 Integration 测试
-      - name: 9. Run Integration Tests
+      - name: 10. Run Integration Tests
         run: |
           docker exec wp_fpm bash -lc '\
             cd /var/www/html/wp-content/plugins/rw-postviewstats-lite && \
@@ -96,10 +114,16 @@ jobs:
           '
 
       # 运行 Acceptance 测试
-      - name: 10. Run Acceptance Tests
+      - name: 11. Run Acceptance Tests
         run: |
           docker exec wp_fpm bash -lc '\
             cd /var/www/html/wp-content/plugins/rw-postviewstats-lite && \
             TEST_SELENIUM_HOST=wp_selenium TEST_SELENIUM_PORT=4444 \
             ./vendor/bin/codecept run Acceptance
           '
+      # 清理
+      - name: 12. Cleanup
+        if: always()
+        run: |
+          cd docker
+          docker compose down -v

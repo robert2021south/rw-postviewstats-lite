@@ -1,4 +1,6 @@
-FROM wordpress:php8.2-fpm
+#FROM wordpress:php8.2-fpm
+ARG PHP_VERSION=8.2
+FROM wordpress:php${PHP_VERSION}-fpm
 
 # 安装构建依赖与常用扩展（gd, mbstring, zip, intl, pdo_mysql ...）
 RUN apt-get update \
