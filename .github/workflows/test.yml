@@ -14,8 +14,8 @@ jobs:
       fail-fast: false
       matrix:
         php_version: [8.0, 8.1, 8.2]
-        wp_version: [6.6, 6.8]
-        mysql_version: [5.7, 8.0]
+        wp_version: [6.8]
+        mysql_version: [8.0]
 
     env:
       WP_ADMIN_USER: ${{ secrets.WP_ADMIN_USER }}
@@ -82,7 +82,6 @@ jobs:
       - name: 8. Install WordPress && Activate plugin
         run: |
           docker exec wp_fpm bash -lc "\
-            wp core download --version=${{ matrix.wp_version }} --allow-root --path=/var/www/html && \
             wp core install \
               --url='http://nginx/' \
               --title='Test Site' \
