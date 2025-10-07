@@ -36,8 +36,8 @@
 
             <li>
                 <strong>🔍 <?php
-                    /* translators: %s: parameter name that requires search keyword */
                     printf(
+                    /* translators: %s: parameter name that requires search keyword */
                         esc_html__('Search %s with keywords', 'rw-postviewstats-lite'),
                         '<a href="https://docs.robertwp.com/rw-postviewstats-pro/en/#/faq" target="_blank">' . esc_html__('[Top Questions]',
                             'rw-postviewstats-lite') . '</a>'
