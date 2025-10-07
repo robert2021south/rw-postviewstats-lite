@@ -44,7 +44,7 @@ jobs:
           echo "PHP_VERSION=${{ matrix.php_version }}" > docker/.env
           echo "WP_VERSION=${{ matrix.wp_version }}" >> docker/.env
           echo "MYSQL_VERSION=${{ matrix.mysql_version }}" >> docker/.env
-          
+
           echo "MYSQL_DATABASE=${MYSQL_DATABASE}" >> docker/.env
           echo "MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}" >> docker/.env
 
@@ -126,3 +126,4 @@ jobs:
         run: |
           cd docker
           docker compose down -v
+

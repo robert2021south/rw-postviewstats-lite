@@ -73,3 +73,4 @@ modules:
               plugins.always_open_pdf_externally: true
         debug: true
         verbose: true
+
