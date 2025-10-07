@@ -22,7 +22,6 @@ class HooksRegistrar {
 
     public static function register(): void
     {
-        self::register_textdomain_hooks();  // 放第一，语言加载早于其他逻辑更安全
         self::register_core_hooks();    // 核心功能，如版本检查、激活等
         self::register_admin_hooks();    // 管理后台钩子
         self::register_frontend_hooks();    // 前台钩子
