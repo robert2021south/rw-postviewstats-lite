@@ -7,31 +7,9 @@ namespace Tests\Support\Helper;
 // here you can define custom actions
 // all public methods declared in helper class will be available in $I
 
-class Acceptance extends \Codeception\Module
+use Codeception\Module;
+
+class Acceptance extends Module
 {
-
-    public function waitForFileDownload(string $postType, int $timeout = 15): string
-    {
-        $downloadsDir = 'E:\\Downloads'; // 实际 Chrome 下载目录
-        $destDir = rtrim(codecept_output_dir(), '\\/') . '\\';
-        $prefix = "page-views-export-{$postType}-";
-        $elapsed = 0;
-
-        while ($elapsed < $timeout) {
-            $files = glob($downloadsDir . '\\' . $prefix . '*.csv');
-            if ($files) {
-                // 找最新的文件
-                usort($files, fn($a, $b) => filemtime($b) <=> filemtime($a));
-                $latest = $files[0];
-                $dest = $destDir . basename($latest);
-                copy($latest, $dest);
-                return $dest;
-            }
-            sleep(1);
-            $elapsed++;
-        }
-
-        throw new \Exception("No file with prefix '$prefix' downloaded in $downloadsDir");
-    }
 
 }

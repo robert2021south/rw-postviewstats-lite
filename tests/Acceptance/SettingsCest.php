@@ -13,7 +13,10 @@ class SettingsCest
             $webDriver->manage()->deleteAllCookies();
         });
 
-        $I->loginAsAdmin(); // 假设有封装好的登录方法
+        // -------------------------
+        // Step 1: 登录后台  (WPBrowser 内置登录方法)
+        // -------------------------
+        $I->loginAsAdmin();
     }
 
     public function testToggleStatEnabled(AcceptanceTester $I): void
@@ -30,18 +33,6 @@ class SettingsCest
 
         // 初始化浏览量
         $I->havePostMetaInDatabase($postId, Tracker::RWPSL_META_KEY_TOTAL, 0);
-//        $realValue = $I->grabFromDatabase(
-//            'wp_postmeta',
-//            'meta_value',
-//            ['post_id' => $postId, 'meta_key' => Tracker::RWPSL_META_KEY_TOTAL]
-//        );
-//
-//        codecept_debug("1, 实际 meta_value: " . var_export($realValue, true));
-
-        // -------------------------
-        // Step 1: 登录后台
-        // -------------------------
-        //$I->loginAsAdmin(); // WPBrowser 内置登录方法
 
         // -------------------------
         // Step 2: 进入插件设置页面
@@ -49,7 +40,7 @@ class SettingsCest
         $I->amOnAdminPage('admin.php?page=rwpsl-settings');
 
         // -------------------------
-        // Step 2: 勾选“禁止统计浏览量”并保存  // 禁止统计
+        // Step 3: 勾选“禁止统计浏览量”并保存  // 禁止统计
         // -------------------------
         // 假设 checkbox 名称为 stat_enabled
         $I->uncheckOption('stat_enabled'); // 禁止统计   先取消，后选中，两次测试
@@ -59,19 +50,21 @@ class SettingsCest
         //$I->click('Save Settings'); // 根据实际按钮文本填写
 
         // 可选：验证保存成功
-        $I->seeInCurrentUrl('notice=success');
+        $I->waitForElementVisible('div.notice-success', 5);
+        //$I->seeInCurrentUrl('notice=success');
+        $I->seeElement('div.notice-success');
         //$I->seeInCurrentUrl('context=settings');
         //$I->see('Settings saved', 'div.notice-success');
 
         // -------------------------
-        // Step 3: 访问文章页面 // 再次访问文章 → 浏览量增加
+        // Step 4: 访问文章页面 // 再次访问文章 → 浏览量增加
         // -------------------------
         $I->amOnPage("/?p={$postId}"); // 或文章固定链接
         //$viewsBefore = (int)$I->grabTextFrom('#rwpsl_post_views'); // 根据前端渲染元素 id 修改
         $I->wait(2);
 
         // -------------------------
-        // Step 4: 验证浏览量不增加
+        // Step 5: 验证浏览量不增加
         // -------------------------
         // 验证浏览量为 0
         $I->seeInDatabase(
@@ -102,7 +95,10 @@ class SettingsCest
         //$I->click('Save Settings');
 
         // 可选：验证保存成功
-        $I->seeInCurrentUrl('notice=success');
+        $I->waitForElementVisible('div.notice-success', 5);
+        //$I->seeInCurrentUrl('notice=success');
+        $I->seeElement('div.notice-success');
+
         //$I->seeInCurrentUrl('context=settings');
         //$I->see('Settings saved', 'div.notice-success');
 
@@ -151,9 +147,14 @@ class SettingsCest
         // Step 1: 登录后台，关闭排序
         //$I->loginAsAdmin();
         $I->amOnAdminPage('admin.php?page=rwpsl-settings');
+
         $I->uncheckOption('sort_enabled');
+
         $I->click('#submit');
-        $I->seeInCurrentUrl('notice=success');
+
+        //$I->seeInCurrentUrl('notice=success');
+        $I->waitForElementVisible('div.notice-success', 5);
+        $I->seeElement('div.notice-success' );
 
         // Step 2: 后台访问文章列表页，确认“按浏览量排序”不可用
         $I->amOnAdminPage('edit.php?orderby=views&order=desc');
@@ -163,7 +164,12 @@ class SettingsCest
         $I->amOnAdminPage('admin.php?page=rwpsl-settings');
         $I->checkOption('sort_enabled');
         $I->click('#submit');
-        $I->seeInCurrentUrl('notice=success');
+
+        $I->waitForElementVisible('div.notice-success', 5);
+        //$I->seeInCurrentUrl('notice=success');
+        $I->waitForElementVisible('div.notice-success', 5);
+        $I->seeElement('div.notice-success' );
+
 
         // Step 4: 再次访问归档页，检查按浏览量排序生效
         $I->amOnAdminPage('edit.php?orderby=views&order=desc');
@@ -194,9 +200,14 @@ class SettingsCest
         // Step 1: 登录后台，关闭 REST API
         //$I->loginAsAdmin();
         $I->amOnAdminPage('admin.php?page=rwpsl-settings');
+
         $I->uncheckOption('rest_api_enabled');
+
         $I->click('#submit');
-        $I->seeInCurrentUrl('notice=success');
+
+        //$I->seeInCurrentUrl('notice=success');
+        $I->waitForElementVisible('div.notice-success', 5);
+        $I->seeElement('div.notice-success' );
 
         // Step 2: 尝试访问 REST API，应失败
         $I->amOnPage("/?rest_route=/rwpsl/v1/views/{$postId}/");
@@ -207,7 +218,10 @@ class SettingsCest
         $I->amOnAdminPage('admin.php?page=rwpsl-settings');
         $I->checkOption('rest_api_enabled');
         $I->click('#submit');
-        $I->seeInCurrentUrl('notice=success');
+
+        //$I->seeInCurrentUrl('notice=success');
+        $I->waitForElementVisible('div.notice-success', 5);
+        $I->seeElement('div.notice-success' );
 
         // Step 4: 再次访问 REST API，应成功
         $I->amOnPage("/?rest_route=/rwpsl/v1/views/{$postId}/");
