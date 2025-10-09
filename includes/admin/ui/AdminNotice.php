@@ -19,7 +19,6 @@ class AdminNotice {
 
         $key = sanitize_text_field( wp_unslash( $_GET['notice'] ?? '' ) );
         $context = sanitize_key( wp_unslash( $_GET['context'] ?? 'common' ) );
-        $network = sanitize_text_field( wp_unslash( $_GET['network'] ?? '' ) );
 
         if (empty($key)) return;
 
@@ -44,11 +43,7 @@ class AdminNotice {
             ]);
         });
 
-        if (empty($network)) {
-            add_action('admin_notices', $callback);
-        }else{
-            add_action('network_admin_notices', $callback);
-        }
+        add_action('admin_notices', $callback);
 
         self::$general_notice_registered = true;
     }
