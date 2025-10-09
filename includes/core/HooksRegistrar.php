@@ -16,7 +16,6 @@ use RobertWP\PostViewStatsLite\Modules\Shortcode\ShortcodeHandler;
 use RobertWP\PostViewStatsLite\Modules\Sort\Sort;
 use RobertWP\PostViewStatsLite\Modules\tracker\Tracker;
 
-
 class HooksRegistrar {
 
     public static function register(): void
