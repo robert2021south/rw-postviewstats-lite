@@ -8,7 +8,6 @@ use RobertWP\PostViewStatsLite\Admin\UI\AdminNotice;
 use RobertWP\PostViewStatsLite\Admin\UI\PluginMetaLinks;
 use RobertWP\PostViewStatsLite\Assets\AdminAssets;
 use RobertWP\PostViewStatsLite\Assets\FrontendAssets;
-use RobertWP\PostViewStatsLite\I18n\Localization;
 use RobertWP\PostViewStatsLite\Modules\Cleaner\Cleaner;
 use RobertWP\PostViewStatsLite\Modules\Export\PostViewsExporter;
 use RobertWP\PostViewStatsLite\Modules\PostColumn\PostViewsColumn;
@@ -26,11 +25,6 @@ class HooksRegistrar {
         self::register_admin_hooks();    // 管理后台钩子
         self::register_frontend_hooks();    // 前台钩子
         self::register_feature_hooks();    // 功能性模块（视具体项目结构）
-    }
-
-    private static function register_textdomain_hooks(): void
-    {
-        add_action('init', [Localization::class, 'load_textdomain']);
     }
 
     private static function register_core_hooks(): void
