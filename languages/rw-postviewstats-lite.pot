@@ -1,0 +1,219 @@
+# Copyright (C) 2025 Robert South
+# This file is distributed under the GPLv3 or later.
+msgid ""
+msgstr ""
+"Project-Id-Version: RW PostViewStats Lite 1.0.0\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/rw-postviewstats-lite\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"POT-Creation-Date: 2025-08-18T14:42:23+00:00\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"X-Generator: WP-CLI 2.11.0\n"
+"X-Domain: rw-postviewstats-lite\n"
+
+#. Plugin Name of the plugin
+#: rw-postviewstats-lite.php
+#: includes/admin/menu/AdminMenuManager.php:15
+msgid "RW PostViewStats Lite"
+msgstr ""
+
+#. Description of the plugin
+#: rw-postviewstats-lite.php
+msgid "Free version of the article page view statistics plug-in, which supports page view export, REST API interface and ranking by heat."
+msgstr ""
+
+#. Author of the plugin
+#: rw-postviewstats-lite.php
+msgid "Robert South"
+msgstr ""
+
+#. Author URI of the plugin
+#: rw-postviewstats-lite.php
+msgid "https://robertwp.com"
+msgstr ""
+
+#: includes/admin/menu/AdminMenuManager.php:14
+msgid "Page view statistics"
+msgstr ""
+
+#: includes/admin/menu/AdminMenuManager.php:25
+#: includes/admin/menu/AdminMenuManager.php:26
+#: includes/admin/ui/PluginMetaLinks.php:8
+#: includes/templates/settings/settings-page.php:6
+msgid "Settings"
+msgstr ""
+
+#: includes/admin/settings/SettingsRegistrar.php:22
+msgid "Feature Settings"
+msgstr ""
+
+#: includes/admin/settings/SettingsRegistrar.php:31
+msgid "Enable page view statistics"
+msgstr ""
+
+#: includes/admin/settings/SettingsRegistrar.php:32
+msgid "When enabled, the page views of each article will be automatically counted."
+msgstr ""
+
+#: includes/admin/settings/SettingsRegistrar.php:37
+msgid "Enable sorting"
+msgstr ""
+
+#: includes/admin/settings/SettingsRegistrar.php:38
+msgid "When enabled, You can sort the articles on the article list page by clicking \"Views\"."
+msgstr ""
+
+#: includes/admin/settings/SettingsRegistrar.php:43
+msgid "Enable REST API"
+msgstr ""
+
+#: includes/admin/settings/SettingsRegistrar.php:44
+msgid "When enabled, you can retrieve the view count of a specific post via the REST API."
+msgstr ""
+
+#: includes/admin/ui/AdminNotice.php:62
+msgid "Settings saved successfully."
+msgstr ""
+
+#: includes/admin/ui/AdminNotice.php:67
+msgid "No posts found to export."
+msgstr ""
+
+#: includes/admin/ui/AdminNotice.php:74
+msgid "Operation completed successfully."
+msgstr ""
+
+#: includes/admin/ui/AdminNotice.php:78
+msgid "Operation failed. Please try again."
+msgstr ""
+
+#: includes/admin/ui/AdminNotice.php:82
+msgid "<strong>Pro Feature:</strong> This feature is only available in the Pro version."
+msgstr ""
+
+#: includes/admin/ui/AdminNotice.php:85
+msgid "You do not have sufficient permissions"
+msgstr ""
+
+#: includes/admin/ui/AdminNotice.php:89
+msgid "Invalid request"
+msgstr ""
+
+#: includes/admin/ui/AdminNotice.php:93
+msgid "Invalid Nonce"
+msgstr ""
+
+#: includes/admin/ui/AdminNotice.php:97
+msgid "Security check failed."
+msgstr ""
+
+#: includes/admin/ui/AdminNotice.php:101
+msgid "Uncaught exception."
+msgstr ""
+
+#: includes/modules/cleaner/Cleaner.php:21
+#: includes/modules/cleaner/Cleaner.php:22
+msgid "Data Cleaner"
+msgstr ""
+
+#: includes/modules/cleaner/templates/cleaner-page.php:14
+msgid "Clear all view count data"
+msgstr ""
+
+#: includes/modules/cleaner/templates/cleaner-page.php:18
+msgid "Cleanup completed successfully."
+msgstr ""
+
+#: includes/modules/cleaner/templates/cleaner-page.php:30
+#: includes/modules/export/templates/export-page.php:22
+msgid "Post Type"
+msgstr ""
+
+#: includes/modules/cleaner/templates/cleaner-page.php:44
+#: includes/modules/export/templates/export-page.php:34
+msgid "Pro Only - Upgrade to use this post type"
+msgstr ""
+
+#: includes/modules/cleaner/templates/cleaner-page.php:52
+#: includes/modules/export/templates/export-page.php:41
+msgid "Upgrade to Pro to unlock all post types"
+msgstr ""
+
+#: includes/modules/cleaner/templates/cleaner-page.php:64
+msgid "Date limit"
+msgstr ""
+
+#: includes/modules/cleaner/templates/cleaner-page.php:65
+msgid "optional"
+msgstr ""
+
+#: includes/modules/cleaner/templates/cleaner-page.php:74
+msgid "Lite version always cleans data older than 30 days."
+msgstr ""
+
+#: includes/modules/cleaner/templates/cleaner-page.php:80
+msgid "Clean up now"
+msgstr ""
+
+#: includes/modules/export/templates/export-page.php:13
+msgid "Export Page View Data"
+msgstr ""
+
+#: includes/modules/export/templates/export-page.php:14
+msgid "Choose the post type to export view data as CSV."
+msgstr ""
+
+#: includes/modules/export/templates/export-page.php:49
+msgid "Export CSV"
+msgstr ""
+
+#: includes/modules/postcolumn/PostViewsColumn.php:20
+msgid "Views"
+msgstr ""
+
+#: includes/templates/settings/settings-page.php:28
+msgid "Need help? Need help? Follow these steps:"
+msgstr ""
+
+#: includes/templates/settings/settings-page.php:30
+msgid "Check the"
+msgstr ""
+
+#: includes/templates/settings/settings-page.php:30
+msgid "[5-Minute Quick Guide]"
+msgstr ""
+
+#: includes/templates/settings/settings-page.php:30
+msgid "covers 90% FAQs"
+msgstr ""
+
+#: includes/templates/settings/settings-page.php:32
+msgid "Search %s with keywords"
+msgstr ""
+
+#: includes/templates/settings/settings-page.php:33
+msgid "[Top Questions]"
+msgstr ""
+
+#: includes/templates/settings/settings-page.php:36
+msgid "Still stuck?"
+msgstr ""
+
+#: includes/templates/settings/settings-page.php:36
+msgid "Plugin Issue: {Brief Description}&body=● Details:%0A● Screenshots/Logs:"
+msgstr ""
+
+#: includes/templates/settings/settings-page.php:36
+msgid "Email us"
+msgstr ""
+
+#: includes/templates/settings/settings-page.php:36
+msgid "include: problem details + screenshots + error logs"
+msgstr ""
+
+#: includes/templates/settings/settings-page.php:38
+msgid "Replies may be delayed if key info is missing."
+msgstr ""
