@@ -4,7 +4,6 @@ namespace RobertWP\PostViewStatsLite\Core;
 use RobertWP\PostViewStatsLite\Admin\Settings\SettingsRegistrar;
 use RobertWP\PostViewStatsLite\Utils\TemplateLoader;
 
-
 class Bootstrap {
     private static bool $initialized = false;
 
@@ -26,7 +25,7 @@ class Bootstrap {
     }
 
     public static function activate(): void {
-        update_option(OPTION_RWPSL_VERSION, RWPSL_PLUGIN_VERSION);
+        update_option(RWPSL_VERSION_OPTION, RWPSL_PLUGIN_VERSION);
 
         $data = [];
         $data['stat_enabled'] = 1;

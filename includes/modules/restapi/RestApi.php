@@ -1,16 +1,10 @@
 <?php
-/*
- *
- * */
 namespace RobertWP\PostViewStatsLite\Modules\RestApi;
-
-if (!defined('ABSPATH')) exit;
 
 use RobertWP\PostViewStatsLite\Admin\Settings\SettingsRegistrar;
 use RobertWP\PostViewStatsLite\Modules\tracker\Tracker;
 use RobertWP\PostViewStatsLite\Traits\Singleton;
 use WP_Error;
-
 
 class RestApi {
     use Singleton;
@@ -27,6 +21,11 @@ class RestApi {
 
     public static function register_routes(): void
     {
+        /**
+         * REST API endpoint for post view counts.
+         * Lite version returns only public data.
+         * Endpoint is intentionally public for theme or plugin integration.
+         */
         register_rest_route('rwpsl/v1', '/views/(?P<id>\d+)', array(
             'methods'  => 'GET',
             'callback' => [self::class,'get_post_views'],
@@ -36,7 +35,7 @@ class RestApi {
                     'sanitize_callback' => 'absint',
                 ]
             ],
-            'permission_callback' => '__return_true'
+            'permission_callback' => '__return_true' // intentionally public
         ));
     }
 

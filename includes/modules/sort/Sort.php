@@ -8,7 +8,6 @@ use RobertWP\PostViewStatsLite\Admin\Settings\SettingsRegistrar;
 use RobertWP\PostViewStatsLite\Modules\tracker\Tracker;
 use RobertWP\PostViewStatsLite\Traits\Singleton;
 
-
 class Sort {
     use Singleton;
 

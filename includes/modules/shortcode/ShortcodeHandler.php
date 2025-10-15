@@ -1,9 +1,7 @@
 <?php
 namespace RobertWP\PostViewStatsLite\Modules\Shortcode;
 
-use RobertWP\PostViewStatsLite\Modules\tracker\Tracker;
-
-if (!defined('ABSPATH')) exit;
+use RobertWP\PostViewStatsLite\Modules\Tracker\Tracker;
 
 class ShortcodeHandler{
 

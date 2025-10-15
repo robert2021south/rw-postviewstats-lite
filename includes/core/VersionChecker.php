@@ -10,10 +10,10 @@ class VersionChecker{
             return;
         }
 
-        $saved_version = get_option(OPTION_RWPSL_VERSION);
+        $saved_version = get_option(RWPSL_VERSION_OPTION);
 
         if (version_compare($saved_version, RWPSL_PLUGIN_VERSION, '<')) {
-            update_option(OPTION_RWPSL_VERSION, RWPSL_PLUGIN_VERSION);
+            update_option(RWPSL_VERSION_OPTION, RWPSL_PLUGIN_VERSION);
         }
     }
 }

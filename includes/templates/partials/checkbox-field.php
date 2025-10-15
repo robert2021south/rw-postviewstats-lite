@@ -1,4 +1,5 @@
 <?php
+if ( ! defined( 'ABSPATH' ) ) exit;
 /** @var string $option  */
 /** @var string $value  */
 /** @var string $desc */
