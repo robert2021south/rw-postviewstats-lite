@@ -106,7 +106,6 @@ class Cleaner {
             }
 
             // 然后处理 _rwpsl_total
-            // 然后处理 _rwpsl_total
             if (metadata_exists('post', $post_id, Tracker::RWPSL_META_KEY_TOTAL)) {
                 if (!empty($retained_today_values)) {
                     // 还有有效数据，更新 _rwpsl_total
