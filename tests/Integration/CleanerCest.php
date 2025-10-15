@@ -140,13 +140,19 @@ class CleanerCest
 
     public function testExpiredTodayDeletedButValidTodayAndTotalRemain(IntegrationTester $I): void
     {
+        wp_set_current_user(1); // 确保 ID=1 是管理员
+
+        // 模拟 POST 数据
+        $_POST['rwpsl_cleaner_nonce'] = wp_create_nonce('rwpsl_cleaner_action');
+        $_POST['post_type'] = 'post';
+
         $postId = $I->havePostInDatabase(['post_type' => 'post']);
 
         // 插入过期 today
         $I->havePostmetaInDatabase($postId, '_rwpsl_today_20250805', 5);
 
         // 插入未过期 today
-        $I->havePostmetaInDatabase($postId, '_rwpsl_today_20250914', 10);
+        $I->havePostmetaInDatabase($postId, '_rwpsl_today_'.date('Ymd'), 10);
 
         // 插入 total
         $I->havePostmetaInDatabase($postId, '_rwpsl_total', 15);
@@ -165,7 +171,7 @@ class CleanerCest
         // 未过期 today 应该保留
         $I->seeInDatabase('wp_postmeta', [
             'post_id'  => $postId,
-            'meta_key' => '_rwpsl_today_20250914',
+            'meta_key' => '_rwpsl_today_'.date('Ymd'),
         ], "断言失败：未过期 today meta 被误删");
 
         // total 应该保留
