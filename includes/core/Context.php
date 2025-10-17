@@ -8,7 +8,7 @@ class Context
         global $pagenow;
 
         if (is_admin()) {
-            $page = wp_unslash($_GET['page'] ?? '');
+            $page = sanitize_text_field(wp_unslash($_GET['page'] ?? ''));
             // 1. 检查是否在后台文章/页面/自定义类型列表页
             if ($pagenow === 'edit.php') {
                 return true;
@@ -20,12 +20,12 @@ class Context
         }
 
         // 3. 检查插件专属 AJAX/REST 操作
-        $action = wp_unslash( $_REQUEST['action'] ?? '' );
+        $action = sanitize_text_field(wp_unslash( $_REQUEST['action'] ?? '' ));
         if (strpos($action, 'rwpsl_') === 0) {
             return true;
         }
 
-        $uri = wp_unslash( $_SERVER['REQUEST_URI'] ?? '' );
+        $uri = sanitize_text_field(wp_unslash( $_SERVER['REQUEST_URI'] ?? '' ));
         if (defined('REST_REQUEST') && REST_REQUEST && strpos($uri ?? '', '/wp-json/rwpsl/') !== false) {
             return true;
         }

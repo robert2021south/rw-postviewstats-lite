@@ -56,7 +56,7 @@ class Cleaner {
 
         // Nonce 验证
         if (!isset($_POST['rwpsl_cleaner_nonce']) ||
-            !wp_verify_nonce(wp_unslash($_POST['rwpsl_cleaner_nonce']), 'rwpsl_cleaner_action')// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
+            !wp_verify_nonce(sanitize_text_field(wp_unslash($_POST['rwpsl_cleaner_nonce'])), 'rwpsl_cleaner_action')// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
         ) {
             wp_redirect(admin_url('admin.php?page=rwpsl-cleaner&notice=inv_req'));
             Helper::terminate();
