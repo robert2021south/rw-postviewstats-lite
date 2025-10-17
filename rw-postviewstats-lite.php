@@ -3,7 +3,7 @@
  * Plugin Name: RW PostViewStats Lite
  * Description: Free version of the article page view statistics plug-in, which supports page view export, REST API interface and ranking by heat.
  * Version: 1.0.1
- * Author: Robert South
+ * Author: RobertWP (Robert South)
  * Author URI: https://robertwp.com
  * License: GPLv3 or later
  * License URI: https://www.gnu.org/licenses/gpl-3.0.html
