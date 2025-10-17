@@ -119,7 +119,7 @@ class Helper
 
         // 如果是数组或对象，转换成可读字符串
         if ( is_array( $data ) || is_object( $data ) ) {
-            $data = print_r( $data, true );
+            $data = var_export( $data, true );
         } else {
             $data = (string) $data;
         }
