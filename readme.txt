@@ -79,6 +79,14 @@ Copy /languages/rw-postviewstats-lite.pot and create your translation files. Sub
 4. REST API Example – JSON response from views endpoint
 
 == Changelog ==
+= 1.0.2 =
+Fix the problem of random numbers not being disinfected
+
+= 1.0.1 =
+Standard constant naming
+Fix REST API callback permissions
+Add protection code to HTML template
+
 = 1.0.0 =
 
 Initial release with AJAX tracking
@@ -87,5 +95,4 @@ REST API integration
 Shortcode for displaying views
 
 == Upgrade Notice ==
-= 1.0.0 =
-Initial free version release. All features available without license key.
+= 1.0.2 =
