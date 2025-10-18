@@ -80,7 +80,7 @@ Copy /languages/rw-postviewstats-lite.pot and create your translation files. Sub
 
 == Changelog ==
 = 1.0.2 =
-Fix the problem of random numbers not being disinfected
+Fix the problem of $_POST not being sanitized
 
 = 1.0.1 =
 Standard constant naming
@@ -96,3 +96,4 @@ Shortcode for displaying views
 
 == Upgrade Notice ==
 = 1.0.2 =
+Fix the problem of $_POST not being sanitized
